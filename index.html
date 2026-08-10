@@ -51,6 +51,17 @@
   .view.active{display:block;animation:fadeIn .45s ease both;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
+  /* ===== Scroll reveal ===== */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,.8,.3,1),transform .7s cubic-bezier(.16,.8,.3,1);}
+  .reveal.in-view{opacity:1;transform:translateY(0);}
+  .reveal-scale{opacity:0;transform:scale(.92);transition:opacity .7s cubic-bezier(.16,.8,.3,1),transform .7s cubic-bezier(.16,.8,.3,1);}
+  .reveal-scale.in-view{opacity:1;transform:scale(1);}
+  .reveal-right{opacity:0;transform:translateX(30px);transition:opacity .7s cubic-bezier(.16,.8,.3,1),transform .7s cubic-bezier(.16,.8,.3,1);}
+  .reveal-right.in-view{opacity:1;transform:translateX(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal,.reveal-scale,.reveal-right{opacity:1!important;transform:none!important;transition:none!important;}
+  }
+
   /* ===== header ===== */
   .site-header{
     position:sticky;top:0;z-index:50;
@@ -756,9 +767,15 @@
   }
   .admin-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .admin-subtabs{display:flex;gap:8px;margin-bottom:26px;flex-wrap:wrap;}
-  .admin-subtab{padding:9px 20px;border-radius:100px;font-weight:700;font-size:14px;color:var(--slate);background:var(--card);border:1.6px solid var(--line);transition:background .2s,color .2s,border-color .2s;}
+  .admin-subtab{padding:9px 20px;border-radius:100px;font-weight:700;font-size:14px;color:var(--slate);background:var(--card);border:1.6px solid var(--line);transition:background .2s,color .2s,border-color .2s;position:relative;}
   .admin-subtab:hover{border-color:var(--cyan);}
   .admin-subtab.active{background:var(--slate);color:#fff;border-color:var(--slate);}
+  .admin-subtab .tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;margin-inline-start:6px;border-radius:100px;background:var(--coral);color:#fff;font-size:11px;font-weight:800;font-family:'IBM Plex Mono',monospace;vertical-align:middle;}
+  .submission-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+  .submission-card .sub-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px;font-size:12.5px;color:var(--slate-soft);}
+  .submission-card .sub-meta b{color:var(--slate);font-weight:700;}
+  .submission-card .sub-text{font-size:15px;color:var(--ink);line-height:1.8;white-space:pre-wrap;background:var(--paper);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;}
+  .submission-card .sub-actions{display:flex;gap:10px;flex-wrap:wrap;}
   .admin-panel{display:none;}
   .admin-panel.active{display:block;}
   .subjects-manage-list{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
@@ -821,7 +838,7 @@
 
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow"><span class="dot"></span> <span data-ekey="hero.eyebrow">منصة اللجنة العلمية لطلبة طب الأسنان</span></span>
+        <span class="eyebrow"><span class="dot"></span> <span data-ekey="hero.eyebrow">الفريق الأكاديمي-لحنة طب الأسنان</span></span>
         <h1><span data-ekey="hero.title.line1">بنك أسئلة شامل</span><br><span data-ekey="hero.title.line2">يواكب مسيرتك في</span> <em data-ekey="hero.title.emphasis">طب الأسنان</em></h1>
         <p class="lead" data-ekey="hero.lead">
           مجموعة مُبوّبة من الأسئلة حسب المادة والسنة الدراسية ونوع السؤال، جهّزتها اللجنة لتكون مرجعك الأول
@@ -832,7 +849,7 @@
         </div>
       </div>
 
-      <div class="hero-panel">
+      <div class="hero-panel reveal-right">
         <div class="hero-panel-inner">
           <b data-ekey="hero.panel.title">بنك الأسئلة بالأرقام</b>
           <div class="stat-row">
@@ -848,9 +865,9 @@
   <div class="section">
     <div class="wrap about-single">
       <div>
-        <span class="section-head kicker" style="display:block;margin-bottom:10px" data-ekey="about.kicker">من نحن</span>
+        <span class="section-head kicker reveal" style="display:block;margin-bottom:10px" data-ekey="about.kicker">من نحن</span>
         <div class="about-cards">
-          <div class="about-card">
+          <div class="about-card reveal" style="transition-delay:.05s">
             <span class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="M3 13l9 5 9-5"/></svg></span>
             <div>
               <h4 data-ekey="about.card1.title">لجنة طب الأسنان</h4>
@@ -860,7 +877,7 @@
               </p>
             </div>
           </div>
-          <div class="about-card">
+          <div class="about-card reveal" style="transition-delay:.15s">
             <span class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z"/></svg></span>
             <div>
               <h4 data-ekey="about.card2.title">رسالتنا</h4>
@@ -870,7 +887,7 @@
               </p>
             </div>
           </div>
-          <div class="about-card">
+          <div class="about-card reveal" style="transition-delay:.25s">
             <span class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z"/></svg></span>
             <div>
               <h4 data-ekey="about.card3.title">رؤيتنا</h4>
@@ -886,7 +903,7 @@
   </div>
 
   <div class="wrap" style="padding-bottom:76px">
-    <div class="cta-banner">
+    <div class="cta-banner reveal-scale">
       <div>
         <h3 data-ekey="cta.title">متذكر سؤال اجاك بالإمتحان؟ شاركنا إياه</h3>
         <p data-ekey="cta.text">ساهم في إثراء بنك الأسئلة — كل سؤال تضيفه يفيد عشرات الزملاء بعدك.</p>
@@ -1245,6 +1262,7 @@
 
     <div class="admin-subtabs">
       <button type="button" class="admin-subtab active" id="adminTabBtnQuestions" onclick="showAdminTab('questions')">📋 الأسئلة</button>
+      <button type="button" class="admin-subtab" id="adminTabBtnSubmissions" onclick="showAdminTab('submissions')">📥 أسئلة الطلاب<span class="tab-badge" id="submissionsBadge" hidden>0</span></button>
       <button type="button" class="admin-subtab" id="adminTabBtnSubjects" onclick="showAdminTab('subjects')">🧪 المواد الدراسية</button>
       <button type="button" class="admin-subtab" id="adminTabBtnTexts" onclick="showAdminTab('texts')">📝 نصوص الموقع</button>
     </div>
@@ -1279,6 +1297,12 @@
           <tbody id="adminTableBody"></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- ---- Panel: Student submissions (أسئلة الطلاب) ---- -->
+    <div class="admin-panel" id="adminPanelSubmissions">
+      <p style="margin-bottom:18px;">الأسئلة التي يبعثها الطلاب من صفحة "متذكر سؤال" في الصفحة الرئيسية تظهر هنا فوراً. راجعها، وحوّل أي سؤال جيد إلى بنك الأسئلة، أو احذف ما لا يلزم.</p>
+      <div id="submissionsList"></div>
     </div>
 
     <!-- ---- Panel: Subjects (المواد) ---- -->
@@ -1407,10 +1431,10 @@
     </div>
     <span class="f-note" data-ekey="footer.note">© جميع الحقوق محفوظة للجنة طب الأسنان — بنك الأسئلة</span>
     <div class="footer-social">
-      <a href="#" id="socialTelegram" target="_blank" rel="noopener" aria-label="تيليجرام" title="ضع رابط التيليجرام هنا">
+      <a href="https://t.me/Alasnanlagneh" id="socialTelegram" target="_blank" rel="noopener" aria-label="تيليجرام">
         <svg viewBox="0 0 24 24"><path d="M9.999 15.617l-.396 5.573c.567 0 .812-.244 1.108-.537l2.66-2.544 5.513 4.03c1.01.556 1.73.264 1.987-.933l3.6-16.88.001-.001c.309-1.44-.522-2.003-1.505-1.64L1.11 9.77c-1.41.55-1.39 1.335-.24 1.692l5.443 1.698L18.85 5.36c.577-.375 1.104-.168.671.207z"/></svg>
       </a>
-      <a href="#" id="socialFacebook" target="_blank" rel="noopener" aria-label="فيسبوك" title="ضع رابط الفيسبوك هنا">
+      <a href="https://www.facebook.com/profile.php?id=61566457650681" id="socialFacebook" target="_blank" rel="noopener" aria-label="فيسبوك">
         <svg viewBox="0 0 24 24"><path d="M13.5 21v-8.1h2.72l.41-3.16h-3.13V7.73c0-.916.254-1.54 1.567-1.54h1.674V3.36C15.99 3.24 15.16 3.17 14.32 3.17c-2.5 0-4.21 1.526-4.21 4.328v2.42H7.38v3.16h2.73V21h3.39z"/></svg>
       </a>
     </div>
@@ -1890,11 +1914,32 @@
     if(view==='student') renderStudentPage();
     if(view==='student-settings') renderStudentSettings();
     if(view==='admin') renderAdminPage();
+    if(view==='home') initRevealObserver();
   }
   window.addEventListener('DOMContentLoaded', ()=>{
     const initial = (location.hash||'#home').replace('#','');
     go(['home','bank','login','student','student-settings','admin'].includes(initial) ? initial : 'home');
   });
+
+  /* ---------- scroll reveal ---------- */
+  let revealObserver = null;
+  function initRevealObserver(){
+    const els = document.querySelectorAll('#view-home .reveal, #view-home .reveal-scale, #view-home .reveal-right');
+    if(!els.length) return;
+    if(!revealObserver){
+      revealObserver = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('in-view');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, {threshold:.15, rootMargin:'0px 0px -40px 0px'});
+    }
+    els.forEach(el=>{
+      if(!el.classList.contains('in-view')) revealObserver.observe(el);
+    });
+  }
 
   /* ---------- question bank data ---------- */
   /* المواد الدراسية — تُجلب الآن من جدول public.subjects في Supabase (إن وُجد) مع الإبقاء على
@@ -2069,11 +2114,12 @@
   }
 
   function showAdminTab(tab){
-    ['questions','subjects','texts'].forEach(t=>{
+    ['questions','submissions','subjects','texts'].forEach(t=>{
       document.getElementById('adminPanel' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t===tab);
       document.getElementById('adminTabBtn' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t===tab);
     });
     document.getElementById('adminAddQuestionBtn').hidden = tab!=='questions';
+    if(tab==='submissions') loadAdminSubmissions();
     if(tab==='subjects') renderAdminSubjects();
     if(tab==='texts') renderSiteTextsAdmin();
   }
@@ -2804,6 +2850,74 @@
     renderAdminSubjects();
     await loadAdminQuestions();
     renderAdminTable();
+    await loadAdminSubmissions();
+  }
+
+  /* ---------- أسئلة الطلاب الواردة (question_submissions) ---------- */
+  let ADMIN_SUBMISSIONS = [];
+  let pendingSubmissionId = null; // إذا كان الأدمن يحوّل مساهمة طالب إلى سؤال رسمي
+
+  async function loadAdminSubmissions(){
+    const { data, error } = await supabaseClient.from('question_submissions')
+      .select('*').order('created_at', { ascending:false });
+    if(error){
+      console.error('تعذّر تحميل أسئلة الطلاب — تحقق من أن جدول question_submissions موجود في Supabase:', error);
+      ADMIN_SUBMISSIONS = [];
+    }else{
+      ADMIN_SUBMISSIONS = data || [];
+    }
+    const badge = document.getElementById('submissionsBadge');
+    if(badge){
+      const n = ADMIN_SUBMISSIONS.length;
+      badge.textContent = n;
+      badge.hidden = n === 0;
+    }
+    renderAdminSubmissionsList();
+  }
+
+  function renderAdminSubmissionsList(){
+    const wrap = document.getElementById('submissionsList');
+    if(!wrap) return;
+    if(ADMIN_SUBMISSIONS.length === 0){
+      wrap.innerHTML = `<p style="text-align:center;color:var(--slate-soft);padding:28px;">لا توجد أسئلة واردة من الطلاب حالياً.</p>`;
+      return;
+    }
+    wrap.innerHTML = ADMIN_SUBMISSIONS.map(s=>{
+      const when = s.created_at ? new Date(s.created_at).toLocaleString('ar') : '—';
+      return `
+      <div class="submission-card">
+        <div class="sub-meta">
+          <span>👤 <b>${s.student_name || 'طالب غير معروف'}</b></span>
+          ${s.contact_email ? `<span class="mono">✉️ ${s.contact_email}</span>` : ''}
+          <span>🕒 ${when}</span>
+        </div>
+        <div class="sub-text">${(s.question_text || '').replace(/</g,'&lt;')}</div>
+        <div class="sub-actions">
+          <button class="btn-icon-sm" onclick="useSubmissionAsQuestion(${s.id})">➕ تحويل إلى بنك الأسئلة</button>
+          <button class="btn-icon-sm danger" onclick="deleteSubmission(${s.id})">🗑️ حذف</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function useSubmissionAsQuestion(id){
+    const s = ADMIN_SUBMISSIONS.find(r=>r.id===id);
+    if(!s) return;
+    openQuestionForm(null);
+    pendingSubmissionId = id;
+    document.getElementById('adminQText').value = s.question_text || '';
+  }
+
+  async function deleteSubmission(id){
+    if(!confirm('هل تريد حذف سؤال هذا الطالب من قائمة الأسئلة الواردة؟')) return;
+    try{
+      const { error } = await supabaseClient.from('question_submissions').delete().eq('id', id);
+      if(error) throw error;
+      await loadAdminSubmissions();
+    }catch(err){
+      console.error('تعذّر حذف سؤال الطالب:', err);
+      alert('تعذّر حذف السؤال: ' + (err.message || 'خطأ غير معروف'));
+    }
   }
 
   function renderAdminTable(){
@@ -2850,6 +2964,7 @@
   }
 
   function openQuestionForm(id){
+    pendingSubmissionId = null;
     fillSelect(document.getElementById('adminQBatch'), BATCHES);
     fillSelect(document.getElementById('adminQSubject'), SUBJECTS);
     fillSelect(document.getElementById('adminQType'), TYPES);
@@ -2903,6 +3018,7 @@
 
   function closeQuestionForm(){
     document.getElementById('adminFormOverlay').hidden = true;
+    pendingSubmissionId = null;
   }
 
   async function saveQuestion(e){
@@ -2944,6 +3060,10 @@
         ({ error } = await supabaseClient.from('questions').insert(payload));
       }
       if(error) throw error;
+      if(pendingSubmissionId){
+        await supabaseClient.from('question_submissions').delete().eq('id', pendingSubmissionId);
+        pendingSubmissionId = null;
+      }
       closeQuestionForm();
       await renderAdminPage();
       await loadQuestions(); // تحديث بنك الأسئلة الظاهر للطلاب فوراً
