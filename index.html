@@ -509,9 +509,6 @@
   .finish-card p{font-size:13.5px;margin-bottom:22px;}
   .finish-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
 
-  .results-toolbar{display:flex;gap:34px;flex-wrap:wrap;margin-bottom:26px;padding-bottom:26px;border-bottom:1px solid var(--line);}
-  .results-toolbar .filter-group{margin-bottom:0;}
-  .results-toolbar label{display:block;font-size:12.5px;font-weight:700;color:var(--slate-soft);margin-bottom:9px;}
 
   .chip-set{display:flex;flex-wrap:wrap;gap:7px;}
   .chip{
@@ -537,9 +534,6 @@
   .tag{padding:4px 11px;border-radius:100px;font-size:11.5px;font-weight:700;}
   .tag.subject{background:var(--cyan-pale);color:var(--cyan-deep);}
   .tag.batch{background:#F1ECFA;color:#7C5CC7;}
-  .tag.diff-easy{background:#E4F6EE;color:var(--green);}
-  .tag.diff-med{background:#FBF0DD;color:var(--amber);}
-  .tag.diff-hard{background:#FAE7E3;color:var(--coral);}
   .tag.type{background:#EEF1F3;color:var(--slate-soft);}
   .q-card h4{font-size:15.5px;font-weight:700;line-height:1.7;color:var(--ink);}
   .q-card h4.q-en, .exam-card h3.q-en{
@@ -706,7 +700,6 @@
     .mode-grid{grid-template-columns:1fr;}
     .lecture-list{grid-template-columns:1fr;}
     .setup-section{padding:20px 16px 24px;}
-    .results-toolbar{gap:20px;}
     .stepper-shell{padding:22px 20px;}
   }
 
@@ -741,8 +734,18 @@
     padding:14px 16px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink);vertical-align:top;
   }
   table.admin-table tr:last-child td{border-bottom:none;}
-  table.admin-table td.q-text-cell{max-width:340px;direction:ltr;text-align:left;color:var(--slate);}
+  table.admin-table td.q-text-cell{max-width:340px;direction:ltr;text-align:right;color:var(--slate);}
   .admin-row-actions{display:flex;gap:8px;white-space:nowrap;}
+  .admin-bulk-bar{
+    display:flex;align-items:center;gap:12px;
+    background:var(--cyan-pale);border:1px solid var(--cyan);border-radius:var(--radius-md);
+    padding:10px 16px;margin-bottom:14px;font-size:13.5px;font-weight:700;color:var(--cyan-deep);
+  }
+  .admin-bulk-bar #adminSelectedCount{margin-inline-end:auto;}
+  table.admin-table td.chk-cell, table.admin-table th.chk-cell{text-align:center;padding-inline-end:0;}
+  .admin-q-checkbox, .admin-lec-checkbox{width:16px;height:16px;cursor:pointer;accent-color:var(--cyan);}
+  .subject-manage-row.selectable{gap:12px;}
+  .subject-manage-row .lec-left{display:flex;align-items:center;gap:12px;}
   .btn-icon-sm{
     border:1.6px solid var(--line);background:var(--card);border-radius:8px;padding:7px 12px;
     font-size:12.5px;font-weight:600;color:var(--slate);transition:border-color .2s, background .2s;
@@ -771,6 +774,23 @@
   .admin-subtab:hover{border-color:var(--cyan);}
   .admin-subtab.active{background:var(--slate);color:#fff;border-color:var(--slate);}
   .admin-subtab .tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;margin-inline-start:6px;border-radius:100px;background:var(--coral);color:#fff;font-size:11px;font-weight:800;font-family:'IBM Plex Mono',monospace;vertical-align:middle;}
+
+  /* ===== Analytics tab ===== */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:34px;}
+  .stat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:20px 20px;display:flex;flex-direction:column;gap:8px;}
+  .stat-card .stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--cyan-pale);font-size:17px;}
+  .stat-card .stat-num{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:var(--ink);direction:ltr;}
+  .stat-card .stat-lbl{font-size:13px;font-weight:600;color:var(--slate-soft);}
+  .analytics-block{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:22px 24px;margin-bottom:20px;}
+  .analytics-block h3{font-size:15.5px;font-weight:800;margin-bottom:16px;}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:11px;}
+  .bar-row .bar-lbl{flex:0 0 130px;font-size:13.5px;font-weight:600;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar-row .bar-track{flex:1;height:10px;border-radius:100px;background:var(--paper);overflow:hidden;}
+  .bar-row .bar-fill{height:100%;border-radius:100px;background:var(--cyan);transition:width .5s ease;}
+  .bar-row .bar-val{flex:0 0 34px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--slate-soft);direction:ltr;text-align:left;}
+  .analytics-empty{text-align:center;color:var(--slate-soft);padding:24px;font-size:14px;}
+  @media (max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.stats-grid{grid-template-columns:1fr;}.bar-row .bar-lbl{flex-basis:96px;}}
   .submission-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
   .submission-card .sub-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px;font-size:12.5px;color:var(--slate-soft);}
   .submission-card .sub-meta b{color:var(--slate);font-weight:700;}
@@ -793,6 +813,13 @@
   .admin-grid-2 .field{margin-bottom:0;}
   .admin-options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
   .admin-options-grid .field{margin-bottom:0;}
+  .admin-options-list{display:flex;flex-direction:column;gap:10px;}
+  .admin-option-row{display:flex;align-items:center;gap:10px;}
+  .admin-option-row .admin-opt-letter{min-width:22px;font-weight:700;color:var(--slate-soft);text-align:center;}
+  .admin-option-row input{flex:1;padding:12px 14px;border-radius:10px;border:1.6px solid var(--line);font-family:inherit;font-size:14px;}
+  .admin-option-row input:focus{outline:none;border-color:var(--cyan);}
+  .admin-option-row .admin-opt-remove{flex:0 0 auto;}
+  .btn-icon-sm[disabled]{opacity:.45;cursor:not-allowed;}
   .admin-form-actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;}
   .btn-cancel{
     background:transparent;border:1.6px solid var(--line);color:var(--slate);padding:13px 26px;
@@ -936,7 +963,7 @@
       <div id="bankLoginGate" class="bank-login-gate" hidden>
         <div class="stage-head">
           <h2>سجّل الدخول لعرض المواد</h2>
-          <p>يجب تسجيل الدخول أولاً لعرض مواد بنك الأسئلة الخاصة بدفعتك.</p>
+          <p>يجب تسجيل الدخول أولاً لعرض مواد بنك الأسئلة.</p>
         </div>
         <button class="btn-primary" onclick="go('login')">تسجيل الدخول</button>
       </div>
@@ -1014,16 +1041,6 @@
 
     <!-- Stage 8: results (classic browse, reached from search) -->
     <div class="stage" id="stageResults" hidden>
-      <div class="results-toolbar">
-        <div class="filter-group">
-          <label>نوع السؤال</label>
-          <div class="chip-set" id="typeFilters"></div>
-        </div>
-        <div class="filter-group">
-          <label>مستوى الصعوبة</label>
-          <div class="chip-set" id="diffFilters"></div>
-        </div>
-      </div>
       <div class="results-bar">
         <span id="resultsCount">— نتيجة</span>
       </div>
@@ -1261,18 +1278,18 @@
     </div>
 
     <div class="admin-subtabs">
+      <button type="button" class="admin-subtab" id="adminTabBtnSubjects" onclick="showAdminTab('subjects')">🧪 المواد الدراسية</button>
+      <button type="button" class="admin-subtab" id="adminTabBtnLectures" onclick="showAdminTab('lectures')">🎓 المحاضرات</button>
       <button type="button" class="admin-subtab active" id="adminTabBtnQuestions" onclick="showAdminTab('questions')">📋 الأسئلة</button>
       <button type="button" class="admin-subtab" id="adminTabBtnSubmissions" onclick="showAdminTab('submissions')">📥 أسئلة الطلاب<span class="tab-badge" id="submissionsBadge" hidden>0</span></button>
-      <button type="button" class="admin-subtab" id="adminTabBtnSubjects" onclick="showAdminTab('subjects')">🧪 المواد الدراسية</button>
+      <button type="button" class="admin-subtab" id="adminTabBtnBatches" onclick="showAdminTab('batches')">🗓️ الدفعات</button>
       <button type="button" class="admin-subtab" id="adminTabBtnTexts" onclick="showAdminTab('texts')">📝 نصوص الموقع</button>
+      <button type="button" class="admin-subtab" id="adminTabBtnAnalytics" onclick="showAdminTab('analytics')">📊 التحليلات</button>
     </div>
 
     <!-- ---- Panel: Questions ---- -->
     <div class="admin-panel active" id="adminPanelQuestions">
       <div class="admin-toolbar">
-        <select id="adminFilterBatch" onchange="renderAdminTable()">
-          <option value="">كل الدفعات</option>
-        </select>
         <select id="adminFilterSubject" onchange="renderAdminTable()">
           <option value="">كل المواد</option>
         </select>
@@ -1280,17 +1297,20 @@
         <span class="admin-count" id="adminCount"></span>
       </div>
 
+      <div class="admin-bulk-bar" id="adminBulkBar" hidden>
+        <span id="adminSelectedCount">0 محدد</span>
+        <button type="button" class="btn-icon-sm" onclick="clearQuestionSelection()">إلغاء التحديد</button>
+        <button type="button" class="btn-icon-sm danger" onclick="deleteSelectedQuestions()">🗑️ حذف المحدد</button>
+      </div>
+
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
+              <th style="width:34px;"><input type="checkbox" id="adminSelectAllQ" onchange="toggleSelectAllQuestions(this.checked)"></th>
               <th>#</th>
-              <th>الدفعة</th>
               <th>المادة</th>
               <th>نص السؤال</th>
-              <th>النوع</th>
-              <th>الصعوبة</th>
-              <th>مقفل</th>
               <th></th>
             </tr>
           </thead>
@@ -1318,6 +1338,43 @@
       <div class="subjects-manage-list" id="subjectsManageList"></div>
     </div>
 
+    <!-- ---- Panel: Batches (الدفعات) ---- -->
+    <div class="admin-panel" id="adminPanelBatches">
+      <div class="form-note" id="adminBatchesMsg" hidden></div>
+      <form class="add-subject-row" onsubmit="addBatch(event)">
+        <input type="text" id="newBatchName" placeholder="اسم الدفعة الجديدة…" required>
+        <button type="submit" class="btn-admin-add" style="flex:0 0 auto;">+ إضافة دفعة</button>
+      </form>
+      <div class="subjects-list-header" id="batchesListHeader" hidden>
+        <button class="btn-icon-sm danger" onclick="deleteAllBatches()">🗑️ حذف كل الدفعات</button>
+      </div>
+      <div class="subjects-manage-list" id="batchesManageList"></div>
+    </div>
+
+    <!-- ---- Panel: Lectures (المحاضرات) ---- -->
+    <div class="admin-panel" id="adminPanelLectures">
+      <div class="form-note" id="adminLecturesMsg" hidden></div>
+      <p style="margin-bottom:14px;">اختر المادة لإدارة محاضراتها: إضافة محاضرة جديدة أو حذف محاضرة موجودة. المحاضرات المحذوفة لا تحذف الأسئلة المرتبطة بها من بنك الأسئلة.</p>
+      <div class="admin-toolbar" style="margin-bottom:16px;">
+        <select id="adminLecturesSubjectSelect" onchange="onAdminLecturesSubjectChange()"></select>
+      </div>
+      <form class="add-subject-row" onsubmit="addLecture(event)">
+        <input type="text" id="newLectureName" placeholder="اسم المحاضرة الجديدة…" required>
+        <button type="submit" class="btn-admin-add" style="flex:0 0 auto;">+ إضافة محاضرة</button>
+      </form>
+      <div class="subjects-list-header" id="lecturesListHeader" hidden style="justify-content:space-between;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--slate);cursor:pointer;">
+          <input type="checkbox" id="adminSelectAllLec" class="admin-lec-checkbox" onchange="toggleSelectAllLectures2(this.checked)">
+          تحديد الكل
+        </label>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-icon-sm danger" id="deleteSelectedLecturesBtn" onclick="deleteSelectedLectures()" disabled>🗑️ حذف المحدد (<span id="lecSelectedCount">0</span>)</button>
+          <button class="btn-icon-sm danger" onclick="deleteAllLecturesForSubject()">🗑️ حذف كل محاضرات هذه المادة</button>
+        </div>
+      </div>
+      <div class="subjects-manage-list" id="lecturesManageList"></div>
+    </div>
+
     <!-- ---- Panel: Site texts (نصوص الموقع) ---- -->
     <div class="admin-panel" id="adminPanelTexts">
       <div class="form-note" id="adminTextsMsg" hidden></div>
@@ -1326,6 +1383,11 @@
       <div class="sitetext-save-bar">
         <button type="button" class="btn-admin-add" onclick="saveAllSiteTexts()">💾 حفظ كل التعديلات</button>
       </div>
+    </div>
+
+    <!-- ---- Panel: Analytics (التحليلات) ---- -->
+    <div class="admin-panel" id="adminPanelAnalytics">
+      <div id="analyticsContent"></div>
     </div>
   </div>
 </section>
@@ -1339,15 +1401,10 @@
       <div class="form-note" id="adminFormMsg" hidden></div>
       <input type="hidden" id="adminQId">
 
-      <div class="admin-grid-2" style="margin-bottom:16px;">
-        <div class="field">
-          <label for="adminQBatch">الدفعة</label>
-          <select id="adminQBatch" required></select>
-        </div>
-        <div class="field">
-          <label for="adminQSubject">المادة</label>
-          <select id="adminQSubject" required onchange="syncAdminLectureOptions()"></select>
-        </div>
+      <input type="hidden" id="adminQBatch">
+      <div class="field" style="margin-bottom:16px;">
+        <label for="adminQSubject">المادة</label>
+        <select id="adminQSubject" required onchange="syncAdminLectureOptions()"></select>
       </div>
 
       <div class="admin-grid-2" style="margin-bottom:16px;">
@@ -1365,48 +1422,20 @@
         </div>
       </div>
 
-      <div class="admin-grid-2" style="margin-bottom:16px;">
-        <div class="field">
-          <label for="adminQType">نمط السؤال</label>
-          <select id="adminQType"></select>
-        </div>
-        <div class="field">
-          <label for="adminQDiff">مستوى الصعوبة</label>
-          <select id="adminQDiff"></select>
-        </div>
-      </div>
-
-      <div class="field" style="margin-bottom:16px;">
-        <label style="display:flex;align-items:center;gap:8px;font-weight:600;">
-          <input type="checkbox" id="adminQLocked" style="width:auto;">
-          سؤال مقفل (يظهر فقط للطلاب المسجّلين دخولهم)
-        </label>
-      </div>
-
       <div class="field" style="margin-bottom:16px;">
         <label for="adminQText">نص السؤال (بالإنجليزي)</label>
         <textarea id="adminQText" dir="ltr" rows="3" required style="width:100%;padding:12px 14px;border-radius:10px;border:1.6px solid var(--line);font-family:inherit;font-size:14px;resize:vertical;"></textarea>
       </div>
 
-      <div class="admin-options-grid">
-        <div class="field"><label for="adminQOptA">Option A</label><input id="adminQOptA" type="text" dir="ltr"></div>
-        <div class="field"><label for="adminQOptB">Option B</label><input id="adminQOptB" type="text" dir="ltr"></div>
-        <div class="field"><label for="adminQOptC">Option C</label><input id="adminQOptC" type="text" dir="ltr"></div>
-        <div class="field"><label for="adminQOptD">Option D</label><input id="adminQOptD" type="text" dir="ltr"></div>
-        <div class="field"><label for="adminQOptE">Option E</label><input id="adminQOptE" type="text" dir="ltr"></div>
-        <div class="field">
-          <label for="adminQCorrect">الإجابة الصحيحة</label>
-          <select id="adminQCorrect" dir="ltr">
-            <option value="">—</option>
-            <option value="A">A</option><option value="B">B</option><option value="C">C</option>
-            <option value="D">D</option><option value="E">E</option>
-          </select>
-        </div>
+      <div class="field" style="margin-bottom:16px;">
+        <label>خيارات الإجابة (Options)</label>
+        <div class="admin-options-list" id="adminOptionsList"></div>
+        <button type="button" class="btn-icon-sm" id="adminAddOptionBtn" onclick="addAdminOption()" style="margin-top:4px;">+ إضافة خيار</button>
       </div>
 
       <div class="field" style="margin-bottom:16px;">
-        <label for="adminQModelAnswer">الإجابة النموذجية (للأسئلة المقالية/الحالات السريرية)</label>
-        <textarea id="adminQModelAnswer" dir="ltr" rows="2" style="width:100%;padding:12px 14px;border-radius:10px;border:1.6px solid var(--line);font-family:inherit;font-size:14px;resize:vertical;"></textarea>
+        <label for="adminQCorrect">الإجابة الصحيحة</label>
+        <select id="adminQCorrect" dir="ltr"></select>
       </div>
 
       <div class="field" style="margin-bottom:0;">
@@ -1497,7 +1526,7 @@
     const link = document.getElementById('authNavLink');
     if(link) link.textContent = currentSession ? 'تسجيل الخروج' : 'تسجيل الدخول';
     const studentLink = document.getElementById('studentNavLink');
-    if(studentLink) studentLink.hidden = !currentSession;
+    if(studentLink) studentLink.hidden = !currentSession || isAdmin;
     const adminLink = document.getElementById('adminNavLink');
     if(adminLink) adminLink.hidden = !isAdmin;
     const meta = currentSession && currentSession.user && currentSession.user.user_metadata;
@@ -1657,6 +1686,21 @@
       if(errBox){ errBox.textContent = msg; errBox.hidden = false; }
       else alert(msg);
       return;
+    }
+
+    // نحفظ الاسم/الدفعة/الهاتف في جدول profiles أيضاً (وليس فقط في user_metadata) حتى تتمكن
+    // لوحة التحكم من حساب عدد الطلاب المسجّلين وتوزيعهم على الدفعات — لا نوقف عملية التسجيل لو فشل هذا.
+    if(data.user){
+      try{
+        await supabaseClient.from('profiles').upsert({
+          id: data.user.id,
+          full_name: name,
+          phone: normalizePhone(phone),
+          batch
+        });
+      }catch(err){
+        console.error('تعذّر حفظ بيانات الطالب (الاسم/الدفعة) في جدول profiles — تحقق من وجود أعمدة full_name/phone/batch فيه:', err);
+      }
     }
 
     // If email confirmation is disabled in Supabase, signUp returns an active session
@@ -1854,6 +1898,18 @@
     currentSession.user = data.user;
     pendingAvatarFile = null;
     applyFontSize(fontSize);
+
+    // مزامنة الاسم/الدفعة/الهاتف مع جدول profiles أيضاً (لحساب عدد الطلاب وتوزيعهم على الدفعات في لوحة التحكم)
+    try{
+      await supabaseClient.from('profiles').upsert({
+        id: currentSession.user.id,
+        full_name: name,
+        phone: newPhone,
+        batch
+      });
+    }catch(err){
+      console.error('تعذّر مزامنة بيانات الطالب مع جدول profiles:', err);
+    }
     showStudentMsg('تم حفظ التعديلات بنجاح.', false);
   }
 
@@ -1903,6 +1959,7 @@
   /* ---------- routing ---------- */
   function go(view){
     if((view==='student' || view==='student-settings') && !currentSession) view = 'login';
+    if((view==='student' || view==='student-settings') && isAdmin) view = 'admin';
     if(view==='admin' && !currentSession) view = 'login';
     if(view==='admin' && currentSession && !isAdmin) view = 'home';
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -1975,6 +2032,7 @@
       await loadSubjects();
       renderAdminSubjects();
       renderAdminPage();
+      renderHomeStats();
     }catch(err){
       console.error('تعذّر إضافة المادة:', err);
       msg.textContent = 'تعذّر إضافة المادة: ' + (err.message || 'تأكد من إنشاء جدول subjects في Supabase.');
@@ -1990,6 +2048,7 @@
       await loadSubjects();
       renderAdminSubjects();
       renderAdminPage();
+      renderHomeStats();
     }catch(err){
       console.error('تعذّر حذف المادة:', err);
       alert('تعذّر حذف المادة: ' + (err.message || 'خطأ غير معروف'));
@@ -2006,6 +2065,7 @@
       await loadSubjects();
       renderAdminSubjects();
       renderAdminPage();
+      renderHomeStats();
     }catch(err){
       console.error('تعذّر حذف المواد:', err);
       alert('تعذّر حذف المواد: ' + (err.message || 'خطأ غير معروف'));
@@ -2029,6 +2089,266 @@
         <span>${s.name}</span>
         <button class="btn-icon-sm danger" onclick="deleteSubject(${s.id})">حذف</button>
       </div>`).join('');
+  }
+
+  /* ---------- الدفعات (إدارة إضافة/حذف من لوحة التحكم عبر جدول batches) ---------- */
+  async function loadBatches(){
+    try{
+      const { data, error } = await supabaseClient.from('batches').select('id, name').order('id');
+      if(error) throw error;
+      if(data && data.length){
+        ADMIN_BATCHES = data;
+        BATCHES = data.map(r=>r.name);
+      }
+    }catch(err){
+      // جدول batches قد لا يكون موجوداً بعد في Supabase — نستمر بالقائمة الافتراضية أعلاه
+      console.error('تعذّر تحميل الدفعات من Supabase — سيتم استخدام القائمة الافتراضية:', err);
+    }
+  }
+
+  async function addBatch(e){
+    e.preventDefault();
+    const input = document.getElementById('newBatchName');
+    const name = input.value.trim();
+    const msg = document.getElementById('adminBatchesMsg');
+    msg.hidden = true;
+    if(!name) return;
+    try{
+      const { error } = await supabaseClient.from('batches').insert({ name });
+      if(error) throw error;
+      input.value = '';
+      await loadBatches();
+      renderAdminBatches();
+      fillSelect(document.getElementById('signupBatch'), BATCHES);
+      renderHomeStats();
+    }catch(err){
+      console.error('تعذّر إضافة الدفعة:', err);
+      msg.textContent = 'تعذّر إضافة الدفعة: ' + (err.message || 'تأكد من إنشاء جدول batches في Supabase.');
+      msg.className = 'form-note'; msg.style.background = 'var(--coral)'; msg.style.color = '#fff'; msg.hidden = false;
+    }
+  }
+
+  async function deleteBatch(id){
+    if(!confirm('حذف هذه الدفعة؟ حسابات الطلاب المسجّلين بها لن تُحذف، لكنها لن تظهر ضمن قائمة الدفعات بعد الآن.')) return;
+    try{
+      const { error } = await supabaseClient.from('batches').delete().eq('id', id);
+      if(error) throw error;
+      await loadBatches();
+      renderAdminBatches();
+      fillSelect(document.getElementById('signupBatch'), BATCHES);
+      renderHomeStats();
+    }catch(err){
+      console.error('تعذّر حذف الدفعة:', err);
+      alert('تعذّر حذف الدفعة: ' + (err.message || 'خطأ غير معروف'));
+    }
+  }
+
+  async function deleteAllBatches(){
+    if(!ADMIN_BATCHES.length) return;
+    if(!confirm(`حذف جميع الدفعات (${ADMIN_BATCHES.length})؟ حسابات الطلاب المسجّلين بها لن تُحذف، لكنها لن تظهر ضمن قائمة الدفعات بعد الآن.`)) return;
+    try{
+      const ids = ADMIN_BATCHES.map(b=>b.id);
+      const { error } = await supabaseClient.from('batches').delete().in('id', ids);
+      if(error) throw error;
+      await loadBatches();
+      renderAdminBatches();
+      fillSelect(document.getElementById('signupBatch'), BATCHES);
+      renderHomeStats();
+    }catch(err){
+      console.error('تعذّر حذف الدفعات:', err);
+      alert('تعذّر حذف الدفعات: ' + (err.message || 'خطأ غير معروف'));
+    }
+  }
+
+  function renderAdminBatches(){
+    const list = document.getElementById('batchesManageList');
+    const header = document.getElementById('batchesListHeader');
+    if(!list) return;
+    if(!ADMIN_BATCHES.length){
+      if(header) header.hidden = true;
+      list.innerHTML = `<p style="color:var(--slate-soft);font-size:14px;">
+        لا توجد دفعات بعد. أضف الدفعة الأولى من الحقل أعلاه.
+      </p>`;
+      return;
+    }
+    if(header) header.hidden = false;
+    list.innerHTML = ADMIN_BATCHES.map(b=>`
+      <div class="subject-manage-row">
+        <span>${b.name}</span>
+        <button class="btn-icon-sm danger" onclick="deleteBatch(${b.id})">حذف</button>
+      </div>`).join('');
+  }
+
+  /* ---------- المحاضرات (إدارة إضافة/حذف من لوحة التحكم عبر جدول lectures) ---------- */
+  async function loadLecturesAdmin(){
+    try{
+      const { data, error } = await supabaseClient.from('lectures').select('id, subject, name').order('id');
+      if(error) throw error;
+      ADMIN_LECTURES = data || [];
+    }catch(err){
+      // جدول lectures قد لا يكون موجوداً بعد في Supabase — نستمر بالقوائم الافتراضية
+      console.error('تعذّر تحميل المحاضرات من Supabase — سيتم استخدام القوائم الافتراضية:', err);
+      ADMIN_LECTURES = [];
+    }
+    rebuildLecturesMap();
+  }
+
+  function rebuildLecturesMap(){
+    LECTURES = {};
+    SUBJECTS.forEach(subject=>{
+      const dbList = ADMIN_LECTURES.filter(l=>l.subject===subject).map(l=>l.name);
+      LECTURES[subject] = dbList.length ? dbList : (DEFAULT_LECTURES[subject] || []);
+    });
+  }
+
+  async function addLecture(e){
+    e.preventDefault();
+    const input = document.getElementById('newLectureName');
+    const name = input.value.trim();
+    const subject = document.getElementById('adminLecturesSubjectSelect').value;
+    const msg = document.getElementById('adminLecturesMsg');
+    msg.hidden = true;
+    if(!name || !subject) return;
+    try{
+      const { error } = await supabaseClient.from('lectures').insert({ subject, name });
+      if(error) throw error;
+      input.value = '';
+      await loadLecturesAdmin();
+      renderAdminLectures();
+      renderAdminPage();
+    }catch(err){
+      console.error('تعذّر إضافة المحاضرة:', err);
+      msg.textContent = 'تعذّر إضافة المحاضرة: ' + (err.message || 'تأكد من إنشاء جدول lectures في Supabase.');
+      msg.className = 'form-note'; msg.style.background = 'var(--coral)'; msg.style.color = '#fff'; msg.hidden = false;
+    }
+  }
+
+  async function deleteLecture(id){
+    if(!confirm('حذف هذه المحاضرة؟ الأسئلة المرتبطة بها في بنك الأسئلة لن تُحذف، لكنها لن تظهر ضمن قائمة المحاضرات بعد الآن.')) return;
+    try{
+      const { error } = await supabaseClient.from('lectures').delete().eq('id', id);
+      if(error) throw error;
+      await loadLecturesAdmin();
+      renderAdminLectures();
+      renderAdminPage();
+    }catch(err){
+      console.error('تعذّر حذف المحاضرة:', err);
+      alert('تعذّر حذف المحاضرة: ' + (err.message || 'خطأ غير معروف'));
+    }
+  }
+
+  async function deleteAllLecturesForSubject(){
+    const subject = adminLecturesSubject;
+    const rows = ADMIN_LECTURES.filter(l=>l.subject===subject);
+    if(!rows.length) return;
+    if(!confirm(`حذف جميع محاضرات "${subject}" (${rows.length})؟ الأسئلة المرتبطة بها في بنك الأسئلة لن تُحذف.`)) return;
+    try{
+      const ids = rows.map(r=>r.id);
+      const { error } = await supabaseClient.from('lectures').delete().in('id', ids);
+      if(error) throw error;
+      ADMIN_SELECTED_LEC_IDS.clear();
+      await loadLecturesAdmin();
+      renderAdminLectures();
+      renderAdminPage();
+    }catch(err){
+      console.error('تعذّر حذف محاضرات المادة:', err);
+      alert('تعذّر حذف المحاضرات: ' + (err.message || 'خطأ غير معروف'));
+    }
+  }
+
+  const ADMIN_SELECTED_LEC_IDS = new Set();
+
+  function toggleLectureSelected(id, checked){
+    if(checked) ADMIN_SELECTED_LEC_IDS.add(id); else ADMIN_SELECTED_LEC_IDS.delete(id);
+    updateLectureBulkControls();
+  }
+
+  function toggleSelectAllLectures2(checked){
+    const rows = ADMIN_LECTURES.filter(l=>l.subject===adminLecturesSubject);
+    rows.forEach(r=>{ if(checked) ADMIN_SELECTED_LEC_IDS.add(r.id); else ADMIN_SELECTED_LEC_IDS.delete(r.id); });
+    document.querySelectorAll('#lecturesManageList .admin-lec-checkbox').forEach(cb=>{ cb.checked = checked; });
+    updateLectureBulkControls();
+  }
+
+  function updateLectureBulkControls(){
+    const rows = ADMIN_LECTURES.filter(l=>l.subject===adminLecturesSubject);
+    const n = rows.filter(r=>ADMIN_SELECTED_LEC_IDS.has(r.id)).length;
+    const countEl = document.getElementById('lecSelectedCount');
+    const btn = document.getElementById('deleteSelectedLecturesBtn');
+    const selectAll = document.getElementById('adminSelectAllLec');
+    if(countEl) countEl.textContent = n;
+    if(btn) btn.disabled = n === 0;
+    if(selectAll) selectAll.checked = rows.length > 0 && n === rows.length;
+  }
+
+  async function deleteSelectedLectures(){
+    const rows = ADMIN_LECTURES.filter(l=>l.subject===adminLecturesSubject && ADMIN_SELECTED_LEC_IDS.has(l.id));
+    if(!rows.length) return;
+    if(!confirm(`حذف ${rows.length} محاضرة محددة؟ الأسئلة المرتبطة بها في بنك الأسئلة لن تُحذف.`)) return;
+    try{
+      const ids = rows.map(r=>r.id);
+      const { error } = await supabaseClient.from('lectures').delete().in('id', ids);
+      if(error) throw error;
+      ids.forEach(id=>ADMIN_SELECTED_LEC_IDS.delete(id));
+      await loadLecturesAdmin();
+      renderAdminLectures();
+      renderAdminPage();
+    }catch(err){
+      console.error('تعذّر حذف المحاضرات المحددة:', err);
+      alert('تعذّر حذف المحاضرات: ' + (err.message || 'خطأ غير معروف'));
+    }
+  }
+
+  function onAdminLecturesSubjectChange(){
+    adminLecturesSubject = document.getElementById('adminLecturesSubjectSelect').value || null;
+    renderAdminLectures();
+  }
+
+  function renderAdminLectures(){
+    const sel = document.getElementById('adminLecturesSubjectSelect');
+    if(!sel) return;
+    const signature = SUBJECTS.join('|');
+    if(sel.dataset.built !== signature){
+      fillSelect(sel, SUBJECTS);
+      sel.dataset.built = signature;
+    }
+    if(!adminLecturesSubject || !SUBJECTS.includes(adminLecturesSubject)){
+      adminLecturesSubject = SUBJECTS[0] || null;
+    }
+    if(adminLecturesSubject) sel.value = adminLecturesSubject;
+
+    const list = document.getElementById('lecturesManageList');
+    const header = document.getElementById('lecturesListHeader');
+    if(!list) return;
+
+    if(!adminLecturesSubject){
+      if(header) header.hidden = true;
+      list.innerHTML = `<p style="color:var(--slate-soft);font-size:14px;">أضف مادة أولاً من تبويب "المواد الدراسية".</p>`;
+      return;
+    }
+
+    const rows = ADMIN_LECTURES.filter(l=>l.subject===adminLecturesSubject);
+    // احذف من التحديد أي محاضرة لم تعد موجودة
+    Array.from(ADMIN_SELECTED_LEC_IDS).forEach(id=>{ if(!ADMIN_LECTURES.some(l=>l.id===id)) ADMIN_SELECTED_LEC_IDS.delete(id); });
+    if(!rows.length){
+      if(header) header.hidden = true;
+      const defaults = DEFAULT_LECTURES[adminLecturesSubject] || [];
+      list.innerHTML = defaults.length
+        ? `<p style="color:var(--slate-soft);font-size:14px;margin-bottom:10px;">لا توجد محاضرات مخصّصة بعد لهذه المادة، وتُعرض القائمة الافتراضية التالية للطلاب حالياً:</p>` +
+          defaults.map(name=>`<div class="subject-manage-row"><span>${name}</span><span class="pill-tiny">افتراضي</span></div>`).join('')
+        : `<p style="color:var(--slate-soft);font-size:14px;">لا توجد محاضرات بعد لهذه المادة. أضف المحاضرة الأولى من الحقل أعلاه.</p>`;
+      return;
+    }
+    if(header) header.hidden = false;
+    list.innerHTML = rows.map(l=>`
+      <div class="subject-manage-row selectable">
+        <span class="lec-left">
+          <input type="checkbox" class="admin-lec-checkbox" data-id="${l.id}" onchange="toggleLectureSelected(${l.id}, this.checked)" ${ADMIN_SELECTED_LEC_IDS.has(l.id)?'checked':''}>
+          ${l.name}
+        </span>
+        <button class="btn-icon-sm danger" onclick="deleteLecture(${l.id})">حذف</button>
+      </div>`).join('');
+    updateLectureBulkControls();
   }
 
   /* ---------- site texts (نصوص الموقع) ---------- */
@@ -2113,19 +2433,118 @@
     }
   }
 
-  function showAdminTab(tab){
-    ['questions','submissions','subjects','texts'].forEach(t=>{
+  async function showAdminTab(tab){
+    ['questions','submissions','subjects','batches','lectures','texts','analytics'].forEach(t=>{
       document.getElementById('adminPanel' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t===tab);
       document.getElementById('adminTabBtn' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t===tab);
     });
     document.getElementById('adminAddQuestionBtn').hidden = tab!=='questions';
     if(tab==='submissions') loadAdminSubmissions();
     if(tab==='subjects') renderAdminSubjects();
+    if(tab==='batches') renderAdminBatches();
+    if(tab==='lectures') renderAdminLectures();
     if(tab==='texts') renderSiteTextsAdmin();
+    if(tab==='analytics'){
+      renderAdminAnalytics(); // نعرض الأرقام المتوفرة فوراً (بدون عدد الطلاب) ريثما يصل الرد من الخادم
+      await loadAdminStudents();
+      renderAdminAnalytics();
+    }
   }
-  const BATCHES = ["آيفوري","لومينا"];
-  const TYPES = ["اختيار من متعدد","مقالي","حالة سريرية"];
-  const DIFFS = [{k:"سهل",cls:"diff-easy"},{k:"متوسط",cls:"diff-med"},{k:"صعب",cls:"diff-hard"}];
+
+  /* ---------- التحليلات (إحصاءات بنك الأسئلة) ---------- */
+  function renderAdminAnalytics(){
+    const wrap = document.getElementById('analyticsContent');
+    if(!wrap) return;
+
+    const totalQuestions = ADMIN_QUESTIONS.length;
+    const totalSubjects = SUBJECTS.length;
+    const totalLectures = ADMIN_LECTURES.length;
+    const totalSubmissions = ADMIN_SUBMISSIONS.length;
+    const totalStudents = ADMIN_STUDENTS.length;
+    const quizCount = ADMIN_QUESTIONS.filter(q=>q.kind==='quiz').length;
+    const archiveCount = ADMIN_QUESTIONS.filter(q=>q.kind!=='quiz').length;
+
+    // توزيع الطلاب على الدفعات
+    const byStudentBatch = {};
+    ADMIN_STUDENTS.forEach(s=>{ const k = s.batch || 'غير محدد'; byStudentBatch[k] = (byStudentBatch[k]||0) + 1; });
+    const studentBatchRows = Object.entries(byStudentBatch).sort((a,b)=>b[1]-a[1]);
+    const maxStudentBatchCount = Math.max(...studentBatchRows.map(r=>r[1]), 1);
+
+    const barsHtml = (rows, max) => rows.map(([label, count])=>`
+      <div class="bar-row">
+        <span class="bar-lbl" title="${label}">${label}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+        <span class="bar-val">${count}</span>
+      </div>`).join('');
+
+    const studentsCard = `<div class="stat-card"><div class="stat-icon">👥</div><div class="stat-num">${totalStudents}</div><div class="stat-lbl">عدد الطلاب المسجّلين</div></div>`;
+
+    const studentsBatchBlock = `
+      <div class="analytics-block">
+        <h3>👥 الطلاب حسب الدفعة</h3>
+        ${adminStudentsError
+          ? `<div class="analytics-empty">${adminStudentsError}</div>`
+          : (studentBatchRows.length ? barsHtml(studentBatchRows, maxStudentBatchCount) : '<div class="analytics-empty">لا يوجد طلاب مسجّلون بعد.</div>')}
+      </div>`;
+
+    if(totalQuestions === 0){
+      wrap.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-num">0</div><div class="stat-lbl">إجمالي الأسئلة</div></div>
+          <div class="stat-card"><div class="stat-icon">🧪</div><div class="stat-num">${totalSubjects}</div><div class="stat-lbl">عدد المواد</div></div>
+          <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-num">${totalLectures}</div><div class="stat-lbl">عدد المحاضرات</div></div>
+          <div class="stat-card"><div class="stat-icon">📥</div><div class="stat-num">${totalSubmissions}</div><div class="stat-lbl">أسئلة واردة من الطلاب</div></div>
+          ${studentsCard}
+        </div>
+        ${studentsBatchBlock}
+        <div class="analytics-empty">لا توجد أسئلة في بنك الأسئلة بعد لعرض تحليلات تفصيلية عنها.</div>`;
+      return;
+    }
+
+    // توزيع الأسئلة على المواد
+    const bySubject = {};
+    ADMIN_QUESTIONS.forEach(q=>{ const k = q.subject || 'غير محدد'; bySubject[k] = (bySubject[k]||0) + 1; });
+    const subjectRows = Object.entries(bySubject).sort((a,b)=>b[1]-a[1]);
+    const maxSubjectCount = Math.max(...subjectRows.map(r=>r[1]), 1);
+
+    // توزيع الأسئلة على الدفعات
+    const byBatch = {};
+    ADMIN_QUESTIONS.forEach(q=>{ const k = q.batch || 'غير محدد'; byBatch[k] = (byBatch[k]||0) + 1; });
+    const batchRows = Object.entries(byBatch).sort((a,b)=>b[1]-a[1]);
+    const maxBatchCount = Math.max(...batchRows.map(r=>r[1]), 1);
+
+    wrap.innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-num">${totalQuestions}</div><div class="stat-lbl">إجمالي الأسئلة</div></div>
+        <div class="stat-card"><div class="stat-icon">🧪</div><div class="stat-num">${totalSubjects}</div><div class="stat-lbl">عدد المواد</div></div>
+        <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-num">${totalLectures}</div><div class="stat-lbl">عدد المحاضرات</div></div>
+        <div class="stat-card"><div class="stat-icon">📥</div><div class="stat-num">${totalSubmissions}</div><div class="stat-lbl">أسئلة واردة من الطلاب</div></div>
+        ${studentsCard}
+      </div>
+
+      <div class="analytics-block">
+        <h3>📋 الأسئلة حسب النوع</h3>
+        ${barsHtml([['الأرشيف', archiveCount], ['Quiz Time', quizCount]], Math.max(archiveCount, quizCount, 1))}
+      </div>
+
+      <div class="analytics-block">
+        <h3>🧪 الأسئلة حسب المادة</h3>
+        ${subjectRows.length ? barsHtml(subjectRows, maxSubjectCount) : '<div class="analytics-empty">لا توجد بيانات.</div>'}
+      </div>
+
+      <div class="analytics-block">
+        <h3>🗓️ الأسئلة حسب الدفعة</h3>
+        ${batchRows.length ? barsHtml(batchRows, maxBatchCount) : '<div class="analytics-empty">لا توجد بيانات.</div>'}
+      </div>
+
+      ${studentsBatchBlock}
+    `;
+  }
+  /* الدفعات — تُدار الآن من جدول public.batches في Supabase مع الإبقاء على
+     هذه القائمة كقيمة افتراضية إن لم يكن الجدول موجوداً أو كان فارغاً بعد */
+  let BATCHES = ["آيفوري","لومينا"];
+  let ADMIN_BATCHES = []; // [{id, name}] — تُستخدم في لوحة التحكم لإضافة/حذف الدفعات
+  const QUESTION_TYPE = "اختيار من متعدد"; // نمط السؤال أصبح ثابتاً: اختيار من متعدد فقط
   const NATURES = [
     {k:"archive", label:"الأرشيف", desc:"أسئلة امتحانات ودفعات سابقة موثّقة من اللجنة."},
     {k:"quiz",    label:"Quiz Time", desc:"أسئلة تدريبية سريعة لمراجعة المحاضرة أوّلاً بأول."},
@@ -2136,7 +2555,9 @@
     {k:"exam",  label:"Exam Mood",  desc:"محاكاة اختبار حقيقي: سؤال واحد في كل مرة بدون إجابات، حتى تنهي الاختبار وتراجعه."},
   ];
 
-  const LECTURES = {
+  /* المحاضرات — تُدار الآن من جدول public.lectures في Supabase (إن وُجد) مع الإبقاء على
+     القوائم التالية كقيمة افتراضية لأي مادة ليس لها محاضرات مخصّصة بعد في لوحة التحكم */
+  const DEFAULT_LECTURES = {
     "Oral Surgery": ["استخراج الأسنان المطمورة","كسور الفكين","الأورام الفموية","التخدير الموضعي والعام"],
     "Prosthodontics": ["التعويضات الثابتة","التعويضات المتحركة الجزئية","أطقم الأسنان الكاملة","الزرعات السنية"],
     "Endodontics": ["تشريح القنوات الجذرية","تشخيص أمراض اللب","حشو القنوات الجذرية","إعادة معالجة القنوات"],
@@ -2151,6 +2572,9 @@
     "Radiology": ["الأشعة البانورامية","الأشعة اللقمية","تفسير الآفات العظمية","مبادئ الحماية الإشعاعية"],
     "Oral Medicine": ["أمراض الغشاء المخاطي الفموي","التشخيص التفريقي للقرح الفموية","الأمراض الفطرية والفيروسية","المظاهر الفموية للأمراض الجهازية"],
   };
+  let LECTURES = { ...DEFAULT_LECTURES }; // subject -> array of lecture names (تُعاد بناؤها بعد تحميل جدول lectures)
+  let ADMIN_LECTURES = []; // [{id, subject, name}] — تُستخدم في لوحة التحكم لإضافة/حذف المحاضرات
+  let adminLecturesSubject = null;
 
   /* الأسئلة الآن تُجلب من جدول public.questions في Supabase بدلاً من مصفوفة ثابتة */
   let QUESTIONS = [];
@@ -2166,8 +2590,8 @@
     const elS = document.getElementById('statSubjects');
     const elB = document.getElementById('statBatches');
     if(!elQ && !elS && !elB) return;
-    const subjectsCount = new Set(QUESTIONS.map(q=>q.subject).filter(Boolean)).size;
-    const batchesCount = new Set(QUESTIONS.map(q=>q.batch).filter(Boolean)).size;
+    const subjectsCount = SUBJECTS.length;
+    const batchesCount = BATCHES.length;
     if(elQ) elQ.textContent = toArabicDigits(QUESTIONS.length);
     if(elS) elS.textContent = toArabicDigits(subjectsCount);
     if(elB) elB.textContent = toArabicDigits(batchesCount);
@@ -2176,7 +2600,7 @@
   async function loadQuestions(){
     // عمود model_answer وأعمدة الخيارات الخمسة (option_a..option_e) والتفسير (explanation)
     // غير مسموح بقراءتها إلا للمستخدم المسجّل دخوله (صلاحيات على مستوى العمود في Supabase)
-    const baseCols = "id, subject, batch, lecture, kind, type, diff, locked, question_text, created_at";
+    const baseCols = "id, subject, batch, lecture, kind, locked, question_text, created_at";
     const answerCols = "model_answer, option_a, option_b, option_c, option_d, option_e, correct_option, explanation";
     const columns = currentSession ? `${baseCols}, ${answerCols}` : baseCols;
     let data = null, error = null;
@@ -2204,7 +2628,14 @@
     }
     QUESTIONS = (data||[]).map(row=>{
       const rawOpts = [row.option_a, row.option_b, row.option_c, row.option_d, row.option_e];
-      const hasOptions = rawOpts.every(o=> o!=null && String(o).trim()!=="");
+      // نحدد آخر خيار مُعبّى فعلياً (من اليمين) بدل اشتراط تعبية الخيارات الخمسة كاملة —
+      // هذا هو سبب ظهور الأسئلة كـ"مقالية" حتى لو كانت اختيار من متعدد لكنها بأقل من 5 خيارات (مثلاً A-D فقط)
+      let filledCount = 0;
+      for(let idx = rawOpts.length - 1; idx >= 0; idx--){
+        if(rawOpts[idx]!=null && String(rawOpts[idx]).trim()!==""){ filledCount = idx + 1; break; }
+      }
+      const trimmedOpts = rawOpts.slice(0, filledCount);
+      const hasOptions = filledCount >= 2 && trimmedOpts.every(o=> o!=null && String(o).trim()!=="");
       let correctIndex = null;
       if(row.correct_option!=null){
         correctIndex = typeof row.correct_option==='number'
@@ -2218,13 +2649,11 @@
         batch: row.batch,
         lecture: row.lecture || (LECTURES[row.subject]||["عام"])[0],
         kind: row.kind,
-        type: row.type,
-        diff: row.diff,
         // إذا كان المستخدم مسجّلاً دخوله، تُفتح كل الأسئلة المقفلة تلقائياً
         locked: !!row.locked && !currentSession,
         text: row.question_text,
         modelAnswer: row.model_answer || null,
-        options: hasOptions ? rawOpts : null,       // 5 خيارات بالإنجليزي (Option A–E)
+        options: hasOptions ? trimmedOpts : null,   // خيارات بالإنجليزي (من 2 إلى 5 خيارات: Option A–E)
         correctIndex: hasOptions ? correctIndex : null,
         explanation: row.explanation || null,        // تفسير الإجابة بالإنجليزي
       };
@@ -2232,72 +2661,25 @@
     renderHomeStats();
   }
 
-  /* synthesize extra lecture-tagged practice questions so every lecture has a workable pool for the wizard */
+  /* بنك الأسئلة الفعلي فقط — بدون أي أسئلة تجريبية/عيّنة */
   let POOL = [];
   function buildPool(){
     POOL = QUESTIONS.slice();
-    let uid = 0;
-    SUBJECTS.forEach(subject=>{
-      const topics = LECTURES[subject] || [];
-      const batch = (QUESTIONS.find(q=>q.subject===subject)||{}).batch || BATCHES[0];
-      topics.forEach((topic, li)=>{
-        ['archive','quiz'].forEach(kind=>{
-          const perLecture = li===0 ? 4 : 6; // lecture 0 already has some real questions
-          for(let n=1; n<=perLecture; n++){
-            uid++;
-            const correctIndex = uid % 5;
-            const letters = ['A','B','C','D','E'];
-            POOL.push({
-              subject, batch, lecture: topic, kind,
-              type: TYPES[uid % TYPES.length],
-              diff: DIFFS[uid % DIFFS.length].k,
-              locked: (uid % 3 !== 0) && !currentSession,
-              text: `Sample question ${n} on "${topic}" (${subject}).`,
-              options: letters.map(l=>`${topic} — sample option ${l}`),
-              correctIndex,
-              explanation: `Sample explanation: option ${letters[correctIndex]} is correct for this "${topic}" question. Replace with the real rationale once available.`,
-            });
-          }
-        });
-      });
-    });
   }
 
   const state = {
-    batch:null, subject:null, type:null, diff:null, query:"",
+    batch:null, subject:null, query:"",
     step:'batch', nature:null, lectures:[], count:10, mode:null,
     session:null,
   };
 
-  function buildChipSet(containerId, items, stateKey){
-    const el = document.getElementById(containerId);
-    el.innerHTML = items.map(item=>{
-      const label = typeof item==='string' ? item : item.k;
-      return `<button class="chip" data-val="${label}" onclick="toggleFilter('${stateKey}','${label}', this)">${label}</button>`;
-    }).join('');
-  }
-  buildChipSet('typeFilters', TYPES, 'type');
-  buildChipSet('diffFilters', DIFFS, 'diff');
-
-  function toggleFilter(key, val, btn){
-    if(state[key]===val){ state[key]=null; btn.classList.remove('active'); }
-    else{
-      state[key]=val;
-      btn.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-      btn.classList.add('active');
-    }
-    renderBank();
-  }
-
   function resetFilters(){
-    state.batch=state.subject=state.type=state.diff=null;
+    state.batch=state.subject=null;
     state.query="";
     state.step='batch'; state.nature=null; state.lectures=[]; state.count=10; state.mode=null; state.session=null;
     document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
     renderBank();
   }
-
-  function diffClass(diff){ return (DIFFS.find(d=>d.k===diff)||{}).cls || ''; }
 
   function selectSubject(subject){
     state.subject = subject;
@@ -2319,7 +2701,6 @@
   function poolForSubject(){
     return POOL.filter(q=>{
       if(q.subject!==state.subject) return false;
-      if(q.batch!==state.batch) return false;
       if(state.nature && state.nature!=='all' && q.kind!==state.nature) return false;
       return true;
     });
@@ -2492,7 +2873,7 @@
   /* ---------- MCQ rendering: 5-option circle system, English, left-to-right ---------- */
   const OPT_LETTERS = ['A','B','C','D','E'];
   function renderOptionsHtml(q, {selectedIndex=null, revealed=false, clickHandler=null, clickExtraArg=null} = {}){
-    if(!q.options || q.options.length!==5) return '';
+    if(!q.options || q.options.length<2) return '';
     const rows = q.options.map((opt, idx)=>{
       let cls = 'mcq-option';
       if(revealed){
@@ -2544,7 +2925,7 @@
       const i = sess.cursor;
       const q = sess.questions[i];
       const revealed = sess.revealed.has(i);
-      const isMcq = q.options && q.options.length===5;
+      const isMcq = q.options && q.options.length>=2;
       const pct = Math.round(((sess.cursor+1)/sess.questions.length)*100);
 
       let answerBlock = '';
@@ -2581,11 +2962,11 @@
     if(sess.finished){
       document.getElementById('sessionTitle').textContent = 'انتهى الاختبار — Exam Mood';
       document.getElementById('sessionSubtitle').textContent = 'يمكنك الآن مراجعة الأسئلة مع إظهار الإجابات.';
-      const mcqQs = sess.questions.filter(q=>q.options && q.options.length===5);
+      const mcqQs = sess.questions.filter(q=>q.options && q.options.length>=2);
       let scoreHtml = '';
       if(mcqQs.length>0){
         const correctCount = sess.questions.reduce((acc,q,i)=>{
-          if(q.options && q.options.length===5 && sess.answers[i]===q.correctIndex) return acc+1;
+          if(q.options && q.options.length>=2 && sess.answers[i]===q.correctIndex) return acc+1;
           return acc;
         },0);
         scoreHtml = `<p class="mono" dir="ltr" style="margin-top:6px;font-weight:700;color:var(--cyan-deep);">${correctCount} / ${mcqQs.length} correct</p>`;
@@ -2611,7 +2992,7 @@
         const userAnswer = sess.answers[i];
         const meta = q.locked
           ? `<span class="locked">🔒 سجّل الدخول لعرض الإجابة النموذجية — <a href="#login" onclick="go('login')">تسجيل الدخول</a></span>`
-          : (q.options && q.options.length===5
+          : (q.options && q.options.length>=2
               ? `<div class="mcq-reveal show">${renderOptionsHtml(q,{selectedIndex:userAnswer, revealed:true})}${renderExplanationHtml(q)}${userAnswer==null ? `<div class="explain-box" dir="ltr"><b>Note</b>You did not select an answer for this question.</div>` : ''}</div>`
               : `<div class="reveal-box show">${q.modelAnswer ? q.modelAnswer : 'إجابة نموذجية: راجع ملخص المحاضرة — هذا محتوى تجريبي لغايات العرض.'}</div>`);
         return `
@@ -2630,7 +3011,7 @@
     const q = sess.questions[sess.cursor];
     const pct = Math.round(((sess.cursor+1)/sess.questions.length)*100);
     const selected = sess.answers[sess.cursor];
-    const optionsHtml = q.options && q.options.length===5
+    const optionsHtml = q.options && q.options.length>=2
       ? renderOptionsHtml(q, {selectedIndex: selected, revealed:false, clickHandler:'selectExamOption'})
       : '';
     body.innerHTML = `
@@ -2737,7 +3118,7 @@
   </svg>`;
 
   function renderSubjectStage(){
-    const inBatch = QUESTIONS.filter(q=>q.batch===state.batch);
+    const inBatch = QUESTIONS;
     let subjects = SUBJECTS.slice();
     const searchBox = document.getElementById('subjectSearchInput');
     const query = (searchBox && searchBox.value || '').trim().toLowerCase();
@@ -2767,10 +3148,7 @@
       if(state.query){
         return q.text.includes(state.query) || q.subject.includes(state.query) || q.batch.includes(state.query);
       }
-      if(state.batch && q.batch!==state.batch) return false;
       if(state.subject && q.subject!==state.subject) return false;
-      if(state.type && q.type!==state.type) return false;
-      if(state.diff && q.diff!==state.diff) return false;
       return true;
     });
 
@@ -2783,7 +3161,7 @@
     }
 
     grid.innerHTML = filtered.map((q,i)=>{
-      const num = String(11 + (i % 8) + Math.floor(i/8)*10).padStart(2,'0');
+      const num = String(i+1).padStart(2,'0');
       const meta = q.locked
         ? `<span class="locked">🔒 سجّل الدخول لعرض الإجابة النموذجية — <a href="#login" onclick="go('login')">تسجيل الدخول</a></span>`
         : `<button>عرض الإجابة النموذجية</button>`;
@@ -2820,7 +3198,7 @@
   }
 
   /* ---------- admin dashboard (question management) ---------- */
-  const ADMIN_COLS = "id, subject, batch, lecture, kind, type, diff, locked, question_text, model_answer, option_a, option_b, option_c, option_d, option_e, correct_option, explanation";
+  const ADMIN_COLS = "id, subject, batch, lecture, kind, type, locked, question_text, model_answer, option_a, option_b, option_c, option_d, option_e, correct_option, explanation";
   let ADMIN_QUESTIONS = [];
 
   function fillSelect(el, items, placeholder){
@@ -2841,13 +3219,13 @@
   async function renderAdminPage(){
     if(!isAdmin) return;
     await loadSubjects();
-    const fb = document.getElementById('adminFilterBatch');
+    await loadLecturesAdmin();
     const fs = document.getElementById('adminFilterSubject');
     const prevSubjectFilter = fs.value;
-    if(fb.options.length <= 1) fillSelect(fb, BATCHES, 'كل الدفعات');
     fillSelect(fs, SUBJECTS, 'كل المواد');
     if(SUBJECTS.includes(prevSubjectFilter)) fs.value = prevSubjectFilter;
     renderAdminSubjects();
+    renderAdminLectures();
     await loadAdminQuestions();
     renderAdminTable();
     await loadAdminSubmissions();
@@ -2900,6 +3278,26 @@
     }).join('');
   }
 
+  /* ---------- الطلاب المسجّلون (لعرضهم في تبويب "التحليلات") ---------- */
+  let ADMIN_STUDENTS = [];
+  let adminStudentsError = null; // رسالة توضيحية تُعرض إذا تعذّر جلب بيانات الطلاب (مثلاً عمود batch غير موجود بعد في جدول profiles)
+
+  async function loadAdminStudents(){
+    adminStudentsError = null;
+    try{
+      // نجلب كل الصفوف من profiles باستثناء حساب/حسابات الأدمن، لنحسب عدد الطلاب المسجّلين وتوزيعهم على الدفعات.
+      // ملاحظة: يتطلب هذا أن يسمح RLS الخاص بجدول profiles للأدمن بقراءة كل الصفوف (وليس فقط صفّه هو)،
+      // وأن يحتوي الجدول على عمود batch (يُملأ تلقائياً الآن عند تسجيل/تعديل بيانات أي طالب).
+      const { data, error } = await supabaseClient.from('profiles').select('id, role, batch, full_name');
+      if(error) throw error;
+      ADMIN_STUDENTS = (data || []).filter(p => p.role !== 'admin');
+    }catch(err){
+      console.error('تعذّر تحميل بيانات الطلاب المسجّلين — تحقق من أن جدول profiles يحتوي عمود batch، وأن صلاحيات RLS تسمح للأدمن بقراءة كل الصفوف:', err);
+      ADMIN_STUDENTS = [];
+      adminStudentsError = 'تعذّر تحميل عدد الطلاب: ' + (err.message || 'تأكد من وجود عمود batch في جدول profiles، ومن أن صلاحيات RLS تسمح للأدمن بقراءة كل صفوف الجدول.');
+    }
+  }
+
   function useSubmissionAsQuestion(id){
     const s = ADMIN_SUBMISSIONS.find(r=>r.id===id);
     if(!s) return;
@@ -2920,13 +3318,14 @@
     }
   }
 
+  const ADMIN_SELECTED_Q_IDS = new Set();
+
   function renderAdminTable(){
-    const batchFilter = document.getElementById('adminFilterBatch').value;
     const subjectFilter = document.getElementById('adminFilterSubject').value;
     const q = (document.getElementById('adminSearch').value || '').trim().toLowerCase();
 
     const filtered = ADMIN_QUESTIONS.filter(row=>{
-      if(batchFilter && row.batch !== batchFilter) return false;
+      if(subjectFilter && row.subject !== subjectFilter) return false;
       if(subjectFilter && row.subject !== subjectFilter) return false;
       if(q && !String(row.question_text||'').toLowerCase().includes(q)) return false;
       return true;
@@ -2934,27 +3333,91 @@
 
     document.getElementById('adminCount').textContent = filtered.length + ' سؤال';
 
+    // احذف من التحديد أي سؤال لم يعد ضمن النتائج المفلترة/المحذوفة
+    const filteredIds = new Set(filtered.map(r=>r.id));
+    Array.from(ADMIN_SELECTED_Q_IDS).forEach(id=>{ if(!ADMIN_QUESTIONS.some(r=>r.id===id)) ADMIN_SELECTED_Q_IDS.delete(id); });
+
     const body = document.getElementById('adminTableBody');
     if(filtered.length === 0){
-      body.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--slate-soft);padding:28px;">لا توجد أسئلة مطابقة</td></tr>`;
-      return;
+      body.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--slate-soft);padding:28px;">لا توجد أسئلة مطابقة</td></tr>`;
+    }else{
+      body.innerHTML = filtered.map((row, i)=>`
+        <tr>
+          <td class="chk-cell"><input type="checkbox" class="admin-q-checkbox" data-id="${row.id}" onchange="toggleQuestionSelected(${row.id}, this.checked)" ${ADMIN_SELECTED_Q_IDS.has(row.id)?'checked':''}></td>
+          <td class="mono">${i+1}</td>
+          <td>${row.subject || '—'}</td>
+          <td class="q-text-cell">${(row.question_text||'').slice(0,90)}${(row.question_text||'').length>90?'…':''}</td>
+          <td>
+            <div class="admin-row-actions">
+              <button class="btn-icon-sm" onclick="openQuestionForm(${row.id})">تعديل</button>
+              <button class="btn-icon-sm danger" onclick="deleteQuestion(${row.id})">حذف</button>
+            </div>
+          </td>
+        </tr>`).join('');
     }
-    body.innerHTML = filtered.map(row=>`
-      <tr>
-        <td class="mono">${row.id}</td>
-        <td>${row.batch || '—'}</td>
-        <td>${row.subject || '—'}</td>
-        <td class="q-text-cell">${(row.question_text||'').slice(0,90)}${(row.question_text||'').length>90?'…':''}</td>
-        <td>${row.type || '—'}</td>
-        <td>${row.diff || '—'}</td>
-        <td>${row.locked ? '<span class="pill-tiny">🔒 نعم</span>' : '—'}</td>
-        <td>
-          <div class="admin-row-actions">
-            <button class="btn-icon-sm" onclick="openQuestionForm(${row.id})">تعديل</button>
-            <button class="btn-icon-sm danger" onclick="deleteQuestion(${row.id})">حذف</button>
-          </div>
-        </td>
-      </tr>`).join('');
+
+    const selectAll = document.getElementById('adminSelectAllQ');
+    if(selectAll) selectAll.checked = filtered.length > 0 && filtered.every(r=>ADMIN_SELECTED_Q_IDS.has(r.id));
+    updateQuestionBulkBar(filtered);
+  }
+
+  function toggleQuestionSelected(id, checked){
+    if(checked) ADMIN_SELECTED_Q_IDS.add(id); else ADMIN_SELECTED_Q_IDS.delete(id);
+    const filtered = getFilteredAdminQuestions();
+    const selectAll = document.getElementById('adminSelectAllQ');
+    if(selectAll) selectAll.checked = filtered.length > 0 && filtered.every(r=>ADMIN_SELECTED_Q_IDS.has(r.id));
+    updateQuestionBulkBar(filtered);
+  }
+
+  function toggleSelectAllQuestions(checked){
+    const filtered = getFilteredAdminQuestions();
+    filtered.forEach(row=>{
+      if(checked) ADMIN_SELECTED_Q_IDS.add(row.id); else ADMIN_SELECTED_Q_IDS.delete(row.id);
+    });
+    document.querySelectorAll('#adminTableBody .admin-q-checkbox').forEach(cb=>{ cb.checked = checked; });
+    updateQuestionBulkBar(filtered);
+  }
+
+  function clearQuestionSelection(){
+    ADMIN_SELECTED_Q_IDS.clear();
+    renderAdminTable();
+  }
+
+  function getFilteredAdminQuestions(){
+    const subjectFilter = document.getElementById('adminFilterSubject').value;
+    const q = (document.getElementById('adminSearch').value || '').trim().toLowerCase();
+    return ADMIN_QUESTIONS.filter(row=>{
+      if(subjectFilter && row.subject !== subjectFilter) return false;
+      if(subjectFilter && row.subject !== subjectFilter) return false;
+      if(q && !String(row.question_text||'').toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }
+
+  function updateQuestionBulkBar(filtered){
+    const bar = document.getElementById('adminBulkBar');
+    const countEl = document.getElementById('adminSelectedCount');
+    if(!bar || !countEl) return;
+    const n = ADMIN_SELECTED_Q_IDS.size;
+    countEl.textContent = n + ' محدد';
+    bar.hidden = n === 0;
+  }
+
+  async function deleteSelectedQuestions(){
+    const ids = Array.from(ADMIN_SELECTED_Q_IDS);
+    if(!ids.length) return;
+    if(!confirm(`هل أنت متأكد من حذف ${ids.length} سؤال؟ لا يمكن التراجع عن هذا الإجراء.`)) return;
+    try{
+      const { error } = await supabaseClient.from('questions').delete().in('id', ids);
+      if(error) throw error;
+      ADMIN_SELECTED_Q_IDS.clear();
+      await renderAdminPage();
+      await loadQuestions();
+      buildPool();
+    }catch(err){
+      console.error('تعذّر حذف الأسئلة المحددة:', err);
+      alert('تعذّر حذف الأسئلة: ' + (err.message || 'خطأ غير معروف'));
+    }
   }
 
   function syncAdminLectureOptions(){
@@ -2965,10 +3428,8 @@
 
   function openQuestionForm(id){
     pendingSubmissionId = null;
-    fillSelect(document.getElementById('adminQBatch'), BATCHES);
+
     fillSelect(document.getElementById('adminQSubject'), SUBJECTS);
-    fillSelect(document.getElementById('adminQType'), TYPES);
-    fillSelect(document.getElementById('adminQDiff'), DIFFS.map(d=>d.k));
 
     const msg = document.getElementById('adminFormMsg');
     msg.hidden = true; msg.textContent = '';
@@ -2984,17 +3445,12 @@
       syncAdminLectureOptions();
       document.getElementById('adminQLecture').value = row.lecture || '';
       document.getElementById('adminQKind').value = row.kind || 'archive';
-      document.getElementById('adminQType').value = row.type || TYPES[0];
-      document.getElementById('adminQDiff').value = row.diff || DIFFS[0].k;
-      document.getElementById('adminQLocked').checked = !!row.locked;
       document.getElementById('adminQText').value = row.question_text || '';
-      document.getElementById('adminQOptA').value = row.option_a || '';
-      document.getElementById('adminQOptB').value = row.option_b || '';
-      document.getElementById('adminQOptC').value = row.option_c || '';
-      document.getElementById('adminQOptD').value = row.option_d || '';
-      document.getElementById('adminQOptE').value = row.option_e || '';
+      let existingOpts = [row.option_a, row.option_b, row.option_c, row.option_d, row.option_e].map(v=>v || '');
+      let lastFilled = existingOpts.length;
+      while(lastFilled > 2 && !existingOpts[lastFilled-1]) lastFilled--;
+      renderAdminOptionRows(existingOpts.slice(0, lastFilled));
       document.getElementById('adminQCorrect').value = row.correct_option ? String(row.correct_option).toUpperCase() : '';
-      document.getElementById('adminQModelAnswer').value = row.model_answer || '';
       document.getElementById('adminQExplanation').value = row.explanation || '';
     }else{
       document.getElementById('adminFormTitle').textContent = 'إضافة سؤال جديد';
@@ -3004,16 +3460,56 @@
       syncAdminLectureOptions();
       document.getElementById('adminQLecture').value = '';
       document.getElementById('adminQKind').value = 'archive';
-      document.getElementById('adminQType').value = TYPES[0];
-      document.getElementById('adminQDiff').value = DIFFS[0].k;
-      document.getElementById('adminQLocked').checked = false;
       document.getElementById('adminQText').value = '';
-      ['adminQOptA','adminQOptB','adminQOptC','adminQOptD','adminQOptE'].forEach(id2=>document.getElementById(id2).value='');
+      renderAdminOptionRows(['', '', '', '']);
       document.getElementById('adminQCorrect').value = '';
-      document.getElementById('adminQModelAnswer').value = '';
       document.getElementById('adminQExplanation').value = '';
     }
     document.getElementById('adminFormOverlay').hidden = false;
+  }
+
+  /* ---------- إدارة خيارات السؤال (إضافة/حذف خيار) ---------- */
+  const ADMIN_OPT_LETTERS = ['A','B','C','D','E'];
+
+  function renderAdminOptionRows(values){
+    const list = document.getElementById('adminOptionsList');
+    list.innerHTML = values.map((val, i)=>`
+      <div class="admin-option-row" data-index="${i}">
+        <span class="admin-opt-letter">${ADMIN_OPT_LETTERS[i]}</span>
+        <input type="text" dir="ltr" class="admin-opt-input" placeholder="Option ${ADMIN_OPT_LETTERS[i]}" value="${(val || '').replace(/"/g,'&quot;')}">
+        <button type="button" class="btn-icon-sm danger admin-opt-remove" onclick="removeAdminOption(this)" ${values.length<=2?'disabled':''}>✕ حذف</button>
+      </div>`).join('');
+    const addBtn = document.getElementById('adminAddOptionBtn');
+    if(addBtn) addBtn.disabled = values.length >= ADMIN_OPT_LETTERS.length;
+    syncAdminCorrectSelect();
+  }
+
+  function getAdminOptionValues(){
+    return Array.from(document.querySelectorAll('#adminOptionsList .admin-opt-input')).map(inp=>inp.value);
+  }
+
+  function addAdminOption(){
+    const values = getAdminOptionValues();
+    if(values.length >= ADMIN_OPT_LETTERS.length) return;
+    values.push('');
+    renderAdminOptionRows(values);
+  }
+
+  function removeAdminOption(btn){
+    const values = getAdminOptionValues();
+    if(values.length <= 2) return;
+    const row = btn.closest('.admin-option-row');
+    const idx = Array.from(row.parentNode.children).indexOf(row);
+    values.splice(idx, 1);
+    renderAdminOptionRows(values);
+  }
+
+  function syncAdminCorrectSelect(){
+    const count = document.querySelectorAll('#adminOptionsList .admin-opt-input').length;
+    const sel = document.getElementById('adminQCorrect');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">—</option>' + ADMIN_OPT_LETTERS.slice(0, count).map(l=>`<option value="${l}">${l}</option>`).join('');
+    if(ADMIN_OPT_LETTERS.slice(0, count).includes(current)) sel.value = current;
   }
 
   function closeQuestionForm(){
@@ -3031,40 +3527,48 @@
       msg.textContent = 'الرجاء كتابة نص السؤال.'; msg.className = 'form-note'; msg.style.background = 'var(--coral)'; msg.style.color = '#fff'; msg.hidden = false;
       return;
     }
+    const optValues = getAdminOptionValues().map(v=>v.trim());
+    while(optValues.length < 5) optValues.push('');
     const payload = {
       batch: document.getElementById('adminQBatch').value,
       subject: document.getElementById('adminQSubject').value,
       lecture: document.getElementById('adminQLecture').value.trim() || null,
       kind: document.getElementById('adminQKind').value,
-      type: document.getElementById('adminQType').value,
-      diff: document.getElementById('adminQDiff').value,
-      locked: document.getElementById('adminQLocked').checked,
+      type: QUESTION_TYPE,
       question_text: text,
-      option_a: document.getElementById('adminQOptA').value.trim() || null,
-      option_b: document.getElementById('adminQOptB').value.trim() || null,
-      option_c: document.getElementById('adminQOptC').value.trim() || null,
-      option_d: document.getElementById('adminQOptD').value.trim() || null,
-      option_e: document.getElementById('adminQOptE').value.trim() || null,
+      option_a: optValues[0] || null,
+      option_b: optValues[1] || null,
+      option_c: optValues[2] || null,
+      option_d: optValues[3] || null,
+      option_e: optValues[4] || null,
       correct_option: document.getElementById('adminQCorrect').value || null,
-      model_answer: document.getElementById('adminQModelAnswer').value.trim() || null,
       explanation: document.getElementById('adminQExplanation').value.trim() || null,
     };
 
     const submitBtn = document.getElementById('adminFormSubmitBtn');
     submitBtn.disabled = true;
     try{
-      let error;
+      let error, data;
       if(id){
-        ({ error } = await supabaseClient.from('questions').update(payload).eq('id', id));
+        ({ error, data } = await supabaseClient.from('questions').update(payload).eq('id', id).select());
       }else{
-        ({ error } = await supabaseClient.from('questions').insert(payload));
+        ({ error, data } = await supabaseClient.from('questions').insert(payload).select());
       }
       if(error) throw error;
+      if(!data || data.length === 0){
+        // لا يوجد خطأ ظاهري، لكن قاعدة البيانات لم تُرجع أي صف — غالباً RLS يمنع القراءة بعد الحفظ
+        throw new Error('لم تُرجع قاعدة البيانات أي صف بعد الحفظ. هذا يعني غالباً أن صلاحيات RLS (Row Level Security) تمنع حسابك من الكتابة أو القراءة على جدول questions. تأكد أن حسابك مسجّل بجدول profiles بصلاحية role = \'admin\'، وأن Policy الخاصة بالإدخال (insert/update) مُفعّلة وصحيحة.');
+      }
       if(pendingSubmissionId){
         await supabaseClient.from('question_submissions').delete().eq('id', pendingSubmissionId);
         pendingSubmissionId = null;
       }
       closeQuestionForm();
+      // إعادة ضبط فلاتر الجدول حتى لا يختفي السؤال المُضاف بسبب فلتر مادة كان مفعّلاً
+      const fs = document.getElementById('adminFilterSubject');
+      const sq = document.getElementById('adminSearch');
+      if(fs) fs.value = '';
+      if(sq) sq.value = '';
       await renderAdminPage();
       await loadQuestions(); // تحديث بنك الأسئلة الظاهر للطلاب فوراً
       buildPool();
@@ -3103,10 +3607,14 @@
       updateAuthUI();
       await loadSiteTexts();
       await loadSubjects();
+      await loadBatches();
+      await loadLecturesAdmin();
       await loadQuestions();
     }catch(err){
       console.error('حدث خطأ أثناء تهيئة الاتصال بقاعدة البيانات، سيتم عرض الموقع بدون بيانات مؤقتاً:', err);
     }
+    fillSelect(document.getElementById('signupBatch'), BATCHES);
+    renderHomeStats();
     buildPool();
     renderBank();
   }
