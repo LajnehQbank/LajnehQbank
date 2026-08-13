@@ -510,19 +510,64 @@
   .btn-back:hover{border-color:var(--slate);}
 
   /* ---- quiz session ---- */
+  #stageSession:not([hidden]){display:flex;flex-direction:column;align-items:stretch;}
+  #stageSession .stage-head{text-align:center;margin-left:auto;margin-right:auto;}
+  #stageSession .wizard-actions{justify-content:center;margin-left:auto;margin-right:auto;}
   .session-summary{
-    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--line);
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 auto 22px;padding-bottom:22px;border-bottom:1px solid var(--line);max-width:900px;width:100%;
   }
   .session-summary .s-pill{background:var(--paper);border:1px solid var(--line);border-radius:100px;padding:7px 14px;font-size:12.5px;font-weight:700;color:var(--slate);}
   .session-summary .s-pill b{color:var(--cyan-deep);}
-  .progress-track{height:7px;border-radius:100px;background:var(--line);overflow:hidden;margin-bottom:24px;max-width:520px;}
+  .progress-track{height:7px;border-radius:100px;background:var(--line);overflow:hidden;margin:0 auto 24px;max-width:640px;width:100%;}
   .progress-fill{height:100%;background:var(--cyan);border-radius:100px;transition:width .25s;}
   .exam-card{
-    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:30px 28px;max-width:720px;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:44px 48px;max-width:900px;width:100%;margin:0 auto;text-align:right;
   }
-  .exam-card .e-index{font-family:'IBM Plex Mono';color:var(--cyan-deep);font-size:12.5px;font-weight:700;margin-bottom:14px;display:block;}
-  .exam-card h3{font-size:18px;line-height:1.8;font-weight:700;}
-  .exam-nav{display:flex;align-items:center;justify-content:space-between;margin-top:26px;max-width:720px;}
+  .exam-card .e-index{font-family:'IBM Plex Mono';color:var(--cyan-deep);font-size:13.5px;font-weight:700;margin-bottom:16px;display:block;}
+  .exam-card h3{font-size:21px;line-height:1.85;font-weight:700;}
+
+  /* ===== حفظ السؤال (bookmark) ===== */
+  .q-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px;}
+  .q-head-row .e-index{margin-bottom:0;}
+  .save-q-btn{
+    flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:1.6px solid var(--line);background:var(--card);
+    color:var(--slate-soft);display:inline-flex;align-items:center;justify-content:center;
+    transition:border-color .18s,color .18s,background .18s,transform .12s;
+  }
+  .save-q-btn svg{width:18px;height:18px;}
+  .save-q-btn:hover{border-color:var(--cyan);color:var(--cyan-deep);transform:translateY(-1px);}
+  .save-q-btn.saved{background:var(--cyan-pale);border-color:var(--cyan);color:var(--cyan-deep);}
+  .save-q-btn.saved:hover{background:var(--coral);border-color:var(--coral);color:#fff;}
+  .q-card .save-q-btn{width:34px;height:34px;}
+  .q-card .save-q-btn svg{width:16px;height:16px;}
+  .q-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+
+  /* ===== قائمة الأسئلة المحفوظة في مساحة الطالب ===== */
+  .saved-q-list{display:flex;flex-direction:column;gap:12px;}
+  .saved-q-item{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:16px 18px;
+    display:flex;align-items:flex-start;gap:12px;text-align:right;
+  }
+  .saved-q-item .q-card-body{flex:1;min-width:0;}
+  .saved-q-item h4{font-size:14.5px;font-weight:700;line-height:1.7;color:var(--ink);}
+  .saved-q-item .mcq-list{margin-top:14px;}
+  .saved-q-item .explain-box{margin-top:12px;}
+  .saved-q-empty{padding:34px 20px;text-align:center;color:var(--slate-soft);font-size:13.5px;}
+  .saved-q-loading{padding:20px;text-align:center;color:var(--slate-soft);font-size:13px;}
+  .exam-nav{display:flex;align-items:center;justify-content:space-between;margin:26px auto 0;max-width:900px;width:100%;}
+  /* ---- responsive sizing: laptop / iPad / phone ---- */
+  @media (max-width:1024px){
+    .exam-card{max-width:760px;padding:36px 38px;}
+    .exam-card h3{font-size:19.5px;}
+    .session-summary,.progress-track,.exam-nav{max-width:760px;}
+  }
+  @media (max-width:640px){
+    .exam-card{padding:26px 20px;border-radius:var(--radius-md);}
+    .exam-card h3{font-size:17px;line-height:1.75;}
+    .exam-card .e-index{font-size:12px;}
+    .mcq-option{padding:14px 16px;font-size:14.5px;}
+    .exam-nav{flex-wrap:wrap;gap:12px;}
+  }
   .exam-nav .side-btns{display:flex;gap:10px;}
   .reveal-box{margin-top:20px;padding:16px 18px;background:var(--cyan-pale);border-radius:var(--radius-sm);font-size:13.5px;color:var(--slate);line-height:1.8;display:none;}
   .reveal-box.show{display:block;}
@@ -556,7 +601,8 @@
     font-size:13px;color:var(--slate);line-height:1.85;direction:ltr;text-align:left;font-family:'IBM Plex Mono','Segoe UI',Arial,sans-serif;
   }
   .explain-box b{display:block;margin-bottom:6px;color:var(--ink);font-family:inherit;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;}
-  .finish-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:44px 30px;text-align:center;max-width:520px;}
+  .finish-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:44px 30px;text-align:center;max-width:600px;width:100%;margin:0 auto;}
+  @media (max-width:640px){.finish-card{padding:34px 22px;}}
   .finish-card .f-badge{width:64px;height:64px;border-radius:50%;background:var(--cyan-pale);color:var(--cyan-deep);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
   .finish-card .f-badge svg{width:30px;height:30px;}
   .finish-card h3{font-size:20px;font-weight:800;margin-bottom:8px;}
@@ -693,7 +739,7 @@
   }
   .student-empty-space{
     border:1.8px dashed var(--line);border-radius:var(--radius-lg);
-    padding:40px 30px;display:grid;grid-template-columns:1fr 1fr;gap:18px;
+    padding:40px 30px;display:grid;grid-template-columns:1fr;gap:18px;
   }
   .empty-placeholder-card{
     background:var(--card);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);
@@ -1293,12 +1339,14 @@
       </div>
     </div>
 
-    <div class="student-empty-space">
-      <div class="empty-placeholder-card">
-        <div class="empty-placeholder-icon">🔖</div>
-        <h3>الأسئلة المحفوظة</h3>
-        <p>قريبًا ستتمكن من حفظ أسئلتك المفضلة هنا والرجوع إليها بسهولة.</p>
+    <div class="student-card">
+      <h3>🔖 الأسئلة المحفوظة</h3>
+      <div id="savedQuestionsList" class="saved-q-list">
+        <div class="saved-q-loading">جارِ التحميل…</div>
       </div>
+    </div>
+
+    <div class="student-empty-space">
       <div class="empty-placeholder-card">
         <div class="empty-placeholder-icon">📝</div>
         <h3>ملاحظاتي</h3>
@@ -1718,6 +1766,7 @@
   supabaseClient.auth.onAuthStateChange((_event, session)=>{
     currentSession = session;
     checkAdminRole().finally(updateAuthUI);
+    loadSavedIds();
     // re-render whatever is currently visible so locked/unlocked state stays correct
     if(!suppressAuthReload && document.getElementById('view-bank').classList.contains('active')){
       loadQuestions()
@@ -1998,6 +2047,7 @@
     document.getElementById('studentProfileName').textContent = meta.full_name || 'بدون اسم';
     document.getElementById('studentProfileBatch').textContent = meta.batch || '—';
     applyFontSize(meta.font_size || 'medium');
+    renderSavedQuestionsList();
   }
 
   async function renderStudentSettings(){
@@ -2053,6 +2103,119 @@
       await supabaseClient.from('student_progress').upsert(rows, { onConflict: 'user_id,question_id', ignoreDuplicates: true });
     }catch(err){
       console.error('تعذّر تسجيل التقدم (تحقق من إنشاء جدول student_progress في Supabase):', err);
+    }
+  }
+
+  /* ---------- الأسئلة المحفوظة (يتطلّب جدول public.saved_questions في Supabase:
+     id bigint pk، user_id uuid references auth.users(id)، question_id bigint references questions(id)،
+     created_at timestamptz default now()، مع unique(user_id, question_id) وسياسات RLS تسمح لكل مستخدم
+     بالقراءة/الإضافة/الحذف على صفوفه فقط، بنفس نمط جدول student_progress) ---------- */
+  let SAVED_IDS = new Set();
+
+  async function loadSavedIds(){
+    if(!currentSession){ SAVED_IDS = new Set(); return; }
+    try{
+      const { data, error } = await supabaseClient
+        .from('saved_questions')
+        .select('question_id')
+        .eq('user_id', currentSession.user.id);
+      if(error) throw error;
+      SAVED_IDS = new Set((data||[]).map(r=>r.question_id));
+    }catch(err){
+      console.error('تعذّر جلب الأسئلة المحفوظة (تحقق من إنشاء جدول saved_questions في Supabase):', err);
+      SAVED_IDS = new Set();
+    }
+  }
+
+  function isQuestionSaved(id){ return SAVED_IDS.has(id); }
+
+  function saveBtnHtml(qId, extra=''){
+    const saved = isQuestionSaved(qId);
+    return `<button type="button" class="save-q-btn ${saved?'saved':''} ${extra}" data-qid="${qId}"
+      onclick="event.stopPropagation();toggleSaveQuestion(${qId})"
+      title="${saved?'إزالة من المحفوظات':'حفظ السؤال'}" aria-label="${saved?'إزالة من المحفوظات':'حفظ السؤال'}">
+      <svg viewBox="0 0 24 24" fill="${saved?'currentColor':'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12a1 1 0 0 1 1 1V21l-7-4.2L5 21V4.5a1 1 0 0 1 1-1Z"/></svg>
+    </button>`;
+  }
+
+  async function toggleSaveQuestion(qId){
+    if(!currentSession){ go('login'); return; }
+    const wasSaved = isQuestionSaved(qId);
+    if(wasSaved) SAVED_IDS.delete(qId); else SAVED_IDS.add(qId);
+    updateSaveButtons(qId);
+    try{
+      if(wasSaved){
+        const { error } = await supabaseClient.from('saved_questions')
+          .delete().eq('user_id', currentSession.user.id).eq('question_id', qId);
+        if(error) throw error;
+      }else{
+        const { error } = await supabaseClient.from('saved_questions')
+          .upsert({ user_id: currentSession.user.id, question_id: qId }, { onConflict: 'user_id,question_id' });
+        if(error) throw error;
+      }
+    }catch(err){
+      console.error('تعذّر تحديث حالة الحفظ (تحقق من إنشاء جدول saved_questions في Supabase):', err);
+      // تراجع عن التغيير المحلي عند فشل الطلب
+      if(wasSaved) SAVED_IDS.add(qId); else SAVED_IDS.delete(qId);
+      updateSaveButtons(qId);
+      return;
+    }
+    if(document.getElementById('view-student').classList.contains('active')) renderSavedQuestionsList();
+  }
+
+  function updateSaveButtons(qId){
+    document.querySelectorAll(`.save-q-btn[data-qid="${qId}"]`).forEach(btn=>{
+      const saved = isQuestionSaved(qId);
+      btn.classList.toggle('saved', saved);
+      const label = saved ? 'إزالة من المحفوظات' : 'حفظ السؤال';
+      btn.title = label;
+      btn.setAttribute('aria-label', label);
+      const svg = btn.querySelector('svg');
+      if(svg) svg.setAttribute('fill', saved ? 'currentColor' : 'none');
+    });
+  }
+
+  async function renderSavedQuestionsList(){
+    const box = document.getElementById('savedQuestionsList');
+    if(!box || !currentSession) return;
+    box.innerHTML = `<div class="saved-q-loading">جارِ التحميل…</div>`;
+    try{
+      const { data, error } = await supabaseClient
+        .from('saved_questions')
+        .select('question_id, created_at')
+        .eq('user_id', currentSession.user.id)
+        .order('created_at', { ascending:false });
+      if(error) throw error;
+      const ids = (data||[]).map(r=>r.question_id);
+      if(ids.length===0){
+        box.innerHTML = `<div class="saved-q-empty">لم تقم بحفظ أي أسئلة بعد. اضغط على أيقونة 🔖 بجانب أي سؤال لحفظه هنا.</div>`;
+        return;
+      }
+      const items = ids.map(id => QUESTIONS.find(q=>q.id===id)).filter(Boolean);
+      if(items.length===0){
+        box.innerHTML = `<div class="saved-q-empty">لم تقم بحفظ أي أسئلة بعد. اضغط على أيقونة 🔖 بجانب أي سؤال لحفظه هنا.</div>`;
+        return;
+      }
+      box.innerHTML = items.map(q=>`
+        <div class="saved-q-item">
+          <div class="q-card-body">
+            <div class="q-tags">
+              <span class="tag subject">${q.subject||''}</span>
+              ${q.lecture ? `<span class="tag type">${q.lecture}</span>` : ''}
+            </div>
+            <div class="q-card-head">
+              <h4 dir="ltr" class="q-en">${q.text}</h4>
+              ${saveBtnHtml(q.id)}
+            </div>
+            ${q.options && q.options.length>=2
+              ? renderOptionsHtml(q, { revealed:true })
+              : `<div class="reveal-box show">${q.modelAnswer ? q.modelAnswer : 'لا يوجد جواب نموذجي مسجَّل لهذا السؤال.'}</div>`}
+            ${renderExplanationHtml(q)}
+          </div>
+        </div>`).join('');
+    }catch(err){
+      console.error('تعذّر جلب قائمة الأسئلة المحفوظة (تحقق من إنشاء جدول saved_questions في Supabase):', err);
+      box.innerHTML = `<div class="saved-q-empty">تعذّر تحميل الأسئلة المحفوظة. تأكد من إنشاء جدول saved_questions في Supabase.</div>`;
     }
   }
 
@@ -2444,18 +2607,21 @@
     }
   }
 
-  async function deleteBatch(id){
-    if(!confirm('حذف هذه الدفعة؟ حسابات الطلاب المسجّلين بها لن تُحذف، لكنها لن تظهر ضمن قائمة الدفعات بعد الآن.')) return;
+  async function editBatch(id, currentName){
+    const newName = prompt('اسم الدفعة الجديد:', currentName);
+    if(newName === null) return; // المستخدم ألغى العملية
+    const trimmed = newName.trim();
+    if(!trimmed || trimmed === currentName) return;
     try{
-      const { error } = await supabaseClient.from('batches').delete().eq('id', id);
+      const { error } = await supabaseClient.from('batches').update({ name: trimmed }).eq('id', id);
       if(error) throw error;
       await loadBatches();
       renderAdminBatches();
       fillSelect(document.getElementById('signupBatch'), BATCHES);
       renderHomeStats();
     }catch(err){
-      console.error('تعذّر حذف الدفعة:', err);
-      alert('تعذّر حذف الدفعة: ' + (err.message || 'خطأ غير معروف'));
+      console.error('تعذّر تعديل اسم الدفعة:', err);
+      alert('تعذّر تعديل اسم الدفعة: ' + (err.message || 'خطأ غير معروف'));
     }
   }
 
@@ -2491,7 +2657,7 @@
     list.innerHTML = ADMIN_BATCHES.map(b=>`
       <div class="subject-manage-row">
         <span>${b.name}</span>
-        <button class="btn-icon-sm danger" onclick="deleteBatch(${b.id})">حذف</button>
+        <button class="btn-icon-sm" onclick="editBatch(${b.id}, '${String(b.name).replace(/'/g, "\\'")}')">✏️ تعديل</button>
       </div>`).join('');
   }
 
@@ -2573,6 +2739,7 @@
   }
 
   const ADMIN_SELECTED_LEC_IDS = new Set();
+  let adminEditingLectureId = null;
 
   function toggleLectureSelected(id, checked){
     if(checked) ADMIN_SELECTED_LEC_IDS.add(id); else ADMIN_SELECTED_LEC_IDS.delete(id);
@@ -2656,15 +2823,75 @@
       return;
     }
     if(header) header.hidden = false;
-    list.innerHTML = rows.map(l=>`
+    list.innerHTML = rows.map(l=>{
+      if(l.id === adminEditingLectureId){
+        return `
+      <div class="subject-manage-row selectable">
+        <span class="lec-left" style="flex:1;">
+          <input type="checkbox" class="admin-lec-checkbox" data-id="${l.id}" onchange="toggleLectureSelected(${l.id}, this.checked)" ${ADMIN_SELECTED_LEC_IDS.has(l.id)?'checked':''}>
+          <input type="text" id="editLectureInput-${l.id}" value="${(l.name || '').replace(/"/g,'&quot;')}" style="flex:1;border:1.6px solid var(--cyan);border-radius:8px;padding:6px 10px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink);" onkeydown="if(event.key==='Enter'){event.preventDefault();saveLectureEdit(${l.id});}else if(event.key==='Escape'){cancelLectureEdit();}">
+        </span>
+        <button class="btn-icon-sm" onclick="saveLectureEdit(${l.id})">💾 حفظ</button>
+        <button class="btn-icon-sm" onclick="cancelLectureEdit()">إلغاء</button>
+      </div>`;
+      }
+      return `
       <div class="subject-manage-row selectable">
         <span class="lec-left">
           <input type="checkbox" class="admin-lec-checkbox" data-id="${l.id}" onchange="toggleLectureSelected(${l.id}, this.checked)" ${ADMIN_SELECTED_LEC_IDS.has(l.id)?'checked':''}>
           ${l.name}
         </span>
-        <button class="btn-icon-sm danger" onclick="deleteLecture(${l.id})">حذف</button>
-      </div>`).join('');
+        <button class="btn-icon-sm" onclick="editLectureStart(${l.id})">✎ تعديل</button>
+      </div>`;
+    }).join('');
+    if(adminEditingLectureId!=null && rows.some(l=>l.id===adminEditingLectureId)){
+      const inp = document.getElementById(`editLectureInput-${adminEditingLectureId}`);
+      if(inp){ inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+    }
     updateLectureBulkControls();
+  }
+
+  function editLectureStart(id){
+    adminEditingLectureId = id;
+    renderAdminLectures();
+  }
+
+  function cancelLectureEdit(){
+    adminEditingLectureId = null;
+    renderAdminLectures();
+  }
+
+  async function saveLectureEdit(id){
+    const row = ADMIN_LECTURES.find(l=>l.id===id);
+    if(!row) return;
+    const input = document.getElementById(`editLectureInput-${id}`);
+    const newName = (input ? input.value : '').trim();
+    const msg = document.getElementById('adminLecturesMsg');
+    msg.hidden = true;
+    if(!newName){
+      msg.textContent = 'الرجاء إدخال اسم للمحاضرة.';
+      msg.className = 'form-note'; msg.style.background = 'var(--coral)'; msg.style.color = '#fff'; msg.hidden = false;
+      return;
+    }
+    const oldName = row.name;
+    if(newName === oldName){ adminEditingLectureId = null; renderAdminLectures(); return; }
+    try{
+      const { error: lecError } = await supabaseClient.from('lectures').update({ name: newName }).eq('id', id);
+      if(lecError) throw lecError;
+      // حدّث اسم المحاضرة في كل أسئلة بنك الأسئلة المرتبطة بها لنفس المادة
+      const { error: qError } = await supabaseClient.from('questions').update({ lecture: newName }).eq('subject', row.subject).eq('lecture', oldName);
+      if(qError) throw qError;
+      adminEditingLectureId = null;
+      await loadLecturesAdmin();
+      renderAdminLectures();
+      renderAdminPage();
+      await loadQuestions();
+      buildPool();
+    }catch(err){
+      console.error('تعذّر تعديل المحاضرة:', err);
+      msg.textContent = 'تعذّر تعديل المحاضرة: ' + (err.message || 'خطأ غير معروف');
+      msg.className = 'form-note'; msg.style.background = 'var(--coral)'; msg.style.color = '#fff'; msg.hidden = false;
+    }
   }
 
   /* ---------- site texts (نصوص الموقع) ---------- */
@@ -3236,6 +3463,35 @@
       body.innerHTML = `<div class="empty-state"><b>لا توجد أسئلة مطابقة</b>عدّل اختياراتك من زر "تعديل الإعدادات".</div>`;
       return;
     }
+    if(sess.reviewing){
+      document.getElementById('sessionTitle').textContent = 'مراجعة الأسئلة والإجابات';
+      document.getElementById('sessionSubtitle').textContent = 'إجابات نموذجية لجميع الأسئلة.';
+      body.innerHTML = `<div class="q-grid">${sess.questions.map((q,i)=>{
+        const num = String(i+1).padStart(2,'0');
+        const userAnswer = sess.answers[i];
+        const meta = q.locked
+          ? `<span class="locked">🔒 سجّل الدخول لعرض الإجابة النموذجية — <a href="#login" onclick="go('login')">تسجيل الدخول</a></span>`
+          : (q.options && q.options.length>=2
+              ? `<div class="mcq-reveal show">${renderOptionsHtml(q,{selectedIndex:userAnswer, revealed:true})}${renderExplanationHtml(q)}${userAnswer==null ? `<div class="explain-box" dir="ltr"><b>Note</b>You did not select an answer for this question.</div>` : ''}</div>`
+              : `<div class="reveal-box show">${q.modelAnswer ? q.modelAnswer : 'إجابة نموذجية: راجع ملخص المحاضرة — هذا محتوى تجريبي لغايات العرض.'}</div>`);
+        return `
+          <article class="q-card">
+            <span class="tooth-badge filled">${num}</span>
+            <div class="q-card-body">
+              <div class="q-card-head">
+                <h4 dir="ltr" class="q-en">${q.text}</h4>
+                ${currentSession ? saveBtnHtml(q.id) : ''}
+              </div>
+              <div class="q-meta">${meta}</div>
+            </div>
+          </article>`;
+      }).join('')}</div>
+      <div class="exam-nav">
+        <div class="side-btns"></div>
+        <button class="btn-continue" onclick="backTo('setup')">${state.mode==='study' ? 'إنهاء المذاكرة' : 'إعداد اختبار جديد'}</button>
+      </div>`;
+      return;
+    }
     if(state.mode==='study'){
       document.getElementById('sessionTitle').textContent = 'وضع المذاكرة — Study Mood';
       document.getElementById('sessionSubtitle').textContent = 'اختر إجابة السؤال لتشاهد فوراً إن كانت صحيحة، ثم انتقل للسؤال التالي.';
@@ -3260,7 +3516,10 @@
       body.innerHTML = `
         <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
         <div class="exam-card">
-          <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
+          <div class="q-head-row">
+            <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
+            ${currentSession ? saveBtnHtml(q.id) : ''}
+          </div>
           <h3 dir="ltr" class="q-en">${q.text}</h3>
           ${answerBlock}
           ${metaBlock ? `<div class="q-meta" style="margin-top:16px;">${metaBlock}</div>` : ''}
@@ -3271,7 +3530,7 @@
           </div>
           ${sess.cursor < sess.questions.length-1
             ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
-            : `<button class="btn-continue" onclick="backTo('setup')">إنهاء المذاكرة</button>`}
+            : `<button class="btn-continue" onclick="reviewSession()">مراجعة الأسئلة والإجابات</button>`}
         </div>`;
       return;
     }
@@ -3301,28 +3560,6 @@
         </div>`;
       return;
     }
-    if(sess.reviewing){
-      document.getElementById('sessionTitle').textContent = 'مراجعة الاختبار';
-      document.getElementById('sessionSubtitle').textContent = 'إجابات نموذجية لجميع أسئلة الاختبار.';
-      body.innerHTML = `<div class="q-grid">${sess.questions.map((q,i)=>{
-        const num = String(i+1).padStart(2,'0');
-        const userAnswer = sess.answers[i];
-        const meta = q.locked
-          ? `<span class="locked">🔒 سجّل الدخول لعرض الإجابة النموذجية — <a href="#login" onclick="go('login')">تسجيل الدخول</a></span>`
-          : (q.options && q.options.length>=2
-              ? `<div class="mcq-reveal show">${renderOptionsHtml(q,{selectedIndex:userAnswer, revealed:true})}${renderExplanationHtml(q)}${userAnswer==null ? `<div class="explain-box" dir="ltr"><b>Note</b>You did not select an answer for this question.</div>` : ''}</div>`
-              : `<div class="reveal-box show">${q.modelAnswer ? q.modelAnswer : 'إجابة نموذجية: راجع ملخص المحاضرة — هذا محتوى تجريبي لغايات العرض.'}</div>`);
-        return `
-          <article class="q-card">
-            <span class="tooth-badge filled">${num}</span>
-            <div class="q-card-body">
-              <h4 dir="ltr" class="q-en">${q.text}</h4>
-              <div class="q-meta">${meta}</div>
-            </div>
-          </article>`;
-      }).join('')}</div>`;
-      return;
-    }
     document.getElementById('sessionTitle').textContent = 'وضع الاختبار — Exam Mood';
     document.getElementById('sessionSubtitle').textContent = 'أجب بالتسلسل، لن تظهر الإجابات إلا بعد إنهاء الاختبار.';
     const q = sess.questions[sess.cursor];
@@ -3334,7 +3571,10 @@
     body.innerHTML = `
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="exam-card">
-        <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
+        <div class="q-head-row">
+          <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
+          ${currentSession ? saveBtnHtml(q.id) : ''}
+        </div>
         <h3 dir="ltr" class="q-en">${q.text}</h3>
         ${optionsHtml}
       </div>
@@ -4528,6 +4768,7 @@
     try{
       await refreshSession();
       updateAuthUI();
+      await loadSavedIds();
       await loadSiteTexts();
       await loadSubjects();
       await loadBatches();
