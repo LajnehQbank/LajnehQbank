@@ -1,0 +1,27 @@
+{
+  "name": "لجنة طب الأسنان - بنك الأسئلة",
+  "short_name": "بنك الأسئلة",
+  "description": "بنك أسئلة لجنة طب الأسنان",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F4F8FA",
+  "theme_color": "#12A2DB",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
