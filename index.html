@@ -253,16 +253,26 @@
   .contribute-form{position:relative;z-index:1;}
   .contribute-row{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
   .contribute-row input{flex:1 1 220px;min-width:220px;}
+  .contribute-row select{flex:1 1 220px;min-width:220px;}
   .contribute-form input,
+  .contribute-form select,
   .contribute-form textarea{
     width:100%;padding:13px 15px;border-radius:var(--radius-sm);
     border:1.6px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);
     color:#fff;font-family:inherit;font-size:14.5px;
   }
+  .contribute-form select{
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:left 14px center;background-size:16px;
+    padding-left:38px;cursor:pointer;
+  }
+  .contribute-form select option{color:var(--ink);background:#fff;}
   .contribute-form input::placeholder,
   .contribute-form textarea::placeholder{color:#9FAEB6;}
   .contribute-form input:focus,
-  .contribute-form textarea:focus{outline:none;border-color:var(--cyan);background:rgba(255,255,255,.14);}
+  .contribute-form select:focus,
+  .contribute-form textarea:focus{outline:none;border-color:var(--cyan);background-color:rgba(255,255,255,.14);}
   .contribute-form textarea{min-height:110px;resize:vertical;margin-bottom:16px;line-height:1.6;}
   .contribute-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
   .contribute-msg{font-size:13px;font-weight:700;}
@@ -1103,7 +1113,11 @@
           <input id="contribName" type="text" placeholder="اسم الطالب (اختياري)">
           <input id="contribEmail" type="email" placeholder="بريدك الإلكتروني للتواصل معك إذا لزم الأمر (اختياري)">
         </div>
-        <textarea id="contribQuestion" placeholder="اكتب نص السؤال هنا..." required></textarea>
+        <div class="contribute-row">
+          <select id="contribSubject" required></select>
+          <input id="contribLecture" type="text" placeholder="اسم المحاضرة ورقمها" required>
+        </div>
+        <textarea id="contribQuestion" placeholder="اكتب الي متذكره من السؤال..." required></textarea>
         <div class="contribute-actions">
           <button type="submit" class="btn-on-dark">إرسال السؤال</button>
           <span class="contribute-msg" id="contribMsg" hidden></span>
@@ -1983,14 +1997,26 @@
     e.preventDefault();
     const nameEl = document.getElementById('contribName');
     const emailEl = document.getElementById('contribEmail');
+    const subjectEl = document.getElementById('contribSubject');
+    const lectureEl = document.getElementById('contribLecture');
     const textEl = document.getElementById('contribQuestion');
     const msgEl = document.getElementById('contribMsg');
     const btn = e.target.querySelector('button[type="submit"]');
     const questionText = (textEl.value || '').trim();
+    const subjectVal = (subjectEl.value || '').trim();
+    const lectureVal = (lectureEl.value || '').trim();
 
     if(msgEl){ msgEl.hidden = true; msgEl.className = 'contribute-msg'; }
+    if(!subjectVal){
+      if(msgEl){ msgEl.textContent = 'الرجاء اختيار اسم المادة.'; msgEl.className = 'contribute-msg error'; msgEl.hidden = false; }
+      return;
+    }
+    if(!lectureVal){
+      if(msgEl){ msgEl.textContent = 'الرجاء كتابة اسم المحاضرة ورقمها.'; msgEl.className = 'contribute-msg error'; msgEl.hidden = false; }
+      return;
+    }
     if(!questionText){
-      if(msgEl){ msgEl.textContent = 'الرجاء كتابة نص السؤال قبل الإرسال.'; msgEl.className = 'contribute-msg error'; msgEl.hidden = false; }
+      if(msgEl){ msgEl.textContent = 'الرجاء كتابة الي متذكره من السؤال قبل الإرسال.'; msgEl.className = 'contribute-msg error'; msgEl.hidden = false; }
       return;
     }
 
@@ -1999,6 +2025,8 @@
       const { error } = await supabaseClient.from('question_submissions').insert({
         student_name: (nameEl.value || '').trim() || null,
         contact_email: (emailEl.value || '').trim() || null,
+        subject: subjectVal,
+        lecture: lectureVal,
         question_text: questionText,
       });
       if(error) throw error;
@@ -2413,6 +2441,8 @@
     }
     fillSelect(document.getElementById('newSubjectYear'), SUBJECT_YEARS);
     populateSubjectYearFilter();
+    const contribSubjectEl = document.getElementById('contribSubject');
+    if(contribSubjectEl) fillSelect(contribSubjectEl, SUBJECTS, 'اسم المادة');
   }
 
   function populateSubjectYearFilter(){
@@ -3831,6 +3861,8 @@
         <div class="sub-meta">
           <span>👤 <b>${s.student_name || 'طالب غير معروف'}</b></span>
           ${s.contact_email ? `<span class="mono">✉️ ${s.contact_email}</span>` : ''}
+          ${s.subject ? `<span>📘 <b>${s.subject}</b></span>` : ''}
+          ${s.lecture ? `<span>🗂️ ${s.lecture}</span>` : ''}
           <span>🕒 ${when}</span>
         </div>
         <div class="sub-text">${(s.question_text || '').replace(/</g,'&lt;')}</div>
@@ -3867,6 +3899,12 @@
     if(!s) return;
     openQuestionForm(null);
     pendingSubmissionId = id;
+    if(s.subject){
+      const subjSel = document.getElementById('adminQSubject');
+      if(subjSel && SUBJECTS.includes(s.subject)) subjSel.value = s.subject;
+    }
+    syncAdminLectureOptions();
+    if(s.lecture) document.getElementById('adminQLecture').value = s.lecture;
     // نص السؤال القادم من الطالب نص عادي (وليس HTML)، لذا نُفلته قبل عرضه في المحرّر المنسّق
     setRTEHtml('adminQText', escapeHtml(s.question_text || '').replace(/\n/g, '<br>'));
   }
