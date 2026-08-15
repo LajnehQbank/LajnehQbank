@@ -249,6 +249,23 @@
   .btn-outline-dark{background:transparent;border:1.6px solid rgba(255,255,255,.35);color:#fff;padding:14px 24px;border-radius:100px;font-weight:700;font-size:14.5px;}
   .btn-outline-dark:hover{border-color:#fff;}
 
+  /* رابط مباشر لقسم "متذكر سؤال" — نسخه الأدمن ونشره للطلاب */
+  .cta-copy-link-btn{
+    position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;
+    background:transparent;border:1.6px dashed rgba(255,255,255,.4);color:#fff;
+    padding:9px 16px;border-radius:100px;font-weight:700;font-size:13px;margin-top:14px;
+    transition:background-color .18s,border-color .18s;width:fit-content;
+  }
+  .cta-copy-link-btn svg{width:15px;height:15px;flex:0 0 auto;}
+  .cta-copy-link-btn:hover{background:rgba(255,255,255,.1);border-color:#fff;}
+  .cta-copy-link-btn.copied{background:var(--green);border-color:var(--green);border-style:solid;}
+  .cta-banner.cta-highlight{animation:ctaHighlightPulse 2.2s ease;}
+  @keyframes ctaHighlightPulse{
+    0%{box-shadow:0 0 0 0 rgba(18,162,219,.65);}
+    30%{box-shadow:0 0 0 10px rgba(18,162,219,0);}
+    100%{box-shadow:0 0 0 0 rgba(18,162,219,0);}
+  }
+
   /* contribute-a-question form inside the CTA banner */
   .contribute-form{position:relative;z-index:1;}
   .contribute-row{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
@@ -579,6 +596,20 @@
     .exam-nav{flex-wrap:wrap;gap:12px;}
   }
   .exam-nav .side-btns{display:flex;gap:10px;}
+
+  /* ===== exam timer (per-question countdown) ===== */
+  .exam-timer{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
+    background:var(--cyan-pale);color:var(--cyan-deep);border:1.6px solid transparent;
+    padding:8px 16px;border-radius:100px;font-size:14.5px;font-weight:700;letter-spacing:.02em;
+    transition:background-color .2s,color .2s,border-color .2s;
+  }
+  .exam-timer svg{width:16px;height:16px;flex:0 0 auto;}
+  .exam-timer.low{background:rgba(226,96,79,.14);color:var(--coral);border-color:rgba(226,96,79,.35);animation:examTimerPulse 1s ease-in-out infinite;}
+  @keyframes examTimerPulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+  @media (max-width:640px){
+    .exam-timer{padding:6px 12px;font-size:13px;}
+  }
   .reveal-box{margin-top:20px;padding:16px 18px;background:var(--cyan-pale);border-radius:var(--radius-sm);font-size:13.5px;color:var(--slate);line-height:1.8;display:none;}
   .reveal-box.show{display:block;}
 
@@ -924,6 +955,42 @@
   }
   .subject-img-btn:hover{border-color:var(--cyan);background:var(--cyan-pale);}
   .subject-form-thumb{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1.6px solid var(--line);}
+
+  /* ---- Flaticon search modal ---- */
+  .flaticon-modal-overlay{
+    position:fixed;inset:0;background:rgba(15,23,32,.55);z-index:900;
+    align-items:center;justify-content:center;padding:20px;
+    display:flex;
+  }
+  .flaticon-modal-overlay[hidden]{display:none;}
+  .flaticon-modal{
+    background:var(--card);border-radius:16px;width:100%;max-width:640px;max-height:82vh;
+    display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .flaticon-modal-header{
+    display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
+    border-bottom:1px solid var(--line);
+  }
+  .flaticon-modal-header h3{margin:0;font-size:16px;}
+  .flaticon-modal-search{display:flex;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line);}
+  .flaticon-modal-search input{
+    flex:1;padding:12px 14px;border-radius:10px;border:1.6px solid var(--line);
+    font-family:inherit;font-size:14px;
+  }
+  .flaticon-modal-search input:focus{outline:none;border-color:var(--cyan);}
+  .flaticon-modal-msg{margin:0 20px;padding:10px 14px;border-radius:10px;font-size:13.5px;background:var(--coral);color:#fff;}
+  .flaticon-results-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:10px;
+    padding:16px 20px;overflow-y:auto;
+  }
+  .flaticon-loading{grid-column:1/-1;text-align:center;color:var(--slate-soft);font-size:14px;padding:20px 0;}
+  .flaticon-result-item{
+    width:100%;aspect-ratio:1/1;border-radius:10px;border:1.6px solid var(--line);
+    background:var(--paper);display:flex;align-items:center;justify-content:center;padding:10px;
+    cursor:pointer;transition:border-color .15s, transform .15s;
+  }
+  .flaticon-result-item:hover{border-color:var(--cyan);transform:translateY(-2px);}
+  .flaticon-result-item img{width:100%;height:100%;object-fit:contain;}
   .subject-thumb{width:40px;height:40px;border-radius:9px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto;background:var(--paper);}
   .sitetext-field{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:14px;}
   .sitetext-field label{display:block;font-size:12.5px;font-weight:700;color:var(--cyan-deep);margin-bottom:8px;}
@@ -1103,10 +1170,14 @@
   </div>
 
   <div class="wrap" style="padding-bottom:76px">
-    <div class="cta-banner reveal-scale">
+    <div class="cta-banner reveal-scale" id="contributeBanner">
       <div>
         <h3 data-ekey="cta.title">متذكر سؤال اجاك بالإمتحان؟ شاركنا إياه</h3>
         <p data-ekey="cta.text">ساهم في إثراء بنك الأسئلة — كل سؤال تضيفه يفيد عشرات الزملاء بعدك.</p>
+        <button type="button" class="cta-copy-link-btn" id="ctaCopyLinkBtn" onclick="copyContributeLink()" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12.5 19.5"/></svg>
+          <span>نسخ رابط المشاركة</span>
+        </button>
       </div>
       <form class="contribute-form" id="contributeForm" onsubmit="handleContributeSubmit(event)">
         <div class="contribute-row">
@@ -1525,10 +1596,28 @@
         <select id="newSubjectYear" required></select>
         <label class="subject-img-btn" for="newSubjectImageInput">🖼️ صورة المادة</label>
         <input type="file" id="newSubjectImageInput" accept="image/*" onchange="handleSubjectImageSelected(event)" style="display:none;">
+        <button type="button" class="subject-img-btn" onclick="openFlaticonModal()">🔎 أيقونة من Flaticon</button>
         <img id="newSubjectImagePreview" class="subject-form-thumb" src="" alt="" hidden>
         <button type="submit" class="btn-admin-add" id="subjectFormSubmitBtn" style="flex:0 0 auto;">+ إضافة مادة</button>
         <button type="button" class="btn-icon-sm" id="cancelSubjectEditBtn" onclick="resetSubjectForm()" hidden>إلغاء التعديل</button>
       </form>
+
+      <!-- ---- Modal: البحث عن أيقونة من Flaticon ---- -->
+      <div class="flaticon-modal-overlay" id="flaticonModalOverlay" hidden onclick="if(event.target===this) closeFlaticonModal();">
+        <div class="flaticon-modal">
+          <div class="flaticon-modal-header">
+            <h3>البحث عن أيقونة من Flaticon</h3>
+            <button type="button" class="btn-icon-sm" onclick="closeFlaticonModal()">✕</button>
+          </div>
+          <div class="flaticon-modal-search">
+            <input type="text" id="flaticonSearchInput" placeholder="اكتب كلمة بحث بالإنجليزي، مثل: brain, heart, medicine..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchFlaticonIcons();}">
+            <button type="button" class="btn-admin-add" onclick="searchFlaticonIcons()">بحث</button>
+          </div>
+          <div class="flaticon-modal-msg" id="flaticonModalMsg" hidden></div>
+          <div class="flaticon-results-grid" id="flaticonResultsGrid"></div>
+        </div>
+      </div>
+
       <div class="subjects-list-header" id="subjectsListHeader" hidden>
         <button class="btn-icon-sm danger" onclick="deleteAllSubjects()">🗑️ حذف كل المواد</button>
       </div>
@@ -1796,6 +1885,8 @@
     if(studentLink) studentLink.hidden = !currentSession || isAdmin;
     const adminLink = document.getElementById('adminNavLink');
     if(adminLink) adminLink.hidden = !isAdmin;
+    const ctaCopyBtn = document.getElementById('ctaCopyLinkBtn');
+    if(ctaCopyBtn) ctaCopyBtn.hidden = !isAdmin;
     const meta = currentSession && currentSession.user && currentSession.user.user_metadata;
     applyFontSize(meta && meta.font_size);
   }
@@ -2353,24 +2444,57 @@
 
   /* ---------- routing ---------- */
   function go(view){
-    if((view==='student' || view==='student-settings') && !currentSession) view = 'login';
-    if((view==='student' || view==='student-settings') && isAdmin) view = 'admin';
-    if(view==='admin' && !currentSession) view = 'login';
-    if(view==='admin' && currentSession && !isAdmin) view = 'home';
+    let targetView = (view==='ARCHIVE') ? 'home' : view;
+    if((targetView==='student' || targetView==='student-settings') && !currentSession) targetView = 'login';
+    if((targetView==='student' || targetView==='student-settings') && isAdmin) targetView = 'admin';
+    if(targetView==='admin' && !currentSession) targetView = 'login';
+    if(targetView==='admin' && currentSession && !isAdmin) targetView = 'home';
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    document.getElementById('view-'+view).classList.add('active');
-    document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('current', l.dataset.view==='student' ? (view==='student'||view==='student-settings') : l.dataset.view===view));
+    document.getElementById('view-'+targetView).classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('current', l.dataset.view==='student' ? (targetView==='student'||targetView==='student-settings') : l.dataset.view===targetView));
     document.getElementById('mainNav').classList.remove('open');
-    window.scrollTo({top:0, behavior:'instant'});
-    history.replaceState(null,'','#'+view);
-    if(view==='student') renderStudentPage();
-    if(view==='student-settings') renderStudentSettings();
-    if(view==='admin') renderAdminPage();
-    if(view==='home') initRevealObserver();
+    if(view==='ARCHIVE' && targetView==='home'){
+      history.replaceState(null,'','#ARCHIVE');
+    }else{
+      window.scrollTo({top:0, behavior:'instant'});
+      history.replaceState(null,'','#'+targetView);
+    }
+    if(targetView==='student') renderStudentPage();
+    if(targetView==='student-settings') renderStudentSettings();
+    if(targetView==='admin') renderAdminPage();
+    if(targetView==='home') initRevealObserver();
+    if(view==='ARCHIVE' && targetView==='home') scrollToContributeForm();
+  }
+  /* رابط مباشر لقسم "متذكر سؤال" (#ARCHIVE): يفتح الصفحة الرئيسية وينزل مباشرة لنموذج المشاركة */
+  function scrollToContributeForm(){
+    requestAnimationFrame(()=>{
+      const el = document.getElementById('contributeBanner');
+      if(!el) return;
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add('cta-highlight');
+      setTimeout(()=> el.classList.remove('cta-highlight'), 2300);
+    });
+  }
+  async function copyContributeLink(){
+    const url = 'https://lajnehqbank.github.io/LajnehQbank/#ARCHIVE';
+    const btn = document.getElementById('ctaCopyLinkBtn');
+    const span = btn ? btn.querySelector('span') : null;
+    try{
+      await navigator.clipboard.writeText(url);
+    }catch(err){
+      window.prompt('انسخ الرابط التالي يدوياً:', url);
+      return;
+    }
+    if(btn && span){
+      const original = span.textContent;
+      span.textContent = 'تم نسخ الرابط ✓';
+      btn.classList.add('copied');
+      setTimeout(()=>{ span.textContent = original; btn.classList.remove('copied'); }, 1800);
+    }
   }
   window.addEventListener('DOMContentLoaded', ()=>{
     const initial = (location.hash||'#home').replace('#','');
-    go(['home','bank','login','student','student-settings','admin'].includes(initial) ? initial : 'home');
+    go(['home','bank','login','student','student-settings','admin','ARCHIVE'].includes(initial) ? initial : 'home');
   });
 
   /* ---------- المظهر الليلي (Dark Mode) ---------- */
@@ -2454,9 +2578,12 @@
     if(yearsPresent.includes(current)) sel.value = current;
   }
 
+  let pendingFlaticonImageUrl = '';
+
   function handleSubjectImageSelected(e){
     const file = e.target.files && e.target.files[0];
     pendingSubjectImageFile = file || null;
+    pendingFlaticonImageUrl = '';
     const preview = document.getElementById('newSubjectImagePreview');
     if(file){
       const reader = new FileReader();
@@ -2465,6 +2592,89 @@
     }else{
       preview.hidden = true; preview.src = '';
     }
+  }
+
+  /* ---------- البحث عن أيقونة من Flaticon لاستخدامها كصورة للمادة ---------- */
+  // ملاحظة: هذا المفتاح سيظهر في كود الصفحة لأن الموقع بدون سيرفر خلفي (Client-side فقط).
+  // احصل على مفتاحك من https://www.flaticon.com/api ثم ضعه هنا. لإخفائه تماماً عن الزوار
+  // يُفضّل تمرير الطلبات عبر دالة سيرفرلس (مثل Supabase Edge Function) بدل استدعاء Flaticon مباشرة من المتصفح.
+  const FLATICON_API_KEY = 'ضع_مفتاح_Flaticon_API_هنا';
+  let flaticonToken = null;
+  let flaticonTokenExpiry = 0;
+
+  async function getFlaticonToken(){
+    if(flaticonToken && Date.now() < flaticonTokenExpiry) return flaticonToken;
+    const res = await fetch('https://api.flaticon.com/v3/app/authentication', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apikey: FLATICON_API_KEY })
+    });
+    if(!res.ok) throw new Error('تعذّر الاتصال بـ Flaticon — تأكد من صحة مفتاح الـ API الخاص بك.');
+    const data = await res.json();
+    flaticonToken = data.data.token;
+    flaticonTokenExpiry = Date.now() + 23 * 60 * 60 * 1000; // الصلاحية تقريباً 24 ساعة، نجدد قبلها احتياطاً
+    return flaticonToken;
+  }
+
+  function openFlaticonModal(){
+    document.getElementById('flaticonModalOverlay').hidden = false;
+    document.getElementById('flaticonSearchInput').value = '';
+    document.getElementById('flaticonResultsGrid').innerHTML = '';
+    document.getElementById('flaticonModalMsg').hidden = true;
+    setTimeout(()=>{
+      const el = document.getElementById('flaticonSearchInput');
+      if(el) el.focus();
+    }, 50);
+  }
+
+  function closeFlaticonModal(){
+    document.getElementById('flaticonModalOverlay').hidden = true;
+  }
+
+  async function searchFlaticonIcons(){
+    const q = (document.getElementById('flaticonSearchInput').value || '').trim();
+    const grid = document.getElementById('flaticonResultsGrid');
+    const msg = document.getElementById('flaticonModalMsg');
+    msg.hidden = true;
+    if(!q){ grid.innerHTML = ''; return; }
+    grid.innerHTML = '<p class="flaticon-loading">جارِ البحث…</p>';
+    try{
+      const token = await getFlaticonToken();
+      const res = await fetch(`https://api.flaticon.com/v3/search/icons?q=${encodeURIComponent(q)}&limit=30`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if(!res.ok) throw new Error('تعذّر جلب النتائج من Flaticon.');
+      const data = await res.json();
+      const icons = data.data || [];
+      if(!icons.length){
+        grid.innerHTML = '<p class="flaticon-loading">لا توجد نتائج لهذه الكلمة، جرّب كلمة أخرى بالإنجليزي.</p>';
+        return;
+      }
+      grid.innerHTML = icons.map(icon=>{
+        const imgs = icon.images || {};
+        const thumb = imgs['64'] || imgs['128'] || Object.values(imgs)[0] || '';
+        const full = imgs['512'] || imgs['256'] || thumb;
+        const safeFull = full.replace(/'/g, "&#39;");
+        return `<button type="button" class="flaticon-result-item" onclick="selectFlaticonIcon('${safeFull}')">
+          <img src="${thumb}" alt="" loading="lazy">
+        </button>`;
+      }).join('');
+    }catch(err){
+      console.error('خطأ بحث Flaticon:', err);
+      msg.textContent = err.message || 'حدث خطأ أثناء البحث في Flaticon.';
+      msg.hidden = false;
+      grid.innerHTML = '';
+    }
+  }
+
+  function selectFlaticonIcon(url){
+    pendingFlaticonImageUrl = url;
+    pendingSubjectImageFile = null;
+    document.getElementById('newSubjectImageInput').value = '';
+    const preview = document.getElementById('newSubjectImagePreview');
+    preview.src = url;
+    preview.hidden = false;
+    closeFlaticonModal();
   }
 
   function editSubject(id){
@@ -2476,6 +2686,7 @@
     document.getElementById('newSubjectYear').value = s.year || SUBJECT_YEARS[0];
     document.getElementById('newSubjectImageInput').value = '';
     pendingSubjectImageFile = null;
+    pendingFlaticonImageUrl = '';
     const preview = document.getElementById('newSubjectImagePreview');
     if(s.image_url){ preview.src = s.image_url; preview.hidden = false; } else { preview.hidden = true; preview.src=''; }
     document.getElementById('subjectFormSubmitBtn').textContent = '💾 حفظ التعديلات';
@@ -2493,6 +2704,7 @@
     document.getElementById('newSubjectImagePreview').hidden = true;
     document.getElementById('newSubjectImagePreview').src = '';
     pendingSubjectImageFile = null;
+    pendingFlaticonImageUrl = '';
     document.getElementById('subjectFormSubmitBtn').textContent = '+ إضافة مادة';
     document.getElementById('cancelSubjectEditBtn').hidden = true;
   }
@@ -2519,6 +2731,8 @@
         if(uploadError) throw uploadError;
         const { data: pub } = supabaseClient.storage.from('subject-images').getPublicUrl(path);
         imageUrl = pub.publicUrl + '?t=' + Date.now();
+      }else if(pendingFlaticonImageUrl){
+        imageUrl = pendingFlaticonImageUrl;
       }
       const payload = { name, year: year || null, image_url: imageUrl };
       let error;
@@ -3261,13 +3475,13 @@
     state.step = 'setup';
     renderBank();
   }
-  function crumbToBatch(){ state.subject = null; state.step='subject'; renderBank(); }
-  function crumbClearAll(){ resetFilters(); }
+  function crumbToBatch(){ state.subject = null; state.step='subject'; resetExamTimerState(); renderBank(); }
+  function crumbClearAll(){ resetExamTimerState(); resetFilters(); }
 
   function backTo(step){
     state.step = step;
     if(step==='subject'){ state.nature=null; state.lectures=[]; state.mode=null; }
-    if(step==='setup'){ state.session=null; }
+    if(step==='setup'){ state.session=null; resetExamTimerState(); }
     renderBank();
   }
 
@@ -3427,8 +3641,12 @@
     const n = Math.min(state.count, source.length);
     const shuffled = source.slice().sort(()=> Math.random()-0.5);
     const picked = shuffled.slice(0, n);
-    state.session = { questions: picked, cursor: 0, revealed:new Set(), answers:{}, finished:false };
+    state.session = {
+      questions: picked, cursor: 0, revealed:new Set(), answers:{}, finished:false,
+      examSecondsLeft: state.mode==='exam' ? picked.length * EXAM_SECONDS_PER_QUESTION : null
+    };
     state.step = 'session';
+    resetExamTimerState();
     renderBank();
   }
 
@@ -3483,10 +3701,54 @@
     renderSessionStage();
   }
 
+  /* ---------- مؤقّت وضع الاختبار: وقت إجمالي لكامل الاختبار (دقيقة لكل سؤال) ---------- */
+  const EXAM_SECONDS_PER_QUESTION = 60;
+  let examTimerInterval = null;
+
+  function clearExamTimer(){
+    if(examTimerInterval){ clearInterval(examTimerInterval); examTimerInterval = null; }
+  }
+  function resetExamTimerState(){
+    clearExamTimer();
+  }
+  function updateExamTimerDisplay(){
+    const wrap = document.getElementById('examTimer');
+    const txt = document.getElementById('examTimerText');
+    const sess = state.session;
+    if(!txt || !sess || sess.examSecondsLeft==null) return;
+    const left = Math.max(sess.examSecondsLeft,0);
+    const m = Math.floor(left/60);
+    const s = left%60;
+    txt.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if(wrap) wrap.classList.toggle('low', left<=60);
+  }
+  function armExamTimer(){
+    const sess = state.session;
+    if(!sess || sess.examSecondsLeft==null) return;
+    updateExamTimerDisplay();
+    clearExamTimer();
+    examTimerInterval = setInterval(()=>{
+      const sess = state.session;
+      if(!sess || sess.examSecondsLeft==null){ clearExamTimer(); return; }
+      sess.examSecondsLeft--;
+      updateExamTimerDisplay();
+      if(sess.examSecondsLeft<=0){
+        clearExamTimer();
+        onExamTimeUp();
+      }
+    }, 1000);
+  }
+  function onExamTimeUp(){
+    const sess = state.session;
+    if(!sess || sess.finished || sess.reviewing || state.mode!=='exam') return;
+    finishSession();
+  }
+
   function renderSessionStage(){
     document.getElementById('sessionSummary').innerHTML = sessionSummaryHtml();
     const body = document.getElementById('sessionBody');
     const sess = state.session;
+    clearExamTimer();
     if(!sess || sess.questions.length===0){
       document.getElementById('sessionTitle').textContent = 'لا توجد أسئلة كافية';
       document.getElementById('sessionSubtitle').textContent = 'جرّب اختيار محاضرات إضافية أو نوع أسئلة مختلف.';
@@ -3603,6 +3865,7 @@
       <div class="exam-card">
         <div class="q-head-row">
           <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
+          <span class="exam-timer mono" id="examTimer" dir="ltr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span id="examTimerText">01:00</span></span>
           ${currentSession ? saveBtnHtml(q.id) : ''}
         </div>
         <h3 dir="ltr" class="q-en">${q.text}</h3>
@@ -3616,6 +3879,8 @@
           ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
           : `<button class="btn-continue" onclick="finishSession()">إنهاء الاختبار</button>`}
       </div>`;
+    armExamTimer();
+    return;
   }
   function toggleReveal(i){
     const set = state.session.revealed;
@@ -4819,6 +5084,9 @@
     renderHomeStats();
     buildPool();
     renderBank();
+    // تصحيح موضع التمرير لرابط #ARCHIVE بعد اكتمال تحميل بيانات الصفحة الرئيسية
+    // (بيانات المواد/الإحصائيات ممكن تغيّر ارتفاع الصفحة وتزيح موضع التمرير الأولي)
+    if((location.hash||'').replace('#','') === 'ARCHIVE') scrollToContributeForm();
   }
   initRichEditors();
   initApp();
