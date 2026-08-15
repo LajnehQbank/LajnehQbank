@@ -835,14 +835,6 @@
     .login-grid{max-width:480px;}
   }
   @media (max-width:680px){
-    /* آيفون (Safari) بيكبّر الشاشة تلقائياً وقت الضغط على أي حقل نص خطه أصغر
-       من 16px، وهاد يخلي محاذاة الشاشة تختل بعد ما المستخدم يبلّش يكتب —
-       فبنثبّت حجم خط 16px لكل الحقول عالموبايل لمنع هالتكبير */
-    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
-    select,
-    textarea{
-      font-size:16px !important;
-    }
     nav.main-nav{display:none;position:absolute;top:100%;right:0;left:0;transform:none;background:var(--card);flex-direction:column;padding:12px;border-bottom:1px solid var(--line);gap:4px;}
     nav.main-nav.open{display:flex;}
     .burger{display:block;}
@@ -1085,63 +1077,9 @@
   .sub-text table.rich-content-table td, .sub-text table.rich-content-table th{
     border:1.4px solid var(--line);padding:7px 9px;
   }
-
-  /* ===== شاشة التحميل (Page Loader) ===== */
-  html.is-loading, html.is-loading body{overflow:hidden;height:100%;}
-  #pageLoader{
-    position:fixed; inset:0; z-index:99999;
-    display:flex; align-items:center; justify-content:center;
-    background:var(--paper);
-    transition:opacity .45s ease, visibility .45s ease;
-  }
-  #pageLoader.is-hidden{opacity:0; visibility:hidden; pointer-events:none;}
-  .loader-box{display:flex; flex-direction:column; align-items:center; gap:16px; padding:0 24px;}
-  .loader-title{font-family:'Tajawal',sans-serif; font-weight:800; font-size:17px; color:var(--ink);}
-  .loader-track{width:220px; height:6px; border-radius:100px; background:var(--line); overflow:hidden;}
-  .loader-fill{height:100%; width:0%; border-radius:100px;
-    background:linear-gradient(90deg, var(--cyan), var(--cyan-deep));
-    transition:width .25s ease;}
 </style>
 </head>
 <body>
-
-<!-- ===================== شاشة التحميل (تظهر فوراً وتختفي بعد جهوزية الصفحة) ===================== -->
-<div id="pageLoader">
-  <div class="loader-box">
-    <div class="loader-title">جاري التحميل…</div>
-    <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
-  </div>
-</div>
-<script>
-  /* حارس أمان مستقل (Watchdog): لو أي سكربت خارجي (CDN) تأخر أو فشل بالتحميل
-     لاحقاً، أو صار خطأ غير متوقع في كود الصفحة، ما بدنا شاشة التحميل تعلق
-     للأبد وتمنع الطالب من استخدام الموقع. هاد الكود مستقل تماماً عن باقي
-     سكربتات الصفحة ويشتغل فوراً بمجرد ما المتصفح يوصله، فهو يضمن اختفاء
-     الشاشة حتى لو باقي السكربتات ما اشتغلت أبداً. */
-  (function(){
-    var MAX_WAIT_MS = 12000;
-    var forced = false;
-    function forceHideLoader(){
-      if(forced) return;
-      forced = true;
-      var el = document.getElementById('pageLoader');
-      if(el){ el.classList.add('is-hidden'); }
-      document.documentElement.classList.remove('is-loading');
-      // لو التطبيق الأساسي ما قدر يشتغل (مثلاً مكتبة خارجية ما تحمّلت)،
-      // منّبه المستخدم بلطف بدل ما يضل شايف شاشة تحميل فاضية
-      if(typeof window.__appInitFailed !== 'undefined' && window.__appInitFailed){
-        var box = document.querySelector('#pageLoader .loader-box');
-        if(box){
-          box.innerHTML = '<div class="loader-title">تعذّر تحميل الصفحة، تأكد من اتصال الإنترنت</div>'
-            + '<button onclick="location.reload()" style="margin-top:10px;background:var(--cyan);color:#fff;border:none;padding:10px 20px;border-radius:100px;font-weight:700;font-family:inherit;cursor:pointer;">إعادة المحاولة</button>';
-          el.classList.remove('is-hidden');
-        }
-      }
-    }
-    window.__forceHideLoader = forceHideLoader;
-    window.__loaderWatchdogTimer = setTimeout(forceHideLoader, MAX_WAIT_MS);
-  })();
-</script>
 
 <!-- ===================== HEADER ===================== -->
 <header class="site-header">
@@ -1915,18 +1853,7 @@
   /* ---------- supabase setup ---------- */
   const SUPABASE_URL = "https://abdfawwbztgrlmkdlsgz.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_N2ogg_VSPj3id-2WtBRSPQ_rJt18Kx5";
-  /* لو مكتبة Supabase (من CDN خارجي) تأخرت أو فشلت بالتحميل — بسبب بطء
-     الإنترنت عالموبايل مثلاً — ما بدنا هالسطر يوقف تنفيذ باقي كود الصفحة
-     كلها (يلي كان بالضبط سبب تعليق شاشة التحميل للأبد). بنلف الإنشاء
-     بـ try/catch حتى باقي الصفحة (التنقل، الشاشات..) تضل تشتغل، وبس
-     ميزات قاعدة البيانات يلي بتعتمد عليها هي يلي بتنعطل بهدوء. */
-  let supabaseClient = null;
-  try{
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }catch(err){
-    console.error('تعذّر تحميل مكتبة الاتصال بقاعدة البيانات (تأكد من الإنترنت):', err);
-    window.__appInitFailed = true;
-  }
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   let currentSession = null; // supabase session object, or null when logged out
   let isAdmin = false; // determined from public.profiles.role — never trust user_metadata for this
@@ -2575,84 +2502,13 @@
     go('home');
   }
 
-  /* ---------- شاشة التحميل (Page Loader) ---------- */
-  let __loaderTimer = null;
-  let __appReady = false;
-  let __appReadyResolvers = [];
-  function markAppReady(){
-    __appReady = true;
-    __appReadyResolvers.forEach(fn=>fn());
-    __appReadyResolvers = [];
-  }
-  function whenAppReady(cb){
-    if(__appReady) cb();
-    else __appReadyResolvers.push(cb);
-  }
-  // شبكة أمان: لو تعطّل الاتصال بقاعدة البيانات لأي سبب، ما نخلي شاشة
-  // التحميل عالقة إلى الأبد — نعتبر التطبيق "جاهز" بعد 8 ثواني كحد أقصى
-  setTimeout(()=>{ if(!__appReady) markAppReady(); }, 8000);
-  function showPageLoader(){
-    const el = document.getElementById('pageLoader');
-    if(!el) return;
-    el.classList.remove('is-hidden');
-    document.documentElement.classList.add('is-loading');
-    const fill = document.getElementById('loaderFill');
-    if(fill){
-      fill.style.width = '0%';
-      let progress = 0;
-      clearInterval(__loaderTimer);
-      __loaderTimer = setInterval(()=>{
-        progress += (92 - progress) * 0.12 + 1;
-        if(progress > 92) progress = 92;
-        fill.style.width = progress + '%';
-      }, 110);
-    }
-  }
-  function hidePageLoader(){
-    const el = document.getElementById('pageLoader');
-    if(!el) return;
-    const fill = document.getElementById('loaderFill');
-    clearInterval(__loaderTimer);
-    if(window.__loaderWatchdogTimer) clearTimeout(window.__loaderWatchdogTimer);
-    if(fill) fill.style.width = '100%';
-    setTimeout(()=>{
-      el.classList.add('is-hidden');
-      document.documentElement.classList.remove('is-loading');
-    }, 150);
-  }
-  /* ننتظر جهوزية الصفحة فعلياً: تحميل موارد الصفحة (صور/خطوط) + جهوزية بيانات
-     التطبيق (الأسئلة/المواد المجلوبة من قاعدة البيانات) + استقرار التخطيط
-     (Layout) عبر إطارين متتاليين من الرسم — حتى ما تختفي شاشة التحميل قبل ما
-     يكون بنك الأسئلة (أو أي صفحة) جاهز فعلياً بمحتواه */
-  function whenPageReady(callback){
-    const afterResources = ()=>{
-      whenAppReady(()=>{
-        requestAnimationFrame(()=> requestAnimationFrame(callback));
-      });
-    };
-    if(document.readyState === 'complete'){
-      afterResources();
-    }else{
-      window.addEventListener('load', afterResources, {once:true});
-    }
-  }
-
   /* ---------- routing ---------- */
-  function go(view, opts){
-    opts = opts || {};
-
+  function go(view){
     let targetView = (view==='ARCHIVE') ? 'home' : view;
     if((targetView==='student' || targetView==='student-settings') && !currentSession) targetView = 'login';
     if((targetView==='student' || targetView==='student-settings') && isAdmin) targetView = 'admin';
     if(targetView==='admin' && !currentSession) targetView = 'login';
     if(targetView==='admin' && currentSession && !isAdmin) targetView = 'home';
-
-    // شاشة التحميل تظهر فقط عند الدخول الأولي للموقع (opts.showLoader=true صراحةً)
-    // أو عند الانتقال إلى "بنك الأسئلة" — وليس عند أي تنقّل آخر
-    const showLoader = opts.showLoader === true ? true
-      : (opts.showLoader === false ? false : targetView === 'bank');
-    if(showLoader) showPageLoader();
-
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     document.getElementById('view-'+targetView).classList.add('active');
     document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('current', l.dataset.view==='student' ? (targetView==='student'||targetView==='student-settings') : l.dataset.view===targetView));
@@ -2668,10 +2524,6 @@
     if(targetView==='admin') renderAdminPage();
     if(targetView==='home') initRevealObserver();
     if(view==='ARCHIVE' && targetView==='home') scrollToContributeForm();
-
-    if(showLoader){
-      whenPageReady(hidePageLoader);
-    }
   }
   /* رابط مباشر لقسم "متذكر سؤال" (#ARCHIVE): يفتح الصفحة الرئيسية وينزل مباشرة لنموذج المشاركة */
   function scrollToContributeForm(){
@@ -2709,9 +2561,8 @@
     }
   }
   window.addEventListener('DOMContentLoaded', ()=>{
-    showPageLoader();
     const initial = (location.hash||'#home').replace('#','');
-    go(['home','bank','login','student','student-settings','admin','ARCHIVE'].includes(initial) ? initial : 'home', {showLoader:true});
+    go(['home','bank','login','student','student-settings','admin','ARCHIVE'].includes(initial) ? initial : 'home');
   });
   /* لو الطالب فتح الرابط #ARCHIVE وهو أصلاً بنفس التبويب (بدون إعادة تحميل الصفحة)،
      المتصفح ما بيعيد تحميل الصفحة، بس بيغيّر الهاش فقط — لازم نتعامل معه يدوياً هون */
@@ -5347,7 +5198,6 @@
     renderHomeStats();
     buildPool();
     renderBank();
-    markAppReady();
     // تصحيح موضع التمرير لرابط #ARCHIVE بعد اكتمال تحميل بيانات الصفحة الرئيسية
     // (بيانات المواد/الإحصائيات ممكن تغيّر ارتفاع الصفحة وتزيح موضع التمرير الأولي)
     if((location.hash||'').replace('#','') === 'ARCHIVE') scrollToContributeForm();
