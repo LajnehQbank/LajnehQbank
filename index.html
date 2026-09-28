@@ -5828,7 +5828,7 @@
       }
       const args = (clickExtraArg!=null ? clickExtraArg+',' : '') + idx;
       const click = (clickHandler && !revealed) ? ` onclick="${clickHandler}(${args})"` : '';
-      return `<div class="${cls}"${click}><span class="opt-letter">${OPT_LETTERS[idx]}.</span><span class="opt-text">${opt}</span></div>`;
+      return `<div class="${cls}"${click}><span class="opt-letter">${OPT_LETTERS[idx]}</span><span class="opt-text">${opt}</span></div>`;
     }).join('');
     return `<div class="mcq-list" dir="ltr">${rows}</div>`;
   }
@@ -6472,7 +6472,29 @@
         .pdf-q-correct{background:#dcfce7;color:#166534;font-weight:700;}
         .pdf-q-modelanswer{font-size:12.5px;margin-bottom:8px;background:#f8fafc;padding:6px 8px;border-radius:5px;}
         .pdf-q-explanation{font-size:12px;color:#334155;background:#fffbeb;padding:8px 10px;border-radius:5px;line-height:1.6;}
-      </style>
+      
+  /* ===== صندوق السؤال الرمادي + رموز الخيارات بدوائر ===== */
+  .mcq-option{gap:12px;}
+  .mcq-option .opt-letter{
+    width:30px;height:30px;border-radius:50%;border:1.5px solid var(--slate-soft);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;line-height:1;color:var(--slate);background:transparent;
+    transition:background .15s,border-color .15s,color .15s;
+  }
+  .mcq-option.selected .opt-letter{background:var(--cyan);border-color:var(--cyan);color:#fff;}
+  .mcq-option.correct .opt-letter{background:var(--green);border-color:var(--green);color:#fff;}
+  .mcq-option.incorrect .opt-letter{background:var(--coral);border-color:var(--coral);color:#fff;}
+  #stageSession .mcq-option .opt-letter{font-size:13px;color:var(--slate);}
+  #stageSession .mcq-option.selected .opt-letter{background:var(--q-teal);border-color:var(--q-teal);color:#fff;}
+  #stageSession .mcq-option.correct .opt-letter{background:var(--q-green);border-color:var(--q-green);color:#fff;}
+  #stageSession .mcq-option.incorrect .opt-letter{background:var(--coral);border-color:var(--coral);color:#fff;}
+
+  #stageSession .exam-card h3.q-en{
+    display:block;width:100%;background:#EEF1F3;border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;margin:0;
+  }
+  html[data-theme="dark"] #stageSession .exam-card h3.q-en{background:#2A343B;}
+</style>
       <div class="pdf-header">
         <h1>بنك الأسئلة — ${escapeHtml(subject)}</h1>
         <p>عدد الأسئلة: ${rows.length} — تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}</p>
