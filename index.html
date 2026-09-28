@@ -1378,74 +1378,6 @@
   .loader-fill{height:100%; width:0%; border-radius:100px;
     background:linear-gradient(90deg, var(--cyan), var(--cyan-deep));
     transition:width .25s ease;}
-
-  /* ===== شكل عرض الأسئلة الجديد (Teal question card) ===== */
-  #stageSession{
-    --q-teal:#12808C; --q-teal-deep:#0E6670; --q-teal-ink:#0F4E58;
-    --q-box:#ECFBFC; --q-box-line:#8FD8DE; --q-green:#1FA971; --q-green-bg:#E9F8F1;
-  }
-  html[data-theme="dark"] #stageSession{
-    --q-teal:#2AB3C2; --q-teal-deep:#4CC6D3; --q-teal-ink:#BFEFF4;
-    --q-box:#10303A; --q-box-line:#1F5A66; --q-green:#4FC895; --q-green-bg:rgba(47,174,126,.16);
-  }
-  #stageSession .exam-card{padding:26px 24px;}
-  #stageSession .q-head-row{align-items:center;flex-wrap:wrap;margin-bottom:18px;}
-  #stageSession .q-kind-pill{
-    background:var(--q-box);color:var(--q-teal);border:1px solid var(--q-box-line);
-    padding:4px 12px;border-radius:100px;font-size:11.5px;font-weight:700;
-  }
-  #stageSession .q-head-row .e-index{margin-inline-start:auto;font-size:12px;color:var(--slate-soft);}
-  #stageSession .exam-card h3.q-en{
-    font-size:17px;line-height:1.7;font-weight:800;color:var(--q-teal-ink);margin-bottom:6px;
-  }
-  #stageSession .mcq-list{gap:12px;margin-top:18px;}
-  #stageSession .mcq-option{
-    padding:14px 16px;border:1.4px solid var(--line);border-radius:12px;font-size:14px;line-height:1.7;align-items:center;
-  }
-  #stageSession .mcq-option .opt-letter{font-size:13px;color:var(--ink);}
-  #stageSession .mcq-option .opt-text{font-size:13.5px;}
-  #stageSession .mcq-option:hover{border-color:var(--q-teal);}
-  #stageSession .mcq-option.selected{border-color:var(--q-teal);background:var(--q-box);}
-  #stageSession .mcq-option.correct{border-color:var(--q-green);background:var(--q-green-bg);}
-  #stageSession .mcq-option.correct .opt-letter,
-  #stageSession .mcq-option.correct .opt-text{color:var(--ink);font-weight:700;}
-  #stageSession .mcq-option.incorrect .opt-letter,
-  #stageSession .mcq-option.incorrect .opt-text{font-weight:600;}
-
-  #stageSession .explain-box{
-    margin-top:20px;padding:18px 18px;background:var(--q-box);border:1px solid var(--q-box-line);
-    border-radius:12px;font-size:12.5px;line-height:1.9;color:var(--q-teal-ink);
-    font-family:'IBM Plex Sans Arabic','Segoe UI',Arial,sans-serif;
-  }
-  #stageSession .explain-box b,#stageSession .explain-box strong{
-    display:inline;text-transform:none;letter-spacing:0;font-size:inherit;color:var(--q-teal);font-weight:800;
-  }
-  #stageSession .explain-box p{margin:0 0 12px;color:inherit;line-height:1.9;}
-  #stageSession .explain-box table{
-    display:block;overflow-x:auto;max-width:100%;border-collapse:collapse;margin:14px 0 4px;font-size:12px;
-  }
-  #stageSession .explain-box table td,#stageSession .explain-box table th{
-    border:1px solid var(--q-box-line);padding:9px 10px;vertical-align:top;color:var(--q-teal-ink);background:var(--card);min-width:90px;
-  }
-  #stageSession .explain-box table tr:first-child td,
-  #stageSession .explain-box table th{background:var(--q-box);color:var(--q-teal);font-weight:800;}
-  #stageSession .explain-box table td:first-child{font-weight:800;color:var(--q-teal);}
-
-  #stageSession .exam-nav{margin-top:22px;gap:12px;}
-  #stageSession .exam-nav .side-btns{align-items:center;}
-  #stageSession .btn-continue{background:var(--q-teal);padding:12px 26px;font-size:13.5px;}
-  #stageSession .btn-continue:hover:not(:disabled){background:var(--q-teal-deep);}
-  #stageSession .btn-exit{
-    background:none;border:1.6px solid var(--ink);color:var(--ink);padding:11px 24px;border-radius:100px;
-    font-weight:700;font-size:13.5px;
-  }
-  #stageSession .btn-exit:hover{background:var(--ink);color:var(--card);}
-  #stageSession .btn-prev-round{
-    width:42px;height:42px;border-radius:50%;background:none;border:1.4px solid var(--line);color:var(--slate);
-    font-size:17px;display:inline-flex;align-items:center;justify-content:center;
-  }
-  #stageSession .btn-prev-round:hover:not(:disabled){border-color:var(--q-teal);color:var(--q-teal);}
-  #stageSession .btn-prev-round:disabled{opacity:.35;cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -5828,24 +5760,13 @@
       }
       const args = (clickExtraArg!=null ? clickExtraArg+',' : '') + idx;
       const click = (clickHandler && !revealed) ? ` onclick="${clickHandler}(${args})"` : '';
-      return `<div class="${cls}"${click}><span class="opt-letter">${OPT_LETTERS[idx]}</span><span class="opt-text">${opt}</span></div>`;
+      return `<div class="${cls}"${click}><span class="opt-letter">${OPT_LETTERS[idx]}.</span><span class="opt-text">${opt}</span></div>`;
     }).join('');
     return `<div class="mcq-list" dir="ltr">${rows}</div>`;
   }
   function renderExplanationHtml(q){
     if(!q.explanation) return '';
-    let ex = q.explanation;
-    if(!/<(p|br|div|table|ul|ol|li)[\s>\/]/i.test(ex)) ex = ex.replace(/\n/g,'<br>');
-    return `<div class="explain-box" dir="ltr">${ex}</div>`;
-  }
-  function kindPillHtml(q){
-    const l = ({archive:'الأرشيف', quiz:'Quiz Time'})[q.kind];
-    return l ? `<span class="q-kind-pill">${l}</span>` : '';
-  }
-  function exitSession(){
-    if(!confirm('هل تريد إنهاء الجلسة والخروج؟')) return;
-    if(state.mode==='exam' && state.session && !state.session.finished && !state.session.reviewing){ finishSession(); return; }
-    backTo('setup');
+    return `<div class="explain-box" dir="ltr"><b>Explanation</b>${q.explanation}</div>`;
   }
   function selectExamOption(idx){
     const sess = state.session;
@@ -5970,8 +5891,7 @@
         <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
         <div class="exam-card">
           <div class="q-head-row">
-            ${kindPillHtml(q)}
-            <span class="e-index">${sess.cursor+1} / ${sess.questions.length}</span>
+            <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
             ${currentSession ? saveBtnHtml(q.id) : ''}
           </div>
           <h3 dir="ltr" class="q-en">${q.text}</h3>
@@ -5980,12 +5900,11 @@
         </div>
         <div class="exam-nav">
           <div class="side-btns">
-            ${sess.cursor < sess.questions.length-1
-              ? `<button class="btn-continue" onclick="examNav(1)">السؤال التالي</button>`
-              : `<button class="btn-continue" onclick="reviewSession()">مراجعة الأسئلة والإجابات</button>`}
-            <button class="btn-prev-round" title="السابق" aria-label="السابق" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→</button>
+            <button class="btn-back" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→ السابق</button>
           </div>
-          <button class="btn-exit" onclick="exitSession()">إنهاء والخروج</button>
+          ${sess.cursor < sess.questions.length-1
+            ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
+            : `<button class="btn-continue" onclick="reviewSession()">مراجعة الأسئلة والإجابات</button>`}
         </div>`;
       return;
     }
@@ -6027,8 +5946,7 @@
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="exam-card">
         <div class="q-head-row">
-          ${kindPillHtml(q)}
-          <span class="e-index">${sess.cursor+1} / ${sess.questions.length}</span>
+          <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
           <span class="exam-timer mono" id="examTimer" dir="ltr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span id="examTimerText">01:00</span></span>
           ${currentSession ? saveBtnHtml(q.id) : ''}
         </div>
@@ -6037,12 +5955,11 @@
       </div>
       <div class="exam-nav">
         <div class="side-btns">
-          ${sess.cursor < sess.questions.length-1
-            ? `<button class="btn-continue" onclick="examNav(1)">السؤال التالي</button>`
-            : `<button class="btn-continue" onclick="finishSession()">إنهاء الاختبار</button>`}
-          <button class="btn-prev-round" title="السابق" aria-label="السابق" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→</button>
+          <button class="btn-back" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→ السابق</button>
         </div>
-        <button class="btn-exit" onclick="exitSession()">إنهاء والخروج</button>
+        ${sess.cursor < sess.questions.length-1
+          ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
+          : `<button class="btn-continue" onclick="finishSession()">إنهاء الاختبار</button>`}
       </div>`;
     armExamTimer();
     return;
@@ -6472,29 +6389,7 @@
         .pdf-q-correct{background:#dcfce7;color:#166534;font-weight:700;}
         .pdf-q-modelanswer{font-size:12.5px;margin-bottom:8px;background:#f8fafc;padding:6px 8px;border-radius:5px;}
         .pdf-q-explanation{font-size:12px;color:#334155;background:#fffbeb;padding:8px 10px;border-radius:5px;line-height:1.6;}
-      
-  /* ===== صندوق السؤال الرمادي + رموز الخيارات بدوائر ===== */
-  .mcq-option{gap:12px;}
-  .mcq-option .opt-letter{
-    width:30px;height:30px;border-radius:50%;border:1.5px solid var(--slate-soft);
-    display:inline-flex;align-items:center;justify-content:center;
-    font-size:13px;font-weight:800;line-height:1;color:var(--slate);background:transparent;
-    transition:background .15s,border-color .15s,color .15s;
-  }
-  .mcq-option.selected .opt-letter{background:var(--cyan);border-color:var(--cyan);color:#fff;}
-  .mcq-option.correct .opt-letter{background:var(--green);border-color:var(--green);color:#fff;}
-  .mcq-option.incorrect .opt-letter{background:var(--coral);border-color:var(--coral);color:#fff;}
-  #stageSession .mcq-option .opt-letter{font-size:13px;color:var(--slate);}
-  #stageSession .mcq-option.selected .opt-letter{background:var(--q-teal);border-color:var(--q-teal);color:#fff;}
-  #stageSession .mcq-option.correct .opt-letter{background:var(--q-green);border-color:var(--q-green);color:#fff;}
-  #stageSession .mcq-option.incorrect .opt-letter{background:var(--coral);border-color:var(--coral);color:#fff;}
-
-  #stageSession .exam-card h3.q-en{
-    display:block;width:100%;background:#EEF1F3;border:1px solid var(--line);
-    border-radius:12px;padding:16px 18px;margin:0;
-  }
-  html[data-theme="dark"] #stageSession .exam-card h3.q-en{background:#2A343B;}
-</style>
+      </style>
       <div class="pdf-header">
         <h1>بنك الأسئلة — ${escapeHtml(subject)}</h1>
         <p>عدد الأسئلة: ${rows.length} — تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}</p>
