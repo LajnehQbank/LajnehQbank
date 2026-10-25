@@ -1733,9 +1733,6 @@
       </div>
       <div class="session-summary" id="sessionSummary"></div>
       <div id="sessionBody"></div>
-      <div class="wizard-actions">
-        <button class="btn-back" onclick="backTo('setup')">→ تعديل الإعدادات</button>
-      </div>
     </div>
 
     <!-- Stage 8: results (classic browse, reached from search) -->
@@ -5970,7 +5967,7 @@
     if(!sess || sess.questions.length===0){
       document.getElementById('sessionTitle').textContent = 'لا توجد أسئلة كافية';
       document.getElementById('sessionSubtitle').textContent = 'جرّب اختيار محاضرات إضافية أو نوع أسئلة مختلف.';
-      body.innerHTML = `<div class="empty-state"><b>لا توجد أسئلة مطابقة</b>عدّل اختياراتك من زر "تعديل الإعدادات".</div>`;
+      body.innerHTML = `<div class="empty-state"><b>لا توجد أسئلة مطابقة</b>عدّل اختياراتك من الأزرار في أعلى الصفحة.</div>`;
       return;
     }
     if(sess.reviewing){
