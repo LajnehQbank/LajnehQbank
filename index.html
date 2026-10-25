@@ -5538,7 +5538,7 @@
         kind: row.kind,
         // إذا كان المستخدم مسجّلاً دخوله، تُفتح كل الأسئلة المقفلة تلقائياً
         locked: !!row.locked && !currentSession,
-        text: row.question_text,
+        text: softJoinQuestionText(row.question_text),
         modelAnswer: row.model_answer || null,
         options: hasOptions ? trimmedOpts : null,   // خيارات بالإنجليزي (من 2 إلى 5 خيارات: Option A–E)
         correctIndex: hasOptions ? correctIndex : null,
@@ -5546,6 +5546,19 @@
       };
     });
     renderHomeStats();
+  }
+
+  /* نص السؤال المستورد من ملف/PDF يحمل فواصل أسطر صلبة (<br>) من عرض الصفحة الأصلية فيظهر مقطّعًا مع فراغ بآخر كل سطر.
+     نحوّل الفاصل المنفرد إلى مسافة ليتدفّق النص على كامل عرض المربع، ونُبقي الفاصل المزدوج (فقرة جديدة)
+     والفاصل الذي يسبق بداية قائمة (1. / A) / - / •) كما هو. */
+  function softJoinQuestionText(html){
+    if(!html || !/<br/i.test(html)) return html;
+    return html.replace(/(?:\s*<br\s*\/?>\s*)+/gi, (m, offset, str)=>{
+      if((m.match(/<br/gi)||[]).length >= 2) return m;
+      const rest = str.slice(offset + m.length);
+      if(/^(?:[A-Ea-e][\.\)]\s|\d{1,2}[\.\)]\s|[-\u2022*]\s)/.test(rest)) return m;
+      return ' ';
+    });
   }
 
   /* بنك الأسئلة الفعلي فقط — بدون أي أسئلة تجريبية/عيّنة */
