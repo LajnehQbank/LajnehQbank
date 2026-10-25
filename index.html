@@ -80,8 +80,6 @@
   html[data-theme="dark"] .tag.batch{background:#2A2440;color:#C9B8F5;}
   html[data-theme="dark"] .danger-zone{background:rgba(226,96,79,.12);}
   html[data-theme="dark"] .danger-zone p{color:var(--slate);}
-  html[data-theme="dark"] .mcq-option.correct{background:rgba(47,174,126,.15);}
-  html[data-theme="dark"] .mcq-option.incorrect{background:rgba(226,96,79,.15);}
   html[data-theme="dark"] .btn-icon-sm.danger:hover{background:rgba(226,96,79,.15);}
   html[data-theme="dark"] .rte-btn.danger:hover{background:rgba(226,96,79,.15);}
   html[data-theme="dark"] .btn-start:disabled{background:#3A4650;color:var(--slate-soft);}
@@ -787,7 +785,7 @@
     background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:44px 48px;max-width:900px;width:100%;margin:0 auto;text-align:right;
   }
   .exam-card .e-index{font-family:'IBM Plex Mono';color:var(--cyan-deep);font-size:13.5px;font-weight:700;margin-bottom:16px;display:block;}
-  .exam-card h3{font-size:21px;line-height:1.85;font-weight:700;}
+  .exam-card h3{font-size:15.5px;line-height:1.75;font-weight:700;}
 
   /* ===== حفظ السؤال (bookmark) ===== */
   .q-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px;}
@@ -821,17 +819,43 @@
   /* ---- responsive sizing: laptop / iPad / phone ---- */
   @media (max-width:1024px){
     .exam-card{max-width:760px;padding:36px 38px;}
-    .exam-card h3{font-size:19.5px;}
+    .exam-card h3{font-size:15.5px;}
     .session-summary,.progress-track,.exam-nav{max-width:760px;}
   }
   @media (max-width:640px){
     .exam-card{padding:26px 20px;border-radius:var(--radius-md);}
-    .exam-card h3{font-size:17px;line-height:1.75;}
+    .exam-card h3{font-size:15px;line-height:1.75;}
     .exam-card .e-index{font-size:12px;}
-    .mcq-option{padding:14px 16px;font-size:14.5px;}
+    .mcq-option{padding:12px 14px;font-size:14px;}
     .exam-nav{flex-wrap:wrap;gap:12px;}
   }
   .exam-nav .side-btns{display:flex;gap:10px;}
+
+  /* ===== exam layout: question card + question map (same as source exam page) ===== */
+  .exam-layout{display:grid;grid-template-columns:1fr 280px;gap:18px;align-items:start;max-width:1080px;width:100%;margin:0 auto;}
+  .exam-layout .exam-card{max-width:none;margin:0;padding:32px;}
+  .exam-layout .exam-nav{max-width:none;margin-top:18px;}
+  .exam-nav-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;position:sticky;top:90px;}
+  .exam-nav-card h4{margin:0 0 10px;font-size:14.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .exam-nav-card h4 .meta{font-size:12.5px;color:var(--slate-soft);font-weight:600;}
+  .exam-nav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:8px;margin-bottom:12px;}
+  .exam-nb{position:relative;height:40px;border-radius:10px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font-family:inherit;font-weight:800;font-size:13.5px;cursor:pointer;padding:0;}
+  .exam-nb.answered{background:color-mix(in srgb, var(--cyan) 14%, var(--card));border-color:var(--cyan);}
+  .exam-nb.current{outline:3px solid var(--cyan);outline-offset:1px;}
+  .exam-nb.flagged::after{content:'🚩';position:absolute;top:-8px;inset-inline-end:-5px;font-size:12px;}
+  .exam-legend{display:flex;flex-wrap:wrap;gap:10px;font-size:11.5px;color:var(--slate-soft);margin-bottom:14px;}
+  .exam-legend i{display:inline-block;width:12px;height:12px;border-radius:4px;border:1.5px solid var(--line);vertical-align:-2px;margin-inline-end:4px;}
+  .exam-legend i.a{background:color-mix(in srgb, var(--cyan) 14%, var(--card));border-color:var(--cyan);}
+  .exam-flag-btn{background:none;border:1.4px solid var(--line);padding:7px 14px;border-radius:100px;font-size:12.5px;font-weight:700;color:var(--slate);font-family:inherit;}
+  .exam-flag-btn:hover{border-color:var(--amber);color:var(--amber);}
+  .exam-flag-btn.on{background:color-mix(in srgb, var(--amber) 18%, var(--card));border-color:var(--amber);color:var(--amber);}
+  .exam-nav-card .btn-continue{width:100%;justify-content:center;}
+  .q-head-row .head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  @media (max-width:860px){
+    .exam-layout{grid-template-columns:1fr;}
+    .exam-nav-card{position:static;order:-1;}
+    .exam-layout .exam-card{padding:22px 18px;}
+  }
 
   /* ===== exam timer (per-question countdown) ===== */
   .exam-timer{
@@ -853,28 +877,30 @@
   .mcq-reveal{display:none;margin-top:22px;}
   .mcq-reveal.show{display:block;}
   .mcq-list{
-    display:flex;flex-direction:column;gap:14px;margin-top:22px;
+    display:flex;flex-direction:column;gap:10px;margin-top:18px;
     direction:ltr;text-align:left;font-family:'IBM Plex Sans Arabic','Segoe UI',Arial,sans-serif;
   }
   .mcq-option{
-    display:flex;align-items:center;gap:10px;padding:18px 22px;border:1.5px solid var(--line);border-radius:var(--radius-md);
-    background:var(--card);cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;font-size:15.5px;color:var(--slate-soft);
+    display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;border:1.5px solid var(--line);border-radius:14px;
+    background:var(--card);cursor:pointer;transition:border-color .15s,background-color .15s;font-size:14.5px;line-height:1.6;color:var(--ink);
   }
-  .mcq-option:hover{border-color:var(--cyan);box-shadow:var(--shadow-sm);}
+  .mcq-option:hover{border-color:var(--cyan);}
   .mcq-option .opt-letter{
-    flex:0 0 auto;font-weight:800;color:var(--ink);font-size:15.5px;
+    flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:13px;border:2px solid var(--line);color:var(--slate-soft);background:var(--paper);
   }
-  .mcq-option .opt-text{color:var(--slate-soft);}
-  .mcq-option.selected{border-color:var(--cyan);background:var(--cyan-pale);}
-  .mcq-option.selected .opt-text{color:var(--ink);}
-  .mcq-option.correct{border-color:var(--green);background:#E4F6EE;}
-  .mcq-option.correct .opt-letter,.mcq-option.correct .opt-text{color:var(--green);}
-  .mcq-option.incorrect{border-color:var(--coral);background:#FAE7E3;}
-  .mcq-option.incorrect .opt-letter,.mcq-option.incorrect .opt-text{color:var(--coral);}
+  .mcq-option .opt-text{flex:1;color:var(--ink);}
+  .mcq-option.selected{border-color:var(--cyan);background:color-mix(in srgb, var(--cyan) 8%, var(--card));}
+  .mcq-option.selected .opt-letter{background:var(--cyan);border-color:var(--cyan);color:#fff;}
+  .mcq-option.correct{border-color:var(--green);background:color-mix(in srgb, var(--green) 10%, var(--card));}
+  .mcq-option.correct .opt-letter{background:var(--green);border-color:var(--green);color:#fff;}
+  .mcq-option.incorrect{border-color:var(--coral);background:color-mix(in srgb, var(--coral) 10%, var(--card));}
+  .mcq-option.incorrect .opt-letter{background:var(--coral);border-color:var(--coral);color:#fff;}
   .mcq-option.static{cursor:default;}
   .mcq-option.static:hover{box-shadow:none;}
+  .mcq-option.static:not(.correct):not(.incorrect):not(.selected):hover{border-color:var(--line);}
   .explain-box{
-    margin-top:14px;padding:15px 18px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);
+    margin-top:14px;padding:16px 18px;background:color-mix(in srgb, var(--cyan) 5%, var(--card));border:1px solid var(--cyan-pale);border-radius:16px;
     font-size:13px;color:var(--slate);line-height:1.85;direction:ltr;text-align:left;font-family:'IBM Plex Mono','Segoe UI',Arial,sans-serif;
   }
   .explain-box b{display:block;margin-bottom:6px;color:var(--ink);font-family:inherit;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;}
@@ -916,6 +942,10 @@
   .q-card h4.q-en, .exam-card h3.q-en{
     direction:ltr;text-align:left;unicode-bidi:plaintext;
     font-family:'IBM Plex Sans Arabic','Segoe UI',Arial,sans-serif;
+  }
+  .exam-card h3.q-en{
+    background:color-mix(in srgb, var(--cyan) 6%, var(--card));border:1px solid var(--cyan-pale);border-radius:16px;
+    padding:16px 18px;font-weight:700;font-size:15.5px;line-height:1.75;margin-bottom:6px;
   }
   .q-meta{display:flex;align-items:center;gap:14px;margin-top:14px;}
   .q-meta button{
@@ -5715,7 +5745,7 @@
     const shuffled = source.slice().sort(()=> Math.random()-0.5);
     const picked = shuffled.slice(0, n);
     state.session = {
-      questions: picked, cursor: 0, revealed:new Set(), answers:{}, finished:false,
+      questions: picked, cursor: 0, revealed:new Set(), answers:{}, flagged:new Set(), finished:false,
       examSecondsLeft: state.mode==='exam' ? picked.length * EXAM_SECONDS_PER_QUESTION : null
     };
     state.step = 'session';
@@ -5760,7 +5790,7 @@
       }
       const args = (clickExtraArg!=null ? clickExtraArg+',' : '') + idx;
       const click = (clickHandler && !revealed) ? ` onclick="${clickHandler}(${args})"` : '';
-      return `<div class="${cls}"${click}><span class="opt-letter">${OPT_LETTERS[idx]}.</span><span class="opt-text">${opt}</span></div>`;
+      return `<div class="${cls}"${click}><span class="opt-letter">${OPT_LETTERS[idx]}</span><span class="opt-text">${opt}</span></div>`;
     }).join('');
     return `<div class="mcq-list" dir="ltr">${rows}</div>`;
   }
@@ -5771,8 +5801,33 @@
   function selectExamOption(idx){
     const sess = state.session;
     if(!sess || sess.finished) return;
-    sess.answers[sess.cursor] = idx;
+    if(sess.answers[sess.cursor]===idx) delete sess.answers[sess.cursor];   // الضغط ثانية = إلغاء الاختيار
+    else sess.answers[sess.cursor] = idx;
     renderSessionStage();
+  }
+  function examToggleFlag(){
+    const sess = state.session;
+    if(!sess || sess.finished) return;
+    if(sess.flagged.has(sess.cursor)) sess.flagged.delete(sess.cursor); else sess.flagged.add(sess.cursor);
+    renderSessionStage();
+  }
+  function examGoto(i){
+    const sess = state.session;
+    if(!sess || sess.finished) return;
+    sess.cursor = Math.min(Math.max(i,0), sess.questions.length-1);
+    renderSessionStage();
+    scrollToSessionTop();
+  }
+  function examIsMcq(q){ return !!(q.options && q.options.length>=2); }
+  function confirmFinishExam(){
+    const sess = state.session;
+    if(!sess || sess.finished) return;
+    const un = sess.questions.map((q,i)=>i).filter(i=>examIsMcq(sess.questions[i]) && sess.answers[i]==null);
+    const fl = Array.from(sess.flagged);
+    let msg = 'تسليم الاختبار؟ بعد التسليم لا يمكنك تعديل إجاباتك.';
+    if(un.length) msg += `\n\nأسئلة بدون إجابة (${un.length}): ${un.map(i=>i+1).join('، ')}`;
+    if(fl.length) msg += `\n\n🚩 أسئلة علّمتها للمراجعة (${fl.length}): ${fl.sort((a,b)=>a-b).map(i=>i+1).join('، ')}`;
+    if(confirm(msg)) finishSession();
   }
   function selectStudyOption(i, idx){
     const sess = state.session;
@@ -5942,24 +5997,44 @@
     const optionsHtml = q.options && q.options.length>=2
       ? renderOptionsHtml(q, {selectedIndex: selected, revealed:false, clickHandler:'selectExamOption'})
       : '';
+    const mcqTotal = sess.questions.filter(examIsMcq).length;
+    const answeredCount = sess.questions.filter((qq,i)=>examIsMcq(qq) && sess.answers[i]!=null).length;
+    const isFlagged = sess.flagged.has(sess.cursor);
+    const grid = sess.questions.map((qq,i)=>{
+      const done = examIsMcq(qq) && sess.answers[i]!=null;
+      return `<button type="button" class="exam-nb ${done?'answered':''} ${sess.flagged.has(i)?'flagged':''} ${i===sess.cursor?'current':''}" onclick="examGoto(${i})" aria-label="السؤال ${i+1}">${i+1}</button>`;
+    }).join('');
     body.innerHTML = `
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <div class="exam-card">
-        <div class="q-head-row">
-          <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
-          <span class="exam-timer mono" id="examTimer" dir="ltr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span id="examTimerText">01:00</span></span>
-          ${currentSession ? saveBtnHtml(q.id) : ''}
+      <div class="exam-layout">
+        <div class="exam-main">
+          <div class="exam-card">
+            <div class="q-head-row">
+              <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
+              <div class="head-actions">
+                <span class="exam-timer mono" id="examTimer" dir="ltr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span id="examTimerText">01:00</span></span>
+                <button type="button" class="exam-flag-btn ${isFlagged?'on':''}" onclick="examToggleFlag()">${isFlagged ? '🚩 مُعلَّم للمراجعة' : '⚑ علّم السؤال (مشكوك فيه)'}</button>
+                ${currentSession ? saveBtnHtml(q.id) : ''}
+              </div>
+            </div>
+            <h3 dir="ltr" class="q-en">${q.text}</h3>
+            ${optionsHtml}
+          </div>
+          <div class="exam-nav">
+            <div class="side-btns">
+              <button class="btn-back" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→ السابق</button>
+            </div>
+            ${sess.cursor < sess.questions.length-1
+              ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
+              : `<button class="btn-continue" onclick="confirmFinishExam()">إنهاء الاختبار</button>`}
+          </div>
         </div>
-        <h3 dir="ltr" class="q-en">${q.text}</h3>
-        ${optionsHtml}
-      </div>
-      <div class="exam-nav">
-        <div class="side-btns">
-          <button class="btn-back" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→ السابق</button>
-        </div>
-        ${sess.cursor < sess.questions.length-1
-          ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
-          : `<button class="btn-continue" onclick="finishSession()">إنهاء الاختبار</button>`}
+        <aside class="exam-nav-card">
+          <h4><span>🗂 الأسئلة</span><span class="meta">${answeredCount} / ${mcqTotal} مُجاب</span></h4>
+          <div class="exam-nav-grid">${grid}</div>
+          <div class="exam-legend"><span><i class="a"></i>مُجاب</span><span><i></i>غير مُجاب</span><span>🚩 مشكوك فيه (${sess.flagged.size})</span></div>
+          <button type="button" class="btn-continue" onclick="confirmFinishExam()">إنهاء وتسليم</button>
+        </aside>
       </div>`;
     armExamTimer();
     return;
