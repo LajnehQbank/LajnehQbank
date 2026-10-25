@@ -946,7 +946,9 @@
   .exam-card h3.q-en{
     background:color-mix(in srgb, var(--cyan) 6%, var(--card));border:1px solid var(--cyan-pale);border-radius:16px;
     padding:16px 18px;font-weight:700;font-size:15.5px;line-height:1.75;margin-bottom:6px;
+    display:block;width:100%;box-sizing:border-box;text-align:justify;text-align-last:left;overflow-wrap:anywhere;
   }
+  .exam-card h3.q-en > *{max-width:100%;}
   .q-meta{display:flex;align-items:center;gap:14px;margin-top:14px;}
   .q-meta button{
     background:none;border:1.4px solid var(--line);padding:8px 16px;border-radius:100px;font-size:12.5px;font-weight:700;color:var(--slate);
@@ -5819,15 +5821,34 @@
     scrollToSessionTop();
   }
   function examIsMcq(q){ return !!(q.options && q.options.length>=2); }
+  function examMapHtml(sess, isDone, doneCount, totalCount){
+    const grid = sess.questions.map((qq,i)=>
+      `<button type="button" class="exam-nb ${isDone(qq,i)?'answered':''} ${sess.flagged.has(i)?'flagged':''} ${i===sess.cursor?'current':''}" onclick="examGoto(${i})" aria-label="السؤال ${i+1}">${i+1}</button>`
+    ).join('');
+    const finishLabel = state.mode==='study' ? 'إنهاء ومراجعة' : 'إنهاء وتسليم';
+    return `
+        <aside class="exam-nav-card">
+          <h4><span>🗂 الأسئلة</span><span class="meta">${doneCount} / ${totalCount} ${state.mode==='study' ? 'مُشاهَد' : 'مُجاب'}</span></h4>
+          <div class="exam-nav-grid">${grid}</div>
+          <div class="exam-legend"><span><i class="a"></i>${state.mode==='study' ? 'مُشاهَد' : 'مُجاب'}</span><span><i></i>${state.mode==='study' ? 'غير مُشاهَد' : 'غير مُجاب'}</span><span>🚩 مشكوك فيه (${sess.flagged.size})</span></div>
+          <button type="button" class="btn-continue" onclick="confirmFinishExam()">${finishLabel}</button>
+        </aside>`;
+  }
+  function examFlagBtnHtml(sess){
+    const on = sess.flagged.has(sess.cursor);
+    return `<button type="button" class="exam-flag-btn ${on?'on':''}" onclick="examToggleFlag()">${on ? '🚩 مُعلَّم للمراجعة' : '⚑ علّم السؤال (مشكوك فيه)'}</button>`;
+  }
   function confirmFinishExam(){
     const sess = state.session;
     if(!sess || sess.finished) return;
-    const un = sess.questions.map((q,i)=>i).filter(i=>examIsMcq(sess.questions[i]) && sess.answers[i]==null);
+    const study = state.mode==='study';
+    const un = sess.questions.map((q,i)=>i).filter(i=> study ? !sess.revealed.has(i) : (examIsMcq(sess.questions[i]) && sess.answers[i]==null));
     const fl = Array.from(sess.flagged);
-    let msg = 'تسليم الاختبار؟ بعد التسليم لا يمكنك تعديل إجاباتك.';
-    if(un.length) msg += `\n\nأسئلة بدون إجابة (${un.length}): ${un.map(i=>i+1).join('، ')}`;
+    let msg = study ? 'إنهاء المذاكرة والانتقال إلى مراجعة الأسئلة والإجابات؟' : 'تسليم الاختبار؟ بعد التسليم لا يمكنك تعديل إجاباتك.';
+    if(un.length) msg += `\n\n${study ? 'أسئلة لم تشاهد إجابتها' : 'أسئلة بدون إجابة'} (${un.length}): ${un.map(i=>i+1).join('، ')}`;
     if(fl.length) msg += `\n\n🚩 أسئلة علّمتها للمراجعة (${fl.length}): ${fl.sort((a,b)=>a-b).map(i=>i+1).join('، ')}`;
-    if(confirm(msg)) finishSession();
+    if(!confirm(msg)) return;
+    if(study) reviewSession(); else finishSession();
   }
   function selectStudyOption(i, idx){
     const sess = state.session;
@@ -5942,24 +5963,33 @@
         answerBlock = `<div class="reveal-box ${revealed?'show':''}">${q.modelAnswer ? q.modelAnswer : 'إجابة نموذجية: راجع ملخص المحاضرة — هذا محتوى تجريبي لغايات العرض.'}</div>`;
       }
 
+      const doneCount = sess.questions.filter((qq,k)=>sess.revealed.has(k)).length;
       body.innerHTML = `
         <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-        <div class="exam-card">
-          <div class="q-head-row">
-            <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
-            ${currentSession ? saveBtnHtml(q.id) : ''}
+        <div class="exam-layout">
+          <div class="exam-main">
+            <div class="exam-card">
+              <div class="q-head-row">
+                <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
+                <div class="head-actions">
+                  ${examFlagBtnHtml(sess)}
+                  ${currentSession ? saveBtnHtml(q.id) : ''}
+                </div>
+              </div>
+              <h3 dir="ltr" class="q-en">${q.text}</h3>
+              ${answerBlock}
+              ${metaBlock ? `<div class="q-meta" style="margin-top:16px;">${metaBlock}</div>` : ''}
+            </div>
+            <div class="exam-nav">
+              <div class="side-btns">
+                <button class="btn-back" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→ السابق</button>
+              </div>
+              ${sess.cursor < sess.questions.length-1
+                ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
+                : `<button class="btn-continue" onclick="confirmFinishExam()">مراجعة الأسئلة والإجابات</button>`}
+            </div>
           </div>
-          <h3 dir="ltr" class="q-en">${q.text}</h3>
-          ${answerBlock}
-          ${metaBlock ? `<div class="q-meta" style="margin-top:16px;">${metaBlock}</div>` : ''}
-        </div>
-        <div class="exam-nav">
-          <div class="side-btns">
-            <button class="btn-back" onclick="examNav(-1)" ${sess.cursor===0?'disabled':''}>→ السابق</button>
-          </div>
-          ${sess.cursor < sess.questions.length-1
-            ? `<button class="btn-continue" onclick="examNav(1)">التالي ←</button>`
-            : `<button class="btn-continue" onclick="reviewSession()">مراجعة الأسئلة والإجابات</button>`}
+          ${examMapHtml(sess, (qq,k)=>sess.revealed.has(k), doneCount, sess.questions.length)}
         </div>`;
       return;
     }
@@ -5999,11 +6029,6 @@
       : '';
     const mcqTotal = sess.questions.filter(examIsMcq).length;
     const answeredCount = sess.questions.filter((qq,i)=>examIsMcq(qq) && sess.answers[i]!=null).length;
-    const isFlagged = sess.flagged.has(sess.cursor);
-    const grid = sess.questions.map((qq,i)=>{
-      const done = examIsMcq(qq) && sess.answers[i]!=null;
-      return `<button type="button" class="exam-nb ${done?'answered':''} ${sess.flagged.has(i)?'flagged':''} ${i===sess.cursor?'current':''}" onclick="examGoto(${i})" aria-label="السؤال ${i+1}">${i+1}</button>`;
-    }).join('');
     body.innerHTML = `
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="exam-layout">
@@ -6013,7 +6038,7 @@
               <span class="e-index">سؤال ${sess.cursor+1} من ${sess.questions.length}</span>
               <div class="head-actions">
                 <span class="exam-timer mono" id="examTimer" dir="ltr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span id="examTimerText">01:00</span></span>
-                <button type="button" class="exam-flag-btn ${isFlagged?'on':''}" onclick="examToggleFlag()">${isFlagged ? '🚩 مُعلَّم للمراجعة' : '⚑ علّم السؤال (مشكوك فيه)'}</button>
+                ${examFlagBtnHtml(sess)}
                 ${currentSession ? saveBtnHtml(q.id) : ''}
               </div>
             </div>
@@ -6029,12 +6054,7 @@
               : `<button class="btn-continue" onclick="confirmFinishExam()">إنهاء الاختبار</button>`}
           </div>
         </div>
-        <aside class="exam-nav-card">
-          <h4><span>🗂 الأسئلة</span><span class="meta">${answeredCount} / ${mcqTotal} مُجاب</span></h4>
-          <div class="exam-nav-grid">${grid}</div>
-          <div class="exam-legend"><span><i class="a"></i>مُجاب</span><span><i></i>غير مُجاب</span><span>🚩 مشكوك فيه (${sess.flagged.size})</span></div>
-          <button type="button" class="btn-continue" onclick="confirmFinishExam()">إنهاء وتسليم</button>
-        </aside>
+        ${examMapHtml(sess, (qq,i)=>examIsMcq(qq) && sess.answers[i]!=null, answeredCount, mcqTotal)}
       </div>`;
     armExamTimer();
     return;
