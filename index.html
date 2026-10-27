@@ -1987,6 +1987,7 @@
       <button type="button" class="admin-subtab" id="adminTabBtnGallery" onclick="showAdminTab('gallery')">🖼️ صور الأنشطة</button>
       <button type="button" class="admin-subtab" id="adminTabBtnTexts" onclick="showAdminTab('texts')">📝 نصوص الموقع</button>
       <button type="button" class="admin-subtab" id="adminTabBtnAnalytics" onclick="showAdminTab('analytics')">📊 التحليلات</button>
+      <button type="button" class="admin-subtab" id="adminTabBtnModerators" onclick="showAdminTab('moderators')">👥 المشرفون</button>
     </div>
 
     <!-- ---- Panel: Questions ---- -->
@@ -2131,6 +2132,35 @@
       <div class="sitetext-save-bar">
         <button type="button" class="btn-admin-add" onclick="saveAllSiteTexts()">💾 حفظ كل التعديلات</button>
       </div>
+    </div>
+
+    <!-- ---- Panel: Moderators (المشرفون) ---- -->
+    <div class="admin-panel" id="adminPanelModerators">
+      <div class="form-note" id="adminModsMsg" hidden></div>
+      <form id="modForm" onsubmit="saveModerator(event)" style="margin-bottom:24px;">
+        <input type="hidden" id="modEditingId" value="">
+        <div class="admin-grid-2" style="margin-bottom:16px;">
+          <div class="field"><label for="modName">الاسم</label><input id="modName" type="text" required></div>
+          <div class="field"><label for="modUsername">اسم المستخدم (إنجليزي)</label><input id="modUsername" type="text" dir="ltr" pattern="[A-Za-z0-9_.\-]+" autocomplete="off" required></div>
+        </div>
+        <div class="field" style="margin-bottom:16px;"><label for="modPass" id="modPassLabel">كلمة المرور</label><input id="modPass" type="text" dir="ltr" minlength="6" autocomplete="new-password"></div>
+        <div class="field">
+          <label>الصلاحية: الوصول للأسئلة في</label>
+          <div style="display:flex;gap:18px;flex-wrap:wrap;margin:8px 0 12px;">
+            <label style="display:flex;gap:6px;align-items:center;"><input type="radio" name="modScope" value="all" onchange="onModScopeChange()"> جميع المواد</label>
+            <label style="display:flex;gap:6px;align-items:center;"><input type="radio" name="modScope" value="some" checked onchange="onModScopeChange()"> مواد محددة</label>
+          </div>
+          <div id="modSubjectsBox" style="display:flex;gap:8px 18px;flex-wrap:wrap;"></div>
+        </div>
+        <div class="admin-form-actions">
+          <button type="submit" class="btn-admin-add" id="modSubmitBtn">+ إنشاء حساب مشرف</button>
+          <button type="button" class="btn-icon-sm" id="modCancelBtn" onclick="resetModForm()" hidden>إلغاء التعديل</button>
+        </div>
+      </form>
+      <div class="admin-table-wrap"><table class="admin-table" style="min-width:560px;">
+        <thead><tr><th>الاسم</th><th>اسم المستخدم</th><th>المواد</th><th></th></tr></thead>
+        <tbody id="modTableBody"></tbody>
+      </table></div>
     </div>
 
     <!-- ---- Panel: Analytics (التحليلات) ---- -->
@@ -2348,20 +2378,26 @@
   }
 
   /* صلاحية الأدمن تُقرأ فقط من جدول public.profiles (وليس من بيانات المستخدم القابلة للتعديل من المتصفح) */
+  let isModerator = false; // مشرف أسئلة: صلاحياته محصورة بجدول الأسئلة ومواد محددة
+  let modAccess = { all:false, subjects:[] };
+  function allowedSubjects(){
+    return (isAdmin || modAccess.all) ? SUBJECTS : SUBJECTS.filter(s => modAccess.subjects.includes(s));
+  }
   async function checkAdminRole(){
-    isAdmin = false;
+    isAdmin = false; isModerator = false; modAccess = { all:false, subjects:[] };
     if(!currentSession) return;
     try{
-      const { data, error } = await supabaseClient
-        .from('profiles')
-        .select('role')
-        .eq('id', currentSession.user.id)
-        .single();
+      const { data, error } = await supabaseClient.from('profiles').select('role').eq('id', currentSession.user.id).single();
       if(error) throw error;
       isAdmin = !!data && data.role === 'admin';
+      if(data && data.role === 'moderator'){
+        const r = await supabaseClient.from('moderator_access').select('all_subjects, subjects').eq('user_id', currentSession.user.id).single();
+        if(r.error) throw r.error;
+        isModerator = true;
+        modAccess = { all: !!r.data.all_subjects, subjects: r.data.subjects || [] };
+      }
     }catch(err){
-      // من الطبيعي أن يفشل هذا قبل إنشاء جدول profiles في Supabase — يبقى المستخدم كطالب عادي
-      isAdmin = false;
+      isAdmin = false; isModerator = false;
     }
   }
 
@@ -2391,9 +2427,9 @@
       }
     }
     const studentLink = document.getElementById('studentNavLink');
-    if(studentLink) studentLink.hidden = !currentSession || isAdmin;
+    if(studentLink) studentLink.hidden = !currentSession || isAdmin || isModerator;
     const adminLink = document.getElementById('adminNavLink');
-    if(adminLink) adminLink.hidden = !isAdmin;
+    if(adminLink) adminLink.hidden = !(isAdmin || isModerator);
     const ctaCopyBtn = document.getElementById('ctaCopyLinkBtn');
     if(ctaCopyBtn) ctaCopyBtn.hidden = !isAdmin;
     const meta = currentSession && currentSession.user && currentSession.user.user_metadata;
@@ -2460,7 +2496,7 @@
     }
     currentSession = data.session;
     await checkAdminRole();
-    if(!isAdmin){
+    if(!isAdmin && !isModerator){
       // هذا الحساب ليس حساب مشرف — لا نسمح له بالدخول من هنا
       await supabaseClient.auth.signOut();
       currentSession = null;
@@ -3084,9 +3120,9 @@
 
     let targetView = (view==='ARCHIVE') ? 'home' : view;
     if((targetView==='student' || targetView==='student-settings') && !currentSession) targetView = 'login';
-    if((targetView==='student' || targetView==='student-settings') && isAdmin) targetView = 'admin';
+    if((targetView==='student' || targetView==='student-settings') && (isAdmin || isModerator)) targetView = 'admin';
     if(targetView==='admin' && !currentSession) targetView = 'login';
-    if(targetView==='admin' && currentSession && !isAdmin) targetView = 'home';
+    if(targetView==='admin' && currentSession && !(isAdmin || isModerator)) targetView = 'home';
 
     // شاشة التحميل تظهر فقط عند الدخول الأولي للموقع (opts.showLoader=true صراحةً)
     // أو عند الانتقال إلى "بنك الأسئلة" — وليس عند أي تنقّل آخر
@@ -5327,7 +5363,9 @@
   }
 
   async function showAdminTab(tab){
-    ['questions','submissions','subjects','batches','gallery','lectures','texts','analytics'].forEach(t=>{
+    if(isModerator && tab !== 'questions') return;
+    if(tab === 'moderators' && !isAdmin) return;
+    ['questions','submissions','subjects','batches','gallery','lectures','texts','analytics','moderators'].forEach(t=>{
       document.getElementById('adminPanel' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t===tab);
       document.getElementById('adminTabBtn' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t===tab);
     });
@@ -5339,6 +5377,7 @@
     if(tab==='gallery') renderAdminGallery();
     if(tab==='lectures') renderAdminLectures();
     if(tab==='texts') renderSiteTextsAdmin();
+    if(tab==='moderators') renderModeratorsAdmin();
     if(tab==='analytics'){
       renderAdminAnalytics(); // نعرض الأرقام المتوفرة فوراً (بدون عدد الطلاب) ريثما يصل الرد من الخادم
       await loadAdminStudents();
@@ -6290,6 +6329,134 @@
     else if(step==='results') renderResultsStage();
   }
 
+  /* ---------- واجهة المشرف المحدودة + إدارة حسابات المشرفين (للأدمن فقط) ---------- */
+  function applyStaffUI(){
+    const tabs = document.querySelector('.admin-subtabs');
+    if(tabs) tabs.hidden = isModerator;
+    const modBtn = document.getElementById('adminTabBtnModerators');
+    if(modBtn) modBtn.hidden = !isAdmin;
+    const badge = document.querySelector('.admin-badge');
+    if(badge) badge.textContent = isModerator ? '✏️ لوحة المشرف' : '🛡️ لوحة التحكم';
+    if(isModerator) showAdminTab('questions');
+  }
+
+  let MODERATORS = [];
+  function modMsg(text, ok){
+    const m = document.getElementById('adminModsMsg');
+    m.textContent = text; m.className = 'form-note';
+    m.style.background = ok ? 'var(--green)' : 'var(--coral)'; m.style.color = '#fff';
+    m.hidden = !text;
+  }
+  function renderModSubjectsBox(selected){
+    document.getElementById('modSubjectsBox').innerHTML = SUBJECTS.map(s =>
+      `<label style="display:flex;gap:6px;align-items:center;"><input type="checkbox" class="mod-subj-chk" value="${escapeHtml(s)}" ${selected.includes(s)?'checked':''}> ${escapeHtml(s)}</label>`).join('');
+    onModScopeChange();
+  }
+  function onModScopeChange(){
+    const all = document.querySelector('input[name="modScope"]:checked').value === 'all';
+    document.getElementById('modSubjectsBox').style.display = all ? 'none' : 'flex';
+  }
+  function resetModForm(){
+    document.getElementById('modForm').reset();
+    document.getElementById('modEditingId').value = '';
+    document.getElementById('modUsername').disabled = false;
+    document.getElementById('modPass').required = true;
+    document.getElementById('modPassLabel').textContent = 'كلمة المرور';
+    document.getElementById('modSubmitBtn').textContent = '+ إنشاء حساب مشرف';
+    document.getElementById('modCancelBtn').hidden = true;
+    renderModSubjectsBox([]);
+  }
+  async function renderModeratorsAdmin(){
+    if(!isAdmin) return;
+    modMsg('');
+    resetModForm();
+    try{
+      const [acc, prof] = await Promise.all([
+        supabaseClient.from('moderator_access').select('user_id, username, all_subjects, subjects').order('created_at'),
+        supabaseClient.from('profiles').select('id, full_name').eq('role','moderator')
+      ]);
+      if(acc.error) throw acc.error;
+      const names = {}; (prof.data || []).forEach(p => names[p.id] = p.full_name);
+      MODERATORS = (acc.data || []).map(a => ({ ...a, name: names[a.user_id] || '' }));
+    }catch(err){
+      MODERATORS = [];
+      modMsg('تعذّر تحميل المشرفين — تأكد من تنفيذ سكربت moderators.sql في Supabase: ' + (err.message || ''));
+    }
+    document.getElementById('modTableBody').innerHTML = MODERATORS.length ? MODERATORS.map((m,i) => `
+      <tr>
+        <td>${escapeHtml(m.name)}</td>
+        <td class="mono">${escapeHtml(m.username)}</td>
+        <td>${m.all_subjects ? 'جميع المواد' : (m.subjects.length ? m.subjects.map(escapeHtml).join('، ') : '—')}</td>
+        <td><div class="admin-row-actions">
+          <button class="btn-icon-sm" onclick="editModerator(${i})">تعديل</button>
+          <button class="btn-icon-sm danger" onclick="deleteModerator(${i})">حذف</button>
+        </div></td>
+      </tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--slate-soft);padding:28px;">لا يوجد مشرفون بعد</td></tr>';
+  }
+  function editModerator(i){
+    const m = MODERATORS[i]; if(!m) return;
+    document.getElementById('modEditingId').value = m.user_id;
+    document.getElementById('modName').value = m.name;
+    document.getElementById('modUsername').value = m.username;
+    document.getElementById('modUsername').disabled = true;
+    document.getElementById('modPass').value = '';
+    document.getElementById('modPass').required = false;
+    document.getElementById('modPassLabel').textContent = 'كلمة مرور جديدة (اتركها فارغة بدون تغيير)';
+    document.querySelector(`input[name="modScope"][value="${m.all_subjects ? 'all' : 'some'}"]`).checked = true;
+    renderModSubjectsBox(m.subjects || []);
+    document.getElementById('modSubmitBtn').textContent = 'حفظ التعديلات';
+    document.getElementById('modCancelBtn').hidden = false;
+    document.getElementById('modForm').scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+  async function saveModerator(e){
+    e.preventDefault();
+    if(!isAdmin) return;
+    const editId = document.getElementById('modEditingId').value;
+    const name = document.getElementById('modName').value.trim();
+    const username = document.getElementById('modUsername').value.trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '');
+    const pass = document.getElementById('modPass').value;
+    const all = document.querySelector('input[name="modScope"]:checked').value === 'all';
+    const subjects = Array.from(document.querySelectorAll('.mod-subj-chk:checked')).map(c => c.value);
+    if(!name || !username) return modMsg('الرجاء إدخال الاسم واسم المستخدم.');
+    if(!editId && pass.length < 6) return modMsg('كلمة المرور 6 أحرف على الأقل.');
+    if(editId && pass && pass.length < 6) return modMsg('كلمة المرور 6 أحرف على الأقل.');
+    if(!all && !subjects.length) return modMsg('اختر مادة واحدة على الأقل أو "جميع المواد".');
+    const btn = document.getElementById('modSubmitBtn'); btn.disabled = true;
+    try{
+      let uid = editId;
+      if(!editId){
+        // عميل مؤقت منفصل حتى لا تتبدّل جلسة الأدمن الحالية عند إنشاء الحساب
+        const tmp = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth:{ persistSession:false, autoRefreshToken:false, detectSessionInUrl:false, storageKey:'tmp-mod-signup' }
+        });
+        const { data, error } = await tmp.auth.signUp({ email: usernameToAdminEmail(username), password: pass });
+        if(error) throw error;
+        if(!data.user || (data.user.identities && !data.user.identities.length)) throw new Error('اسم المستخدم مستخدم مسبقاً.');
+        uid = data.user.id;
+      }else if(pass){
+        const { error } = await supabaseClient.rpc('admin_set_moderator_password', { p_user_id: uid, p_password: pass });
+        if(error) throw error;
+      }
+      const { error } = await supabaseClient.rpc('admin_save_moderator', {
+        p_user_id: uid, p_username: username, p_name: name, p_all: all, p_subjects: all ? [] : subjects
+      });
+      if(error) throw error;
+      await renderModeratorsAdmin();
+      modMsg(editId ? 'تم حفظ التعديلات.' : 'تم إنشاء حساب المشرف. يدخل من "دخول المشرفين" باسم المستخدم وكلمة المرور.', true);
+    }catch(err){
+      console.error(err);
+      modMsg('تعذّر الحفظ: ' + (err.message || 'خطأ غير معروف'));
+    }finally{ btn.disabled = false; }
+  }
+  async function deleteModerator(i){
+    const m = MODERATORS[i]; if(!m) return;
+    if(!confirm('حذف حساب المشرف "' + m.name + '" نهائياً؟')) return;
+    const { error } = await supabaseClient.rpc('admin_delete_moderator', { p_user_id: m.user_id });
+    if(error) return modMsg('تعذّر الحذف: ' + error.message);
+    await renderModeratorsAdmin();
+    modMsg('تم حذف الحساب.', true);
+  }
+
   /* ---------- admin dashboard (question management) ---------- */
   const ADMIN_COLS = "id, subject, batch, lecture, kind, type, locked, question_text, model_answer, option_a, option_b, option_c, option_d, option_e, correct_option, explanation";
   let ADMIN_QUESTIONS = [];
@@ -6300,7 +6467,12 @@
   }
 
   async function loadAdminQuestions(){
-    const { data, error } = await supabaseClient.from('questions').select(ADMIN_COLS).order('id', { ascending:false });
+    let qb = supabaseClient.from('questions').select(ADMIN_COLS).order('id', { ascending:false });
+    if(isModerator && !modAccess.all){
+      if(!modAccess.subjects.length){ ADMIN_QUESTIONS = []; return; }
+      qb = qb.in('subject', modAccess.subjects);
+    }
+    const { data, error } = await qb;
     if(error){
       console.error('تعذّر تحميل الأسئلة للوحة التحكم:', error);
       ADMIN_QUESTIONS = [];
@@ -6310,18 +6482,19 @@
   }
 
   async function renderAdminPage(){
-    if(!isAdmin) return;
+    if(!isAdmin && !isModerator) return;
+    applyStaffUI();
     await loadSubjects();
     await loadLecturesAdmin();
     const fs = document.getElementById('adminFilterSubject');
     const prevSubjectFilter = fs.value;
-    fillSelect(fs, SUBJECTS, 'كل المواد');
+    fillSelect(fs, allowedSubjects(), 'كل المواد');
     if(SUBJECTS.includes(prevSubjectFilter)) fs.value = prevSubjectFilter;
     renderAdminSubjects();
     renderAdminLectures();
     await loadAdminQuestions();
     renderAdminTable();
-    await loadAdminSubmissions();
+    if(isAdmin) await loadAdminSubmissions();
   }
 
   /* ---------- أسئلة الطلاب الواردة (question_submissions) ---------- */
@@ -6392,7 +6565,7 @@
       if(res.error) res = await supabaseClient.from('profiles').select('id, role, batch, full_name');
       const { data, error } = res;
       if(error) throw error;
-      ADMIN_STUDENTS = (data || []).filter(p => p.role !== 'admin');
+      ADMIN_STUDENTS = (data || []).filter(p => p.role !== 'admin' && p.role !== 'moderator');
     }catch(err){
       console.error('تعذّر تحميل بيانات الطلاب المسجّلين — تحقق من أن جدول profiles يحتوي عمود batch، وأن صلاحيات RLS تسمح للأدمن بقراءة كل الصفوف:', err);
       ADMIN_STUDENTS = [];
@@ -6647,7 +6820,7 @@
   const IMPORT_OPT_LETTERS = ['A','B','C','D','E'];
 
   function openImportForm(){
-    fillSelect(document.getElementById('importSubject'), SUBJECTS);
+    fillSelect(document.getElementById('importSubject'), allowedSubjects());
     syncImportLectureOptions();
     document.getElementById('importLecture').value = '';
     document.getElementById('importKind').value = 'archive';
@@ -7201,7 +7374,7 @@
   function openQuestionForm(id){
     pendingSubmissionId = null;
 
-    fillSelect(document.getElementById('adminQSubject'), SUBJECTS);
+    fillSelect(document.getElementById('adminQSubject'), allowedSubjects());
 
     const msg = document.getElementById('adminFormMsg');
     msg.hidden = true; msg.textContent = '';
@@ -7213,7 +7386,7 @@
       document.getElementById('adminFormTitle').textContent = 'تعديل السؤال #' + id;
       document.getElementById('adminQId').value = id;
       document.getElementById('adminQBatch').value = row.batch || BATCHES[0];
-      document.getElementById('adminQSubject').value = row.subject || SUBJECTS[0];
+      document.getElementById('adminQSubject').value = row.subject || allowedSubjects()[0];
       syncAdminLectureOptions();
       document.getElementById('adminQLecture').value = row.lecture || '';
       document.getElementById('adminQKind').value = row.kind || 'archive';
@@ -7228,7 +7401,7 @@
       document.getElementById('adminFormTitle').textContent = 'إضافة سؤال جديد';
       document.getElementById('adminQId').value = '';
       document.getElementById('adminQBatch').value = BATCHES[0];
-      document.getElementById('adminQSubject').value = SUBJECTS[0];
+      document.getElementById('adminQSubject').value = allowedSubjects()[0];
       syncAdminLectureOptions();
       document.getElementById('adminQLecture').value = '';
       document.getElementById('adminQKind').value = 'archive';
