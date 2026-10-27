@@ -6331,10 +6331,13 @@
 
   /* ---------- واجهة المشرف المحدودة + إدارة حسابات المشرفين (للأدمن فقط) ---------- */
   function applyStaffUI(){
+    // نستخدم style.display لأن قواعد CSS (display:flex) تتغلّب على خاصية hidden
     const tabs = document.querySelector('.admin-subtabs');
-    if(tabs) tabs.hidden = isModerator;
-    const modBtn = document.getElementById('adminTabBtnModerators');
-    if(modBtn) modBtn.hidden = !isAdmin;
+    if(tabs) tabs.style.display = isModerator ? 'none' : '';
+    document.querySelectorAll('.admin-subtab').forEach(b => {
+      const keep = isAdmin || b.id === 'adminTabBtnQuestions';
+      b.style.display = keep ? '' : 'none';
+    });
     const badge = document.querySelector('.admin-badge');
     if(badge) badge.textContent = isModerator ? '✏️ لوحة المشرف' : '🛡️ لوحة التحكم';
     if(isModerator) showAdminTab('questions');
