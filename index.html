@@ -7278,16 +7278,57 @@
     sel.addRange(newRange);
     RTE_SAVED_RANGES[id] = newRange.cloneRange();
   }
-  function rteInsertImageFile(id, inputEl){
+  /* ضغط صورة السؤال: أكبر بُعد 900px، JPEG بجودة 80%، وخلفية بيضاء للصور الشفافة */
+  function compressQuestionImage(file, maxSize, quality){
+    return new Promise((resolve, reject)=>{
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('تعذّر تحميل الصورة')); };
+      img.onload = ()=>{
+        const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('تعذّر ضغط الصورة')), 'image/jpeg', quality);
+      };
+      img.src = url;
+    });
+  }
+  function blobToDataUrl(blob){
+    return new Promise((resolve, reject)=>{
+      const r = new FileReader();
+      r.onload = ()=> resolve(r.result); r.onerror = ()=> reject(new Error('تعذّرت قراءة الصورة'));
+      r.readAsDataURL(blob);
+    });
+  }
+  async function rteInsertImageFile(id, inputEl){
     const file = inputEl.files && inputEl.files[0];
     if(!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e){
-      rteRestoreSelection(id);
-      document.execCommand('insertHTML', false, `<img src="${e.target.result}" class="rich-content-img">`);
-      inputEl.value = '';
-    };
-    reader.readAsDataURL(file);
+    inputEl.value = '';
+    let src;
+    try{
+      const blob = await compressQuestionImage(file, 900, 0.8);
+      try{
+        // نرفع الصورة إلى Supabase Storage ونحفظ رابطها فقط داخل نص السؤال
+        const path = 'q/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.jpg';
+        const { error } = await supabaseClient.storage.from('question-images').upload(path, blob, { contentType:'image/jpeg', cacheControl:'31536000' });
+        if(error) throw error;
+        src = supabaseClient.storage.from('question-images').getPublicUrl(path).data.publicUrl;
+      }catch(upErr){
+        console.error('تعذّر رفع الصورة إلى Storage (تأكد من إنشاء bucket باسم question-images وتنفيذ سكربت SQL) — سيتم تضمينها داخل السؤال:', upErr);
+        src = await blobToDataUrl(blob);
+      }
+    }catch(err){
+      alert('تعذّرت معالجة الصورة: ' + (err.message || 'خطأ غير معروف'));
+      return;
+    }
+    rteRestoreSelection(id);
+    document.execCommand('insertHTML', false, `<img src="${src}" class="rich-content-img">`);
   }
   function rteInsertImageUrl(id){
     const url = window.prompt('أدخل رابط الصورة (URL):');
