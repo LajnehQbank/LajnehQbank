@@ -1456,6 +1456,16 @@
   }
   .btn-admin-add[data-variant="secondary"]{background:var(--slate);border-color:var(--slate);}
   .btn-admin-add[data-variant="secondary"]:hover{background:var(--ink);border-color:var(--ink);}
+  .admin-subtabs{align-items:flex-end;gap:18px;}
+  .admin-tabgroup{display:flex;gap:6px;align-items:center;flex:0 0 auto;position:relative;padding-top:18px;}
+  .admin-tabgroup + .admin-tabgroup{padding-inline-start:18px;border-inline-start:1px solid var(--line);}
+  .admin-tabgroup-label{position:absolute;top:0;inset-inline-start:0;font-size:11px;font-weight:800;color:var(--slate-soft);letter-spacing:.3px;}
+  .admin-tabgroup + .admin-tabgroup .admin-tabgroup-label{inset-inline-start:18px;}
+  .admin-subtab.active{box-shadow:0 6px 14px -8px rgba(31,42,51,.5);}
+  .admin-subtab:focus-visible, .btn-admin-add:focus-visible, .btn-icon-sm:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+  .u-mb0{margin-bottom:0;}.u-mb14{margin-bottom:14px;}.u-mb16{margin-bottom:16px;}.u-mb18{margin-bottom:18px;}.u-mb24{margin-bottom:24px;}
+  .u-mt4{margin-top:4px;}.u-noshrink{flex:0 0 auto;}.u-ms-auto{margin-inline-start:auto;}
+  .u-row10{display:flex;gap:10px;}.u-wrap{flex-wrap:wrap;}.u-row6c{display:flex;gap:6px;align-items:center;}
 </style>
 </head>
 <body>
@@ -2010,22 +2020,16 @@
         <h2>إدارة بنك الأسئلة</h2>
         <p>إضافة وتعديل وحذف الأسئلة مباشرة — التغييرات تظهر للطلاب فوراً.</p>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <div class="u-row10 u-wrap">
         <button class="btn-admin-add" id="adminImportQuestionsBtn" onclick="openImportForm()" data-variant="secondary">📥 استيراد ملف أسئلة</button>
         <button class="btn-admin-add" id="adminAddQuestionBtn" onclick="openQuestionForm(null)">+ إضافة سؤال جديد</button>
       </div>
     </div>
 
     <div class="admin-subtabs">
-      <button type="button" class="admin-subtab" id="adminTabBtnSubjects" onclick="showAdminTab('subjects')">🧪 المواد الدراسية</button>
-      <button type="button" class="admin-subtab" id="adminTabBtnLectures" onclick="showAdminTab('lectures')">🎓 المحاضرات</button>
-      <button type="button" class="admin-subtab active" id="adminTabBtnQuestions" onclick="showAdminTab('questions')">📋 الأسئلة</button>
-      <button type="button" class="admin-subtab" id="adminTabBtnSubmissions" onclick="showAdminTab('submissions')">📥 أسئلة الطلاب<span class="tab-badge" id="submissionsBadge" hidden>0</span></button>
-      <button type="button" class="admin-subtab" id="adminTabBtnBatches" onclick="showAdminTab('batches')">🗓️ الدفعات</button>
-      <button type="button" class="admin-subtab" id="adminTabBtnGallery" onclick="showAdminTab('gallery')">🖼️ صور الأنشطة</button>
-      <button type="button" class="admin-subtab" id="adminTabBtnTexts" onclick="showAdminTab('texts')">📝 نصوص الموقع</button>
-      <button type="button" class="admin-subtab" id="adminTabBtnAnalytics" onclick="showAdminTab('analytics')">📊 التحليلات</button>
-      <button type="button" class="admin-subtab" id="adminTabBtnModerators" onclick="showAdminTab('moderators')">👥 المشرفون</button>
+      <div class="admin-tabgroup"><span class="admin-tabgroup-label">المحتوى</span><button type="button" class="admin-subtab active" id="adminTabBtnQuestions" onclick="showAdminTab('questions')">📋 الأسئلة</button><button type="button" class="admin-subtab" id="adminTabBtnSubmissions" onclick="showAdminTab('submissions')">📥 أسئلة الطلاب<span class="tab-badge" id="submissionsBadge" hidden>0</span></button><button type="button" class="admin-subtab" id="adminTabBtnSubjects" onclick="showAdminTab('subjects')">🧪 المواد الدراسية</button><button type="button" class="admin-subtab" id="adminTabBtnLectures" onclick="showAdminTab('lectures')">🎓 المحاضرات</button></div>
+      <div class="admin-tabgroup"><span class="admin-tabgroup-label">الموقع</span><button type="button" class="admin-subtab" id="adminTabBtnBatches" onclick="showAdminTab('batches')">🗓️ الدفعات</button><button type="button" class="admin-subtab" id="adminTabBtnGallery" onclick="showAdminTab('gallery')">🖼️ صور الأنشطة</button><button type="button" class="admin-subtab" id="adminTabBtnTexts" onclick="showAdminTab('texts')">📝 نصوص الموقع</button></div>
+      <div class="admin-tabgroup"><span class="admin-tabgroup-label">الإدارة</span><button type="button" class="admin-subtab" id="adminTabBtnAnalytics" onclick="showAdminTab('analytics')">📊 التحليلات</button><button type="button" class="admin-subtab" id="adminTabBtnModerators" onclick="showAdminTab('moderators')">👥 المشرفون</button></div>
     </div>
 
     <!-- ---- Panel: Questions ---- -->
@@ -2063,7 +2067,7 @@
 
     <!-- ---- Panel: Student submissions (أسئلة الطلاب) ---- -->
     <div class="admin-panel" id="adminPanelSubmissions">
-      <p style="margin-bottom:18px;">الأسئلة التي يبعثها الطلاب من صفحة "متذكر سؤال" في الصفحة الرئيسية تظهر هنا فوراً. راجعها، وحوّل أي سؤال جيد إلى بنك الأسئلة، أو احذف ما لا يلزم.</p>
+      <p class="u-mb18">الأسئلة التي يبعثها الطلاب من صفحة "متذكر سؤال" في الصفحة الرئيسية تظهر هنا فوراً. راجعها، وحوّل أي سؤال جيد إلى بنك الأسئلة، أو احذف ما لا يلزم.</p>
       <div id="submissionsList"></div>
     </div>
 
@@ -2079,7 +2083,7 @@
         <input type="file" id="newSubjectImageInput" accept="image/*" onchange="handleSubjectImageSelected(event)" style="display:none;">
         <button type="button" class="subject-img-btn" onclick="openFlaticonModal()">🔎 أيقونة من Flaticon</button>
         <img id="newSubjectImagePreview" class="subject-form-thumb" src="" alt="" hidden>
-        <button type="submit" class="btn-admin-add" id="subjectFormSubmitBtn" style="flex:0 0 auto;">+ إضافة مادة</button>
+        <button type="submit" class="btn-admin-add u-noshrink" id="subjectFormSubmitBtn">+ إضافة مادة</button>
         <button type="button" class="btn-icon-sm" id="cancelSubjectEditBtn" onclick="resetSubjectForm()" hidden>إلغاء التعديل</button>
       </form>
 
@@ -2110,7 +2114,7 @@
       <div class="form-note" id="adminBatchesMsg" hidden></div>
       <form class="add-subject-row" onsubmit="addBatch(event)">
         <input type="text" id="newBatchName" placeholder="اسم الدفعة الجديدة…" required>
-        <button type="submit" class="btn-admin-add" style="flex:0 0 auto;">+ إضافة دفعة</button>
+        <button type="submit" class="btn-admin-add u-noshrink">+ إضافة دفعة</button>
       </form>
       <div class="subjects-list-header" id="batchesListHeader" hidden>
         <button class="btn-icon-sm danger" onclick="deleteAllBatches()">🗑️ حذف كل الدفعات</button>
@@ -2121,7 +2125,7 @@
     <!-- ---- Panel: Gallery (صور الأنشطة) ---- -->
     <div class="admin-panel" id="adminPanelGallery">
       <div class="form-note" id="adminGalleryMsg" hidden></div>
-      <p style="margin-bottom:18px;">الصور المُضافة هنا تظهر في استعراض "من نحن" بالصفحة الرئيسية، وتتبدّل تلقائياً كل 5 ثوانٍ بترتيب إضافتها.</p>
+      <p class="u-mb18">الصور المُضافة هنا تظهر في استعراض "من نحن" بالصفحة الرئيسية، وتتبدّل تلقائياً كل 5 ثوانٍ بترتيب إضافتها.</p>
       <form class="add-subject-row" id="galleryForm" onsubmit="addGalleryImage(event)">
         <input type="hidden" id="editingGalleryId" value="">
         <input type="hidden" id="editingGalleryImageUrl" value="">
@@ -2129,7 +2133,7 @@
         <input type="file" id="newGalleryImageInput" accept="image/*" onchange="handleGalleryImageSelected(event)" style="display:none;">
         <img id="newGalleryImagePreview" class="subject-form-thumb" src="" alt="" hidden>
         <input type="text" id="newGalleryCaption" placeholder="وصف الصورة (يظهر أسفلها في الاستعراض)…" style="flex:1;min-width:220px;">
-        <button type="submit" class="btn-admin-add" id="galleryFormSubmitBtn" style="flex:0 0 auto;">+ إضافة صورة</button>
+        <button type="submit" class="btn-admin-add u-noshrink" id="galleryFormSubmitBtn">+ إضافة صورة</button>
         <button type="button" class="btn-icon-sm" id="cancelGalleryEditBtn" onclick="resetGalleryForm()" hidden>إلغاء التعديل</button>
       </form>
       <div class="subjects-list-header" id="galleryListHeader" hidden>
@@ -2141,20 +2145,20 @@
     <!-- ---- Panel: Lectures (المحاضرات) ---- -->
     <div class="admin-panel" id="adminPanelLectures">
       <div class="form-note" id="adminLecturesMsg" hidden></div>
-      <p style="margin-bottom:14px;">اختر المادة لإدارة محاضراتها: إضافة محاضرة جديدة أو حذف محاضرة موجودة. المحاضرات المحذوفة لا تحذف الأسئلة المرتبطة بها من بنك الأسئلة.</p>
-      <div class="admin-toolbar" style="margin-bottom:16px;">
+      <p class="u-mb14">اختر المادة لإدارة محاضراتها: إضافة محاضرة جديدة أو حذف محاضرة موجودة. المحاضرات المحذوفة لا تحذف الأسئلة المرتبطة بها من بنك الأسئلة.</p>
+      <div class="admin-toolbar u-mb16">
         <select id="adminLecturesSubjectSelect" onchange="onAdminLecturesSubjectChange()"></select>
       </div>
       <form class="add-subject-row" onsubmit="addLecture(event)">
         <input type="text" id="newLectureName" placeholder="اسم المحاضرة الجديدة…" required>
-        <button type="submit" class="btn-admin-add" style="flex:0 0 auto;">+ إضافة محاضرة</button>
+        <button type="submit" class="btn-admin-add u-noshrink">+ إضافة محاضرة</button>
       </form>
       <div class="subjects-list-header" id="lecturesListHeader" hidden style="justify-content:space-between;">
         <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--slate);cursor:pointer;">
           <input type="checkbox" id="adminSelectAllLec" class="admin-lec-checkbox" onchange="toggleSelectAllLectures2(this.checked)">
           تحديد الكل
         </label>
-        <div style="display:flex;gap:10px;">
+        <div class="u-row10">
           <button class="btn-icon-sm danger" id="deleteSelectedLecturesBtn" onclick="deleteSelectedLectures()" disabled>🗑️ حذف المحدد (<span id="lecSelectedCount">0</span>)</button>
           <button class="btn-icon-sm danger" onclick="deleteAllLecturesForSubject()">🗑️ حذف كل محاضرات هذه المادة</button>
         </div>
@@ -2165,7 +2169,7 @@
     <!-- ---- Panel: Site texts (نصوص الموقع) ---- -->
     <div class="admin-panel" id="adminPanelTexts">
       <div class="form-note" id="adminTextsMsg" hidden></div>
-      <p style="margin-bottom:18px;">تعديل نصوص الصفحة الرئيسية والهيدر والفوتر — التغييرات تظهر للزوار فوراً بعد الحفظ.</p>
+      <p class="u-mb18">تعديل نصوص الصفحة الرئيسية والهيدر والفوتر — التغييرات تظهر للزوار فوراً بعد الحفظ.</p>
       <div id="siteTextsForm"></div>
       <div class="sitetext-save-bar">
         <button type="button" class="btn-admin-add" onclick="saveAllSiteTexts()">💾 حفظ كل التعديلات</button>
@@ -2175,18 +2179,18 @@
     <!-- ---- Panel: Moderators (المشرفون) ---- -->
     <div class="admin-panel" id="adminPanelModerators">
       <div class="form-note" id="adminModsMsg" hidden></div>
-      <form id="modForm" onsubmit="saveModerator(event)" style="margin-bottom:24px;">
+      <form class="u-mb24" id="modForm" onsubmit="saveModerator(event)">
         <input type="hidden" id="modEditingId" value="">
-        <div class="admin-grid-2" style="margin-bottom:16px;">
+        <div class="admin-grid-2 u-mb16">
           <div class="field"><label for="modName">الاسم</label><input id="modName" type="text" required></div>
           <div class="field"><label for="modUsername">اسم المستخدم (إنجليزي)</label><input id="modUsername" type="text" dir="ltr" pattern="[A-Za-z0-9_.\-]+" autocomplete="off" required></div>
         </div>
-        <div class="field" style="margin-bottom:16px;"><label for="modPass" id="modPassLabel">كلمة المرور</label><input id="modPass" type="text" dir="ltr" minlength="6" autocomplete="new-password"></div>
+        <div class="field u-mb16"><label for="modPass" id="modPassLabel">كلمة المرور</label><input id="modPass" type="text" dir="ltr" minlength="6" autocomplete="new-password"></div>
         <div class="field">
           <label>الصلاحية: الوصول للأسئلة في</label>
           <div style="display:flex;gap:18px;flex-wrap:wrap;margin:8px 0 12px;">
-            <label style="display:flex;gap:6px;align-items:center;"><input type="radio" name="modScope" value="all" onchange="onModScopeChange()"> جميع المواد</label>
-            <label style="display:flex;gap:6px;align-items:center;"><input type="radio" name="modScope" value="some" checked onchange="onModScopeChange()"> مواد محددة</label>
+            <label class="u-row6c"><input type="radio" name="modScope" value="all" onchange="onModScopeChange()"> جميع المواد</label>
+            <label class="u-row6c"><input type="radio" name="modScope" value="some" checked onchange="onModScopeChange()"> مواد محددة</label>
           </div>
           <div id="modSubjectsBox" style="display:flex;gap:8px 18px;flex-wrap:wrap;"></div>
         </div>
@@ -2218,12 +2222,12 @@
       <input type="hidden" id="adminQId">
 
       <input type="hidden" id="adminQBatch">
-      <div class="field" style="margin-bottom:16px;">
+      <div class="field u-mb16">
         <label for="adminQSubject">المادة</label>
         <select id="adminQSubject" required onchange="syncAdminLectureOptions()"></select>
       </div>
 
-      <div class="admin-grid-2" style="margin-bottom:16px;">
+      <div class="admin-grid-2 u-mb16">
         <div class="field">
           <label for="adminQLecture">المحاضرة</label>
           <input id="adminQLecture" type="text" list="adminLectureOptions" placeholder="مثال: تشريح الفك العلوي والسفلي">
@@ -2238,24 +2242,24 @@
         </div>
       </div>
 
-      <div class="field" style="margin-bottom:16px;">
+      <div class="field u-mb16">
         <label for="adminQText">نص السؤال (بالإنجليزي)</label>
         <div class="rte-toolbar" id="adminQText_tb"></div>
         <div class="rte-editor" id="adminQText" dir="ltr" contenteditable="true" data-placeholder="اكتب نص السؤال هنا... يمكنك إضافة صور وجداول من شريط الأدوات أعلاه"></div>
       </div>
 
-      <div class="field" style="margin-bottom:16px;">
+      <div class="field u-mb16">
         <label>خيارات الإجابة (Options)</label>
         <div class="admin-options-list" id="adminOptionsList"></div>
-        <button type="button" class="btn-icon-sm" id="adminAddOptionBtn" onclick="addAdminOption()" style="margin-top:4px;">+ إضافة خيار</button>
+        <button type="button" class="btn-icon-sm u-mt4" id="adminAddOptionBtn" onclick="addAdminOption()">+ إضافة خيار</button>
       </div>
 
-      <div class="field" style="margin-bottom:16px;">
+      <div class="field u-mb16">
         <label for="adminQCorrect">الإجابة الصحيحة</label>
         <select id="adminQCorrect" dir="ltr"></select>
       </div>
 
-      <div class="field" style="margin-bottom:0;">
+      <div class="field u-mb0">
         <label for="adminQExplanation">تفسير الإجابة (اختياري)</label>
         <div class="rte-toolbar" id="adminQExplanation_tb"></div>
         <div class="rte-editor" id="adminQExplanation" dir="ltr" contenteditable="true" data-placeholder="تفسير الإجابة... يمكنك إضافة صور وجداول من شريط الأدوات أعلاه"></div>
@@ -2264,7 +2268,7 @@
       <div class="admin-form-actions">
         <button type="submit" class="btn-submit" id="adminFormSubmitBtn">حفظ السؤال</button>
         <button type="button" class="btn-cancel" onclick="closeQuestionForm()">إلغاء</button>
-        <button type="button" class="btn-danger" id="adminFormDeleteBtn" onclick="deleteQuestionFromForm()" hidden style="margin-inline-start:auto;">حذف السؤال</button>
+        <button type="button" class="btn-danger u-ms-auto" id="adminFormDeleteBtn" onclick="deleteQuestionFromForm()" hidden>حذف السؤال</button>
       </div>
     </form>
   </div>
@@ -2277,10 +2281,10 @@
     <h3>📥 استيراد أسئلة من ملف محاضرة</h3>
 
     <div id="importStep1">
-      <p style="margin-bottom:16px;">اختر المادة والمحاضرة، ثم حمّل ملف الأسئلة (txt أو docx) أو الصق نص الأسئلة كما هو — وسنقوم بفصل نص كل سؤال عن خياراته وإجابته الصحيحة وتفسيره تلقائياً، وستتمكن من مراجعتها قبل الحفظ النهائي.</p>
+      <p class="u-mb16">اختر المادة والمحاضرة، ثم حمّل ملف الأسئلة (txt أو docx) أو الصق نص الأسئلة كما هو — وسنقوم بفصل نص كل سؤال عن خياراته وإجابته الصحيحة وتفسيره تلقائياً، وستتمكن من مراجعتها قبل الحفظ النهائي.</p>
       <div class="form-note" id="adminImportMsg" hidden></div>
 
-      <div class="admin-grid-2" style="margin-bottom:16px;">
+      <div class="admin-grid-2 u-mb16">
         <div class="field">
           <label for="importSubject">المادة</label>
           <select id="importSubject" required onchange="syncImportLectureOptions()"></select>
@@ -2292,7 +2296,7 @@
         </div>
       </div>
 
-      <div class="field" style="margin-bottom:16px;">
+      <div class="field u-mb16">
         <label for="importKind">النوع (أرشيف / Quiz)</label>
         <select id="importKind">
           <option value="archive">الأرشيف</option>
@@ -2300,12 +2304,12 @@
         </select>
       </div>
 
-      <div class="field" style="margin-bottom:16px;">
+      <div class="field u-mb16">
         <label for="importFileInput">اختر ملف الأسئلة (txt أو docx أو PDF) — اختياري</label>
         <input type="file" id="importFileInput" accept=".txt,.docx,.pdf" onchange="handleImportFileChange(event)">
       </div>
 
-      <div class="field" style="margin-bottom:0;">
+      <div class="field u-mb0">
         <label for="importRawText">أو الصق نص الأسئلة هنا كما هو (نص السؤال، الخيارات، الإجابة، والتفسير)</label>
         <textarea id="importRawText" dir="ltr" rows="12" style="width:100%;padding:12px 14px;border-radius:10px;border:1.6px solid var(--line);font-family:inherit;font-size:14px;" placeholder="Paste the question text here exactly as it appears in the file..."></textarea>
       </div>
