@@ -1632,6 +1632,67 @@
   .students-table tbody tr:hover td{background:color-mix(in srgb,var(--cyan) 5%,var(--card));}
   @media (max-width:900px){.analytics-cols{grid-template-columns:1fr;}}
   @media (max-width:560px){.stats-grid{grid-template-columns:1fr 1fr;}.stats-grid .stat-card:last-child:nth-child(odd){grid-column:1 / -1;}.batch-stat-head{grid-template-columns:96px 1fr 34px;}.batch-stat-row .bar-lbl{flex-basis:96px;}}
+
+  /* ===== توحيد تصميم صفحة بنك الأسئلة ===== */
+  .bank-flow.wrap{max-width:1120px;}
+  .bank-flow{--b-radius:12px;--b-h:46px;}
+  .stage-head, .bank-title{max-width:none;text-align:start;margin:0 0 24px;padding-bottom:16px;border-bottom:1px solid var(--line);}
+  .stage-head h2, .bank-title h1{font-size:26px;font-weight:800;letter-spacing:0;}
+  .stage-head p, .bank-title p{max-width:none;margin:6px 0 0;font-size:14.5px;}
+  .bank-login-gate .stage-head{border-bottom:none;text-align:center;}
+  .subject-inline{margin-top:0;padding-top:0;border-top:none;}
+  .subject-filters{max-width:none;margin:0 0 24px;}
+  .subject-search{max-width:none;margin:0;justify-content:flex-start;flex-wrap:nowrap;}
+  .subject-search input{flex:1 1 auto;text-align:start;border-radius:var(--b-radius);min-height:var(--b-h);padding:0 16px;}
+  .subject-search select{border-radius:var(--b-radius);min-height:var(--b-h);padding:0 16px;}
+  .filter-hint{text-align:start;}
+  .bank-flow .btn-start, .bank-flow .btn-continue, .bank-flow .btn-back, .bank-flow .subject-go-btn, .bank-flow .exam-flag-btn{
+    border-radius:var(--b-radius);min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
+  }
+  .bank-flow .btn-back, .bank-flow .btn-continue{padding:0 24px;}
+  .bank-flow .subject-go-btn{padding:0 18px;}
+  .wiz{border-radius:var(--radius-md);}
+
+  /* الإعداد: عمودين (الخيارات + ملخص ثابت) */
+  .setup-shell{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start;}
+  .setup-main{min-width:0;}
+  .setup-section{border-radius:var(--radius-md);padding:22px 22px 24px;}
+  .setup-aside{position:sticky;top:90px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:22px;box-shadow:var(--shadow-sm);}
+  .setup-aside h3{font-size:16px;font-weight:800;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+  .sum-list{display:flex;flex-direction:column;gap:11px;margin-bottom:20px;}
+  .sum-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13.5px;}
+  .sum-row span{color:var(--slate-soft);font-weight:600;flex:0 0 auto;}
+  .sum-row b{color:var(--ink);font-weight:700;text-align:end;min-width:0;overflow-wrap:anywhere;direction:ltr;unicode-bidi:plaintext;}
+  .setup-aside .btn-start{width:100%;padding:0 20px;}
+  .setup-aside .start-note{text-align:center;margin-top:12px;}
+  .nature-grid{grid-template-columns:repeat(3,1fr);}
+  .nature-card.wide{grid-column:auto;}
+  .nature-card, .mode-card, .lecture-item{border-radius:var(--b-radius);}
+  .stepper-shell{max-width:300px;}
+
+  /* الجلسة: نفس عرض بقية الصفحة */
+  #stageSession .stage-head{text-align:start;margin-inline:0;}
+  .session-summary{justify-content:flex-start;max-width:none;border-bottom:none;padding-bottom:0;margin:-8px 0 18px;}
+  .session-summary .s-pill{border-radius:8px;}
+  .progress-track{max-width:none;margin:0 0 18px;}
+  .exam-layout, .exam-nav{max-width:none;}
+  .exam-card{max-width:none;border-radius:var(--radius-md);}
+  .exam-nav-card{border-radius:var(--radius-md);}
+  #stageSession .wizard-actions{justify-content:flex-start;margin-inline:0;}
+
+  @media (max-width:900px){
+    .setup-shell{grid-template-columns:1fr;}
+    .setup-aside{position:static;}
+    .nature-grid{grid-template-columns:1fr 1fr;}
+    .nature-card.wide{grid-column:1 / -1;}
+  }
+  @media (max-width:640px){
+    .stage-head h2, .bank-title h1{font-size:22px;}
+    .subject-search{flex-wrap:wrap;}
+    .subject-search select{flex:1 1 100%;}
+    .nature-grid, .mode-grid, .lecture-list{grid-template-columns:1fr;}
+    .nature-card.wide{grid-column:auto;}
+  }
 </style>
 </head>
 <body>
@@ -1893,7 +1954,12 @@
 
     <!-- Stage 3: single-page exam setup (nature + lectures + count + mode) -->
     <div class="stage" id="stageSetup" hidden>
+      <div class="stage-head setup-stage-head">
+        <h2>إعداد الاختبار</h2>
+        <p>اختر نوع الأسئلة والمحاضرات والعدد والنمط، ثم ابدأ — ملخص اختيارك بيظهر بالجنب.</p>
+      </div>
       <div class="setup-shell">
+        <div class="setup-main">
 
         <div class="setup-section nature-section" id="natureSection">
           <div class="setup-head">
@@ -1931,10 +1997,20 @@
           <div class="mode-grid" id="modeGrid"></div>
         </div>
 
-        <div class="setup-section setup-start">
+        </div>
+
+        <aside class="setup-aside" aria-label="ملخص الاختيار">
+          <h3>ملخص الاختيار</h3>
+          <div class="sum-list">
+            <div class="sum-row"><span>المادة</span><b id="sumSubject">—</b></div>
+            <div class="sum-row"><span>النوع</span><b id="sumNature">—</b></div>
+            <div class="sum-row"><span>المحاضرات</span><b id="sumLectures">—</b></div>
+            <div class="sum-row"><span>عدد الأسئلة</span><b id="sumCount">—</b></div>
+            <div class="sum-row"><span>النمط</span><b id="sumMode">—</b></div>
+          </div>
           <button class="btn-start" id="startBtn" onclick="startSession()" disabled>ابدأ الاختبار</button>
           <p class="start-note" id="startNote">لا توجد أسئلة مطابقة لهذا الاختيار حالياً.</p>
-        </div>
+        </aside>
 
       </div>
     </div>
@@ -6113,6 +6189,12 @@
     const btn = document.getElementById('startBtn');
     const note = document.getElementById('startNote');
     btn.disabled = !ready;
+    const setTxt = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+    setTxt('sumSubject', state.subject || '—');
+    setTxt('sumNature', (NATURES.find(x=>x.k===state.nature)||{}).label || '—');
+    setTxt('sumLectures', state.lectures.length ? state.lectures.length + ' محاضرة' : '—');
+    setTxt('sumCount', available>0 ? Math.min(state.count, available) + ' سؤال' : '—');
+    setTxt('sumMode', (MODES.find(x=>x.k===state.mode)||{}).label || '—');
     if(ready){
       note.textContent = `سيتضمّن الاختبار ${Math.min(state.count, available)} سؤال.`;
       note.classList.add('ok');
@@ -6151,13 +6233,11 @@
   function sessionSummaryHtml(){
     const natureLabel = (NATURES.find(x=>x.k===state.nature)||{}).label || '—';
     const modeLabel = (MODES.find(x=>x.k===state.mode)||{}).label || '—';
+    const n = state.session ? state.session.questions.length : state.count;
     return `
-      <span class="s-pill">المادة: <b>${state.subject}</b></span>
       <span class="s-pill">الدفعة: <b>${state.batch}</b></span>
       <span class="s-pill">المحاضرات: <b>${state.lectures.length}</b></span>
-      <span class="s-pill">النوع: <b>${natureLabel}</b></span>
-      <span class="s-pill">عدد الأسئلة: <b>${state.session ? state.session.questions.length : state.count}</b></span>
-      <span class="s-pill">النمط: <b>${modeLabel}</b></span>`;
+      <span class="s-pill">عدد الأسئلة: <b>${n}</b></span>`;
   }
 
   /* ---------- MCQ rendering: 5-option circle system, English, left-to-right ---------- */
