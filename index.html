@@ -1466,6 +1466,7 @@
   .u-mb0{margin-bottom:0;}.u-mb14{margin-bottom:14px;}.u-mb16{margin-bottom:16px;}.u-mb18{margin-bottom:18px;}.u-mb24{margin-bottom:24px;}
   .u-mt4{margin-top:4px;}.u-noshrink{flex:0 0 auto;}.u-ms-auto{margin-inline-start:auto;}
   .u-row10{display:flex;gap:10px;}.u-wrap{flex-wrap:wrap;}.u-row6c{display:flex;gap:6px;align-items:center;}
+  html[data-theme="dark"] .q-meta .locked{border-color:rgba(226,96,79,.4);}
 </style>
 </head>
 <body>
@@ -2457,6 +2458,8 @@
     const uid = session && session.user ? session.user.id : null;
     const changed = __lastAuthUid !== undefined && uid !== __lastAuthUid;
     __lastAuthUid = uid;
+    // عند تبدّل المستخدم (خروج/دخول بحساب آخر) نصفّر جلسة البنك حتى لا تبقى أسئلة/إجابات المستخدم السابق ظاهرة
+    if(changed){ try{ resetExamTimerState(); resetFilters(); }catch(e){} }
     if(changed && !suppressAuthReload){
       loadQuestions()
         .catch(err=>console.error('تعذّر تحديث الأسئلة بعد تغيّر حالة الدخول:', err))
