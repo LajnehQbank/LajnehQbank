@@ -1467,6 +1467,105 @@
   .u-mt4{margin-top:4px;}.u-noshrink{flex:0 0 auto;}.u-ms-auto{margin-inline-start:auto;}
   .u-row10{display:flex;gap:10px;}.u-wrap{flex-wrap:wrap;}.u-row6c{display:flex;gap:6px;align-items:center;}
   html[data-theme="dark"] .q-meta .locked{border-color:rgba(226,96,79,.4);}
+
+  /* ===== إعادة ترتيب لوحة التحكم: قائمة جانبية + بطاقات موحّدة ===== */
+  .admin-shell [hidden]{display:none !important;}
+  .admin-shell{padding:32px 0 80px;}
+  .admin-shell.wrap{max-width:1320px;}
+  .admin-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:0;border-bottom:none;margin-bottom:22px;}
+  .admin-head-text{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .admin-head h2{font-size:24px;font-weight:800;}
+  .admin-layout{display:grid;grid-template-columns:248px minmax(0,1fr);gap:28px;align-items:start;}
+  .admin-main{min-width:0;}
+  .admin-layout.no-side{grid-template-columns:minmax(0,1fr);}
+
+  /* القائمة الجانبية */
+  .admin-layout > .admin-subtabs{
+    display:flex;flex-direction:column;gap:18px;align-items:stretch;overflow:visible;
+    position:sticky;top:84px;margin:0;padding:16px 12px;border:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
+  }
+  .admin-layout > .admin-subtabs .admin-tabgroup{display:flex;flex-direction:column;gap:4px;align-items:stretch;padding:0;border:none;position:static;}
+  .admin-layout > .admin-subtabs .admin-tabgroup + .admin-tabgroup{padding:18px 0 0;border-inline-start:none;border-top:1px solid var(--line);}
+  .admin-layout > .admin-subtabs .admin-tabgroup-label{position:static;display:block;padding:0 12px 6px;font-size:11.5px;font-weight:800;color:var(--slate-soft);letter-spacing:.4px;}
+  .admin-layout > .admin-subtabs .admin-tabgroup + .admin-tabgroup .admin-tabgroup-label{inset-inline-start:auto;}
+  .admin-layout .admin-subtab{
+    display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 12px;
+    border:none;background:transparent;color:var(--slate);border-radius:10px;
+    font-size:14px;font-weight:600;text-align:right;box-shadow:none;
+  }
+  .admin-layout .admin-subtab .ti{flex:0 0 26px;width:26px;text-align:center;font-size:16px;}
+  .admin-layout .admin-subtab .tl{flex:1;}
+  .admin-layout .admin-subtab:hover{background:var(--cyan-pale);border-color:transparent;}
+  .admin-layout .admin-subtab.active{background:var(--slate);color:#fff;box-shadow:0 8px 16px -10px rgba(31,42,51,.55);}
+  .admin-layout .admin-subtab .tab-badge{margin:0;}
+
+  /* رأس كل قسم */
+  .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line);}
+  .panel-head h3{font-size:21px;font-weight:800;}
+  .panel-head p{margin-top:4px;font-size:13.5px;line-height:1.7;max-width:640px;}
+  .panel-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+
+  /* بطاقات موحّدة */
+  .admin-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:16px 18px;box-shadow:var(--shadow-sm);margin-bottom:18px;}
+  .add-subject-row.admin-card{margin-bottom:18px;gap:12px;}
+  .admin-toolbar-card{padding:12px 14px;}
+  .admin-toolbar-card .admin-toolbar{margin-bottom:0;}
+  .admin-toolbar input[type="search"]{flex:1;min-width:220px;}
+  .toolbar-label{font-size:13px;font-weight:700;color:var(--slate);}
+  .admin-toolbar select{min-width:200px;}
+  .admin-count{font-weight:700;background:var(--paper);padding:6px 12px;border-radius:100px;}
+  .add-subject-row input, .add-subject-row select{min-height:var(--a-h);padding:0 14px;background:var(--card);color:var(--ink);}
+  .add-subject-row input[type="text"]{flex:1 1 220px;}
+  .subject-img-btn{min-height:var(--a-h);padding:0 14px;}
+
+  /* الجداول والقوائم */
+  .admin-table-wrap{border-radius:var(--radius-md);}
+  table.admin-table{min-width:0;table-layout:fixed;}
+  table.admin-table th{padding:12px 14px;}
+  table.admin-table td{vertical-align:middle;padding:12px 14px;}
+  table.admin-table td.q-text-cell{max-width:none;overflow:hidden;text-overflow:ellipsis;}
+  table.admin-table td.q-text-cell, table.admin-table td.mono{word-break:break-word;}
+  .admin-table-wrap{overflow-x:auto;}
+  .admin-bulk-bar{position:sticky;top:76px;z-index:5;box-shadow:var(--shadow-sm);}
+  .subjects-manage-list{gap:8px;}
+  .subject-manage-row{padding:12px 16px;transition:border-color .2s, box-shadow .2s;}
+  .subject-manage-row:hover{border-color:var(--cyan);box-shadow:var(--shadow-sm);}
+  .subjects-list-header{justify-content:space-between;align-items:center;margin:4px 0 12px;}
+  .sitetext-save-bar{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:12px 16px;bottom:12px;box-shadow:var(--shadow);}
+  .submission-card{box-shadow:var(--shadow-sm);}
+
+  /* موبايل وتابلت: القائمة تصير شريط أفقي */
+  @media (max-width:980px){
+    .admin-layout{grid-template-columns:1fr;gap:18px;}
+    .admin-layout > .admin-subtabs{
+      position:sticky;top:64px;z-index:20;flex-direction:row;gap:6px;overflow-x:auto;scrollbar-width:none;
+      padding:8px;border-radius:14px;
+    }
+    .admin-layout > .admin-subtabs::-webkit-scrollbar{display:none;}
+    .admin-layout > .admin-subtabs .admin-tabgroup{flex-direction:row;gap:4px;flex:0 0 auto;align-items:center;}
+    .admin-layout > .admin-subtabs .admin-tabgroup + .admin-tabgroup{padding:0 0 0 0;padding-inline-start:10px;border-top:none;border-inline-start:1px solid var(--line);}
+    .admin-layout > .admin-subtabs .admin-tabgroup-label{display:none;}
+    .admin-layout .admin-subtab{width:auto;white-space:nowrap;min-height:38px;padding:0 12px;}
+    .admin-layout .admin-subtab .ti{flex-basis:auto;width:auto;}
+    .admin-layout .admin-subtab .tl{flex:0 0 auto;}
+  }
+  @media (max-width:640px){
+    .admin-shell{padding:20px 0 56px;}
+    .admin-head h2{font-size:20px;}
+    .panel-head{flex-direction:column;align-items:stretch;}
+    .panel-actions .btn-admin-add{flex:1 1 100%;}
+    .admin-toolbar > *{flex:1 1 100%;}
+    .admin-table-wrap{overflow-x:visible;}
+    table.admin-table thead{display:none;}
+    table.admin-table, table.admin-table tbody, table.admin-table tr, table.admin-table td{display:block;width:100%;}
+    table.admin-table tr{padding:12px 14px;border-bottom:1px solid var(--line);position:relative;}
+    table.admin-table td{padding:4px 0;border:none;}
+    table.admin-table td.chk-cell{position:absolute;top:12px;inset-inline-start:14px;width:auto;padding:0;}
+    table.admin-table td.mono{display:inline-block;width:auto;margin-inline-end:8px;padding-inline-start:30px;}
+    table.admin-table td.q-text-cell{white-space:normal;}
+    .admin-row-actions{margin-top:8px;}
+  }
 </style>
 </head>
 <body>
@@ -2016,32 +2115,55 @@
 <section class="view" id="view-admin">
   <div class="wrap admin-shell">
     <div class="admin-head">
-      <div>
+      <div class="admin-head-text">
         <span class="admin-badge">🛡️ لوحة التحكم</span>
-        <h2>إدارة بنك الأسئلة</h2>
-        <p>إضافة وتعديل وحذف الأسئلة مباشرة — التغييرات تظهر للطلاب فوراً.</p>
-      </div>
-      <div class="u-row10 u-wrap">
-        <button class="btn-admin-add" id="adminImportQuestionsBtn" onclick="openImportForm()" data-variant="secondary">📥 استيراد ملف أسئلة</button>
-        <button class="btn-admin-add" id="adminAddQuestionBtn" onclick="openQuestionForm(null)">+ إضافة سؤال جديد</button>
+        <h2>إدارة بنك الأسئلة والموقع</h2>
       </div>
     </div>
 
-    <div class="admin-subtabs">
-      <div class="admin-tabgroup"><span class="admin-tabgroup-label">المحتوى</span><button type="button" class="admin-subtab active" id="adminTabBtnQuestions" onclick="showAdminTab('questions')">📋 الأسئلة</button><button type="button" class="admin-subtab" id="adminTabBtnSubmissions" onclick="showAdminTab('submissions')">📥 أسئلة الطلاب<span class="tab-badge" id="submissionsBadge" hidden>0</span></button><button type="button" class="admin-subtab" id="adminTabBtnSubjects" onclick="showAdminTab('subjects')">🧪 المواد الدراسية</button><button type="button" class="admin-subtab" id="adminTabBtnLectures" onclick="showAdminTab('lectures')">🎓 المحاضرات</button></div>
-      <div class="admin-tabgroup"><span class="admin-tabgroup-label">الموقع</span><button type="button" class="admin-subtab" id="adminTabBtnBatches" onclick="showAdminTab('batches')">🗓️ الدفعات</button><button type="button" class="admin-subtab" id="adminTabBtnGallery" onclick="showAdminTab('gallery')">🖼️ صور الأنشطة</button><button type="button" class="admin-subtab" id="adminTabBtnTexts" onclick="showAdminTab('texts')">📝 نصوص الموقع</button></div>
-      <div class="admin-tabgroup"><span class="admin-tabgroup-label">الإدارة</span><button type="button" class="admin-subtab" id="adminTabBtnAnalytics" onclick="showAdminTab('analytics')">📊 التحليلات</button><button type="button" class="admin-subtab" id="adminTabBtnModerators" onclick="showAdminTab('moderators')">👥 المشرفون</button></div>
-    </div>
+    <div class="admin-layout">
+    <nav class="admin-subtabs" aria-label="أقسام لوحة التحكم">
+      <div class="admin-tabgroup"><span class="admin-tabgroup-label">المحتوى</span>
+        <button type="button" class="admin-subtab active" id="adminTabBtnQuestions" onclick="showAdminTab('questions')"><span class="ti">📋</span><span class="tl">الأسئلة</span></button>
+        <button type="button" class="admin-subtab" id="adminTabBtnSubmissions" onclick="showAdminTab('submissions')"><span class="ti">📥</span><span class="tl">أسئلة الطلاب</span><span class="tab-badge" id="submissionsBadge" hidden>0</span></button>
+        <button type="button" class="admin-subtab" id="adminTabBtnSubjects" onclick="showAdminTab('subjects')"><span class="ti">🧪</span><span class="tl">المواد الدراسية</span></button>
+        <button type="button" class="admin-subtab" id="adminTabBtnLectures" onclick="showAdminTab('lectures')"><span class="ti">🎓</span><span class="tl">المحاضرات</span></button>
+      </div>
+      <div class="admin-tabgroup"><span class="admin-tabgroup-label">الموقع</span>
+        <button type="button" class="admin-subtab" id="adminTabBtnBatches" onclick="showAdminTab('batches')"><span class="ti">🗓️</span><span class="tl">الدفعات</span></button>
+        <button type="button" class="admin-subtab" id="adminTabBtnGallery" onclick="showAdminTab('gallery')"><span class="ti">🖼️</span><span class="tl">صور الأنشطة</span></button>
+        <button type="button" class="admin-subtab" id="adminTabBtnTexts" onclick="showAdminTab('texts')"><span class="ti">📝</span><span class="tl">نصوص الموقع</span></button>
+      </div>
+      <div class="admin-tabgroup"><span class="admin-tabgroup-label">الإدارة</span>
+        <button type="button" class="admin-subtab" id="adminTabBtnAnalytics" onclick="showAdminTab('analytics')"><span class="ti">📊</span><span class="tl">التحليلات</span></button>
+        <button type="button" class="admin-subtab" id="adminTabBtnModerators" onclick="showAdminTab('moderators')"><span class="ti">👥</span><span class="tl">المشرفون</span></button>
+      </div>
+    </nav>
+
+    <div class="admin-main">
 
     <!-- ---- Panel: Questions ---- -->
     <div class="admin-panel active" id="adminPanelQuestions">
-      <div class="admin-toolbar">
-        <select id="adminFilterSubject" onchange="renderAdminTable()">
-          <option value="">كل المواد</option>
-        </select>
-        <input type="search" id="adminSearch" placeholder="بحث في نص السؤال…" oninput="renderAdminTable()">
-        <span class="admin-count" id="adminCount"></span>
-        <button type="button" class="btn-icon-sm" id="adminDownloadPdfBtn" onclick="downloadSubjectQuestionsPdf()">⬇️ تحميل PDF للمادة</button>
+      <div class="panel-head">
+        <div class="panel-head-text">
+          <h3>الأسئلة</h3>
+          <p>إضافة وتعديل وحذف الأسئلة مباشرة — التغييرات تظهر للطلاب فوراً.</p>
+        </div>
+        <div class="panel-actions">
+          <button type="button" class="btn-admin-add" id="adminImportQuestionsBtn" onclick="openImportForm()" data-variant="secondary">📥 استيراد ملف أسئلة</button>
+          <button type="button" class="btn-admin-add" id="adminAddQuestionBtn" onclick="openQuestionForm(null)">+ إضافة سؤال جديد</button>
+        </div>
+      </div>
+
+      <div class="admin-card admin-toolbar-card">
+        <div class="admin-toolbar">
+          <select id="adminFilterSubject" onchange="renderAdminTable()" aria-label="تصفية حسب المادة">
+            <option value="">كل المواد</option>
+          </select>
+          <input type="search" id="adminSearch" placeholder="🔍 بحث في نص السؤال…" oninput="renderAdminTable()">
+          <span class="admin-count" id="adminCount"></span>
+          <button type="button" class="btn-icon-sm" id="adminDownloadPdfBtn" onclick="downloadSubjectQuestionsPdf()">⬇️ تحميل PDF للمادة</button>
+        </div>
       </div>
 
       <div class="admin-bulk-bar" id="adminBulkBar" hidden>
@@ -2054,11 +2176,11 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th style="width:34px;"><input type="checkbox" id="adminSelectAllQ" onchange="toggleSelectAllQuestions(this.checked)"></th>
-              <th>#</th>
-              <th>المادة</th>
+              <th class="chk-cell" style="width:44px;"><input type="checkbox" id="adminSelectAllQ" onchange="toggleSelectAllQuestions(this.checked)" aria-label="تحديد الكل"></th>
+              <th style="width:52px;">#</th>
+              <th style="width:200px;">المادة</th>
               <th>نص السؤال</th>
-              <th></th>
+              <th style="width:150px;"></th>
             </tr>
           </thead>
           <tbody id="adminTableBody"></tbody>
@@ -2068,14 +2190,19 @@
 
     <!-- ---- Panel: Student submissions (أسئلة الطلاب) ---- -->
     <div class="admin-panel" id="adminPanelSubmissions">
-      <p class="u-mb18">الأسئلة التي يبعثها الطلاب من صفحة "متذكر سؤال" في الصفحة الرئيسية تظهر هنا فوراً. راجعها، وحوّل أي سؤال جيد إلى بنك الأسئلة، أو احذف ما لا يلزم.</p>
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>أسئلة الطلاب</h3><p>الأسئلة التي يبعثها الطلاب من صفحة "متذكر سؤال" تظهر هنا فوراً. راجعها، وحوّل أي سؤال جيد إلى بنك الأسئلة، أو احذف ما لا يلزم.</p></div>
+      </div>
       <div id="submissionsList"></div>
     </div>
 
     <!-- ---- Panel: Subjects (المواد) ---- -->
     <div class="admin-panel" id="adminPanelSubjects">
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>المواد الدراسية</h3><p>أضف مادة جديدة مع صورتها وسنتها الدراسية، أو عدّل المواد الموجودة.</p></div>
+      </div>
       <div class="form-note" id="adminSubjectsMsg" hidden></div>
-      <form class="add-subject-row" id="subjectForm" onsubmit="addSubject(event)">
+      <form class="add-subject-row admin-card" id="subjectForm" onsubmit="addSubject(event)">
         <input type="hidden" id="editingSubjectId" value="">
         <input type="hidden" id="editingSubjectImageUrl" value="">
         <input type="text" id="newSubjectName" placeholder="اسم المادة الجديدة…" required>
@@ -2112,8 +2239,11 @@
 
     <!-- ---- Panel: Batches (الدفعات) ---- -->
     <div class="admin-panel" id="adminPanelBatches">
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>الدفعات</h3><p>إدارة الدفعات الدراسية المتاحة للتسجيل.</p></div>
+      </div>
       <div class="form-note" id="adminBatchesMsg" hidden></div>
-      <form class="add-subject-row" onsubmit="addBatch(event)">
+      <form class="add-subject-row admin-card" onsubmit="addBatch(event)">
         <input type="text" id="newBatchName" placeholder="اسم الدفعة الجديدة…" required>
         <button type="submit" class="btn-admin-add u-noshrink">+ إضافة دفعة</button>
       </form>
@@ -2125,9 +2255,11 @@
 
     <!-- ---- Panel: Gallery (صور الأنشطة) ---- -->
     <div class="admin-panel" id="adminPanelGallery">
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>صور الأنشطة</h3><p>الصور المُضافة هنا تظهر في استعراض "من نحن" بالصفحة الرئيسية، وتتبدّل تلقائياً كل 5 ثوانٍ بترتيب إضافتها.</p></div>
+      </div>
       <div class="form-note" id="adminGalleryMsg" hidden></div>
-      <p class="u-mb18">الصور المُضافة هنا تظهر في استعراض "من نحن" بالصفحة الرئيسية، وتتبدّل تلقائياً كل 5 ثوانٍ بترتيب إضافتها.</p>
-      <form class="add-subject-row" id="galleryForm" onsubmit="addGalleryImage(event)">
+      <form class="add-subject-row admin-card" id="galleryForm" onsubmit="addGalleryImage(event)">
         <input type="hidden" id="editingGalleryId" value="">
         <input type="hidden" id="editingGalleryImageUrl" value="">
         <label class="subject-img-btn" for="newGalleryImageInput">🖼️ اختيار صورة</label>
@@ -2145,12 +2277,17 @@
 
     <!-- ---- Panel: Lectures (المحاضرات) ---- -->
     <div class="admin-panel" id="adminPanelLectures">
-      <div class="form-note" id="adminLecturesMsg" hidden></div>
-      <p class="u-mb14">اختر المادة لإدارة محاضراتها: إضافة محاضرة جديدة أو حذف محاضرة موجودة. المحاضرات المحذوفة لا تحذف الأسئلة المرتبطة بها من بنك الأسئلة.</p>
-      <div class="admin-toolbar u-mb16">
-        <select id="adminLecturesSubjectSelect" onchange="onAdminLecturesSubjectChange()"></select>
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>المحاضرات</h3><p>اختر المادة لإدارة محاضراتها. حذف محاضرة لا يحذف الأسئلة المرتبطة بها من بنك الأسئلة.</p></div>
       </div>
-      <form class="add-subject-row" onsubmit="addLecture(event)">
+      <div class="form-note" id="adminLecturesMsg" hidden></div>
+      <div class="admin-card admin-toolbar-card">
+        <div class="admin-toolbar">
+          <label class="toolbar-label" for="adminLecturesSubjectSelect">المادة:</label>
+          <select id="adminLecturesSubjectSelect" onchange="onAdminLecturesSubjectChange()"></select>
+        </div>
+      </div>
+      <form class="add-subject-row admin-card" onsubmit="addLecture(event)">
         <input type="text" id="newLectureName" placeholder="اسم المحاضرة الجديدة…" required>
         <button type="submit" class="btn-admin-add u-noshrink">+ إضافة محاضرة</button>
       </form>
@@ -2169,8 +2306,10 @@
 
     <!-- ---- Panel: Site texts (نصوص الموقع) ---- -->
     <div class="admin-panel" id="adminPanelTexts">
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>نصوص الموقع</h3><p>تعديل نصوص الصفحة الرئيسية والهيدر والفوتر — التغييرات تظهر للزوار فوراً بعد الحفظ.</p></div>
+      </div>
       <div class="form-note" id="adminTextsMsg" hidden></div>
-      <p class="u-mb18">تعديل نصوص الصفحة الرئيسية والهيدر والفوتر — التغييرات تظهر للزوار فوراً بعد الحفظ.</p>
       <div id="siteTextsForm"></div>
       <div class="sitetext-save-bar">
         <button type="button" class="btn-admin-add" onclick="saveAllSiteTexts()">💾 حفظ كل التعديلات</button>
@@ -2179,8 +2318,11 @@
 
     <!-- ---- Panel: Moderators (المشرفون) ---- -->
     <div class="admin-panel" id="adminPanelModerators">
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>المشرفون</h3><p>أنشئ حسابات مشرفين وحدّد المواد التي يستطيعون إدارة أسئلتها.</p></div>
+      </div>
       <div class="form-note" id="adminModsMsg" hidden></div>
-      <form class="u-mb24" id="modForm" onsubmit="saveModerator(event)">
+      <form class="u-mb24 admin-card" id="modForm" onsubmit="saveModerator(event)">
         <input type="hidden" id="modEditingId" value="">
         <div class="admin-grid-2 u-mb16">
           <div class="field"><label for="modName">الاسم</label><input id="modName" type="text" required></div>
@@ -2208,8 +2350,14 @@
 
     <!-- ---- Panel: Analytics (التحليلات) ---- -->
     <div class="admin-panel" id="adminPanelAnalytics">
+      <div class="panel-head">
+        <div class="panel-head-text"><h3>التحليلات</h3><p>نظرة عامة على بنك الأسئلة والطلاب.</p></div>
+      </div>
       <div id="analyticsContent"></div>
     </div>
+
+    </div><!-- /admin-main -->
+    </div><!-- /admin-layout -->
   </div>
 </section>
 
@@ -6412,6 +6560,8 @@
     // نستخدم style.display لأن قواعد CSS (display:flex) تتغلّب على خاصية hidden
     const tabs = document.querySelector('.admin-subtabs');
     if(tabs) tabs.style.display = isModerator ? 'none' : '';
+    const layout = document.querySelector('.admin-layout');
+    if(layout) layout.classList.toggle('no-side', !!isModerator);
     document.querySelectorAll('.admin-subtab').forEach(b => {
       const keep = isAdmin || b.id === 'adminTabBtnQuestions';
       b.style.display = keep ? '' : 'none';
