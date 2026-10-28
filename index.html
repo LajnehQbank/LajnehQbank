@@ -1693,6 +1693,12 @@
     .nature-grid, .mode-grid, .lecture-list{grid-template-columns:1fr;}
     .nature-card.wide{grid-column:auto;}
   }
+
+  /* عنوان بنك الأسئلة: بالنص وبخط كبير */
+  .bank-title{text-align:center;border-bottom:none;padding-bottom:0;margin:6px 0 28px;}
+  .bank-title h1{font-size:44px;font-weight:900;line-height:1.2;letter-spacing:-.01em;}
+  .bank-title p{max-width:520px;margin:12px auto 0;font-size:16px;}
+  @media (max-width:640px){.bank-title h1{font-size:34px;}.bank-title p{font-size:14.5px;}}
 </style>
 </head>
 <body>
