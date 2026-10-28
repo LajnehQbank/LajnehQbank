@@ -1418,6 +1418,44 @@
   .loader-fill{height:100%; width:0%; border-radius:100px;
     background:linear-gradient(90deg, var(--cyan), var(--cyan-deep));
     transition:width .25s ease;}
+
+  /* ===== توحيد تصميم لوحة التحكم (أزرار، حقول، تبويبات، جداول) ===== */
+  .admin-shell{--a-radius:10px;--a-h:40px;--a-gap:12px;}
+  .btn-admin-add, .btn-icon-sm, .btn-cancel, .admin-form-actions .btn-submit, .admin-shell .btn-danger{
+    min-height:var(--a-h);border-radius:var(--a-radius);font-family:inherit;font-size:13.5px;font-weight:700;
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 18px;cursor:pointer;
+    transition:background .2s,border-color .2s,color .2s;
+  }
+  .btn-admin-add{background:var(--cyan);color:#fff;border:1.6px solid var(--cyan);}
+  .btn-admin-add:hover{background:var(--cyan-deep);border-color:var(--cyan-deep);}
+  .btn-icon-sm{padding:0 14px;font-size:12.5px;font-weight:600;min-height:34px;}
+  .btn-cancel{padding:0 22px;}
+  .admin-form-actions .btn-submit{width:auto;margin-top:0;padding:0 26px;border:1.6px solid var(--slate);}
+  .admin-shell .btn-danger{padding:0 20px;}
+  .admin-toolbar select, .admin-toolbar input[type="search"]{
+    min-height:var(--a-h);border-radius:var(--a-radius);padding:0 14px;color:var(--ink);
+  }
+  .admin-toolbar{gap:var(--a-gap);}
+  .admin-subtabs{gap:8px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding-bottom:6px;
+    border-bottom:1px solid var(--line);margin-bottom:22px;}
+  .admin-subtab{border-radius:var(--a-radius);padding:0 16px;min-height:var(--a-h);white-space:nowrap;
+    font-family:inherit;font-size:13.5px;flex:0 0 auto;cursor:pointer;}
+  .admin-head{padding-bottom:18px;border-bottom:1px solid var(--line);}
+  .admin-head > div[style]{gap:var(--a-gap) !important;}
+  .btn-icon-sm.danger:hover{background:color-mix(in srgb,var(--coral) 14%,var(--card));}
+  table.admin-table tbody tr:hover td{background:color-mix(in srgb,var(--cyan) 5%,var(--card));}
+  @media (max-width:640px){
+    .admin-shell{padding:28px 0 60px;}
+    .admin-head h2{font-size:22px;}
+    .admin-head > div[style]{width:100%;}
+    .admin-head .btn-admin-add{flex:1 1 100%;}
+    .admin-toolbar > *{flex:1 1 100%;}
+    .admin-count{margin-inline-start:0;}
+    .admin-grid-2{grid-template-columns:1fr;}
+    .admin-form-card{padding:22px 18px;}
+  }
+  .btn-admin-add[data-variant="secondary"]{background:var(--slate);border-color:var(--slate);}
+  .btn-admin-add[data-variant="secondary"]:hover{background:var(--ink);border-color:var(--ink);}
 </style>
 </head>
 <body>
@@ -1973,7 +2011,7 @@
         <p>إضافة وتعديل وحذف الأسئلة مباشرة — التغييرات تظهر للطلاب فوراً.</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn-admin-add" id="adminImportQuestionsBtn" onclick="openImportForm()" style="background:var(--slate);">📥 استيراد ملف أسئلة</button>
+        <button class="btn-admin-add" id="adminImportQuestionsBtn" onclick="openImportForm()" data-variant="secondary">📥 استيراد ملف أسئلة</button>
         <button class="btn-admin-add" id="adminAddQuestionBtn" onclick="openQuestionForm(null)">+ إضافة سؤال جديد</button>
       </div>
     </div>
@@ -2362,6 +2400,11 @@
   }
 
   let currentSession = null; // supabase session object, or null when logged out
+  /* يُحَلّ بعد انتهاء قراءة الجلسة والصلاحيات لأول مرة — حتى لا يحوّلك الموقع لصفحة الدخول قبل ما يعرف إنك مسجّل */
+  let __resolveSessionReady;
+  const sessionReady = new Promise(r => { __resolveSessionReady = r; });
+  setTimeout(() => __resolveSessionReady(), 6000);
+  let __questionsLoadedFor = undefined; // معرّف المستخدم الذي حُمّلت الأسئلة على أساسه (null = زائر)
   let isAdmin = false; // determined from public.profiles.role — never trust user_metadata for this
   let suppressAuthReload = false; // true while handleLogin/handleSignup are already refreshing the bank themselves
 
@@ -2401,12 +2444,16 @@
     }
   }
 
+  let __lastAuthUid;
   if(supabaseClient) supabaseClient.auth.onAuthStateChange((_event, session)=>{
     currentSession = session;
     checkAdminRole().finally(updateAuthUI);
     loadSavedIds();
-    // re-render whatever is currently visible so locked/unlocked state stays correct
-    if(!suppressAuthReload && document.getElementById('view-bank').classList.contains('active')){
+    // نعيد تحميل الأسئلة فقط لما يتغيّر المستخدم فعلياً (دخول/خروج) — بغض النظر عن الصفحة المفتوحة
+    const uid = session && session.user ? session.user.id : null;
+    const changed = __lastAuthUid !== undefined && uid !== __lastAuthUid;
+    __lastAuthUid = uid;
+    if(changed && !suppressAuthReload){
       loadQuestions()
         .catch(err=>console.error('تعذّر تحديث الأسئلة بعد تغيّر حالة الدخول:', err))
         .finally(()=>{ buildPool(); renderBank(); });
@@ -2502,6 +2549,16 @@
       currentSession = null;
       if(errBox){ errBox.textContent = 'هذا الحساب ليس حساب مشرف.'; errBox.hidden = false; }
       return;
+    }
+    suppressAuthReload = true;
+    try{
+      await loadQuestions();
+      buildPool();
+      renderBank();
+    }catch(err){
+      console.error('تعذّر تحديث الأسئلة بعد دخول المشرف:', err);
+    }finally{
+      suppressAuthReload = false;
     }
     updateAuthUI();
     go('admin');
@@ -3144,6 +3201,14 @@
     if(targetView==='student-settings') renderStudentSettings();
     if(targetView==='admin') renderAdminPage();
     if(targetView==='home') initRevealObserver();
+    if(targetView==='bank' && __appReady){
+      const uidNow = currentSession ? currentSession.user.id : null;
+      if(__questionsLoadedFor !== uidNow){
+        loadQuestions().catch(()=>{}).finally(()=>{ buildPool(); renderBank(); });
+      }else{
+        renderBank();
+      }
+    }
     if(view==='ARCHIVE' && targetView==='home') scrollToContributeForm();
 
     if(showLoader){
@@ -3204,7 +3269,12 @@
   window.addEventListener('DOMContentLoaded', ()=>{
     showPageLoader();
     const initial = (location.hash||'#home').replace('#','');
-    go(['home','bank','login','student','student-settings','admin','ARCHIVE'].includes(initial) ? initial : 'home', {showLoader:true});
+    const target = ['home','bank','login','student','student-settings','admin','ARCHIVE'].includes(initial) ? initial : 'home';
+    if(['bank','student','student-settings','admin'].includes(target)){
+      sessionReady.then(()=> go(target, {showLoader:true}));
+    }else{
+      go(target, {showLoader:true});
+    }
   });
   /* لو الطالب فتح الرابط #ARCHIVE وهو أصلاً بنفس التبويب (بدون إعادة تحميل الصفحة)،
      المتصفح ما بيعيد تحميل الصفحة، بس بيغيّر الهاش فقط — لازم نتعامل معه يدوياً هون */
@@ -5596,6 +5666,7 @@
       renderHomeStats();
       return;
     }
+    __questionsLoadedFor = currentSession ? currentSession.user.id : null;
     QUESTIONS = (data||[]).map(row=>{
       const rawOpts = [row.option_a, row.option_b, row.option_c, row.option_d, row.option_e];
       // نحدد آخر خيار مُعبّى فعلياً (من اليمين) بدل اشتراط تعبية الخيارات الخمسة كاملة —
@@ -7593,7 +7664,9 @@
     fillSelect(document.getElementById('signupBatch'), BATCHES);
     try{
       await refreshSession();
+      __lastAuthUid = currentSession && currentSession.user ? currentSession.user.id : null;
       updateAuthUI();
+      __resolveSessionReady();
       await loadSavedIds();
       await loadSiteTexts();
       await loadSubjects();
@@ -7603,6 +7676,7 @@
       await loadQuestions();
     }catch(err){
       console.error('حدث خطأ أثناء تهيئة الاتصال بقاعدة البيانات، سيتم عرض الموقع بدون بيانات مؤقتاً:', err);
+      __resolveSessionReady();
     }
     fillSelect(document.getElementById('signupBatch'), BATCHES);
     renderHomeStats();
