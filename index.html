@@ -1566,6 +1566,39 @@
     table.admin-table td.q-text-cell{white-space:normal;}
     .admin-row-actions{margin-top:8px;}
   }
+
+  /* ===== شريط مراحل بنك الأسئلة (Stepper) ===== */
+  .bank-crumb.wiz-host{display:block;margin-bottom:30px;}
+  .wiz{list-style:none;margin:0;padding:14px 18px;display:flex;align-items:center;gap:10px;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);}
+  .wiz-step{flex:0 0 auto;min-width:0;}
+  .wiz-btn{display:flex;align-items:center;gap:10px;background:none;border:none;padding:6px 8px;border-radius:12px;
+    font-family:inherit;text-align:start;color:inherit;}
+  button.wiz-btn{cursor:pointer;transition:background .2s;}
+  button.wiz-btn:hover{background:var(--cyan-pale);}
+  .wiz-dot{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:14px;
+    border:1.8px solid var(--line);color:var(--slate-soft);background:var(--paper);transition:all .25s;}
+  .wiz-txt{display:flex;flex-direction:column;line-height:1.35;min-width:0;}
+  .wiz-txt b{font-family:'Tajawal',sans-serif;font-size:14.5px;font-weight:800;color:var(--slate-soft);}
+  .wiz-txt small{font-size:12px;color:var(--slate-soft);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .wiz-step.done .wiz-dot{background:var(--cyan);border-color:var(--cyan);color:#fff;}
+  .wiz-step.done .wiz-txt b{color:var(--slate);}
+  .wiz-step.current .wiz-dot{background:var(--slate);border-color:var(--slate);color:#fff;box-shadow:0 0 0 4px var(--cyan-pale);}
+  .wiz-step.current .wiz-txt b{color:var(--ink);}
+  .wiz-step.current .wiz-txt small{color:var(--cyan-deep);font-weight:700;}
+  .wiz-step.todo{opacity:.75;}
+  .wiz-line{flex:1 1 20px;min-width:14px;height:2px;border-radius:2px;background:var(--line);}
+  .wiz-line.filled{background:var(--cyan);}
+  @media (max-width:760px){
+    .wiz{padding:12px 12px;gap:6px;}
+    .wiz-btn{padding:4px;gap:0;}
+    .wiz-dot{width:30px;height:30px;font-size:13px;}
+    .wiz-txt{display:none;}
+    .wiz-step.current .wiz-txt{display:flex;margin-inline-start:8px;}
+    .wiz-step.current .wiz-txt small{max-width:120px;}
+    .wiz-line{min-width:8px;}
+  }
 </style>
 </head>
 <body>
@@ -6046,6 +6079,7 @@
   }
 
   function updateStartButton(){
+    renderCrumb();
     const available = availableForSelection();
     const ready = !!state.nature && state.lectures.length>0 && !!state.mode && available>0;
     const btn = document.getElementById('startBtn');
@@ -6395,6 +6429,7 @@
   }
   function finishSession(){
     state.session.finished = true;
+    renderCrumb();
     recordProgress(state.session.questions.map(q=>q.id));
     renderSessionStage();
   }
@@ -6413,20 +6448,57 @@
         <button class="crumb-clear" onclick="crumbClearAll()">✕ مسح البحث</button>`;
       return;
     }
-    if(!currentSession || !state.subject){ crumb.innerHTML = ""; return; }
-    let html = `<button class="crumb-pill link" onclick="crumbToBatch()">المادة: <b>${state.subject}</b></button>`;
-    if(state.nature && state.step==='session'){
-      const natureLabel = (NATURES.find(x=>x.k===state.nature)||{}).label || '';
-      html += `<span class="crumb-sep">/</span>
-        <button class="crumb-pill link" onclick="backTo('setup')">النوع: <b>${natureLabel}</b></button>`;
-    }
-    if(state.mode && state.step==='session'){
-      const modeLabel = (MODES.find(x=>x.k===state.mode)||{}).label || '';
-      html += `<span class="crumb-sep">/</span>
-        <span class="crumb-pill">النمط: <b>${modeLabel}</b></span>`;
-    }
-    html += `<button class="crumb-clear" onclick="crumbClearAll()">✕ البدء من جديد</button>`;
+    if(!currentSession){ crumb.className='bank-crumb'; crumb.innerHTML = ""; return; }
+    crumb.className = 'bank-crumb wiz-host';
+
+    const hasSubject = !!state.subject;
+    const sess = state.session;
+    const finished = !!(sess && sess.finished);
+    const inSession = state.step==='session' && !!sess;
+    const natureLabel = (NATURES.find(x=>x.k===state.nature)||{}).label || '';
+    const modeObj = MODES.find(x=>x.k===state.mode) || null;
+
+    // 0 = المادة، 1 = الإعداد، 2 = الحل، 3 = النتيجة
+    let cur = 0;
+    if(hasSubject) cur = 1;
+    if(hasSubject && inSession) cur = finished ? 3 : 2;
+
+    const lecCount = state.lectures.length;
+    const setupSub = state.nature
+      ? natureLabel + (lecCount ? ' · ' + lecCount + ' محاضرة' : '')
+      : 'النوع والمحاضرات والعدد';
+    const steps = [
+      { t:'المادة',  sub: hasSubject ? state.subject : 'اختر المادة', go: hasSubject ? 'subject' : null },
+      { t:'الإعداد', sub: hasSubject ? setupSub : '—',                 go: (hasSubject && cur>1) ? 'setup' : null },
+      { t: modeObj ? (modeObj.k==='exam' ? 'الاختبار' : 'المراجعة') : 'الحل',
+        sub: inSession && modeObj ? modeObj.label : '—', go:null },
+      { t:'النتيجة', sub: finished ? 'تم إنهاء الجلسة' : '—',          go:null },
+    ];
+
+    let html = '<ol class="wiz" aria-label="مراحل بنك الأسئلة">';
+    steps.forEach((st,i)=>{
+      const status = i<cur ? 'done' : (i===cur ? 'current' : 'todo');
+      const dot = status==='done' ? '✓' : String(i+1);
+      const inner = `<span class="wiz-dot">${dot}</span><span class="wiz-txt"><b>${st.t}</b><small>${escapeHtml(String(st.sub))}</small></span>`;
+      if(i>0) html += `<li class="wiz-line ${i<=cur ? 'filled' : ''}" aria-hidden="true"></li>`;
+      html += `<li class="wiz-step ${status}" ${status==='current' ? 'aria-current="step"' : ''}>` +
+        (st.go && status!=='current'
+          ? `<button type="button" class="wiz-btn" onclick="wizGo('${st.go}')" title="الرجوع لهذه الخطوة">${inner}</button>`
+          : `<span class="wiz-btn static">${inner}</span>`) + '</li>';
+    });
+    html += '</ol>';
     crumb.innerHTML = html;
+  }
+
+  // التنقل من شريط الخطوات (مع تأكيد إذا في اختبار شغّال وفيه إجابات)
+  function wizGo(target){
+    const sess = state.session;
+    if(state.step==='session' && sess && !sess.finished && sess.answers && Object.keys(sess.answers).length>0){
+      if(!confirm('عندك جلسة شغّالة وفيها إجابات، إذا رجعت رح تنحذف. بدك تكمل؟')) return;
+    }
+    if(target==='subject') crumbToBatch();
+    else if(target==='setup') backTo('setup');
+    window.scrollTo({top:0, behavior:'smooth'});
   }
 
   /* دفعة الطالب تُقرأ الآن من بياناته الشخصية (بدل اختيارها يدوياً) — لا تظهر المواد إلا بعد تسجيل الدخول */
