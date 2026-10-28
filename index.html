@@ -1699,6 +1699,128 @@
   .bank-title h1{font-size:44px;font-weight:900;line-height:1.2;letter-spacing:-.01em;}
   .bank-title p{max-width:520px;margin:12px auto 0;font-size:16px;}
   @media (max-width:640px){.bank-title h1{font-size:34px;}.bank-title p{font-size:14.5px;}}
+
+  /* =====================================================================
+     حقول الإدخال الحديثة — نظام موحّد لكل مربعات النص في الموقع
+     (input / select / textarea / محرر النصوص). كل القيم تمر عبر متغيرات
+     --f-* فبتشتغل تلقائياً بالوضع الفاتح والداكن.
+     ===================================================================== */
+  :root{
+    --f-h:48px;
+    --f-radius:12px;
+    --f-bg:var(--card);
+    --f-bg-focus:var(--card);
+    --f-border:var(--line);
+    --f-border-hover:color-mix(in srgb,var(--slate-soft) 45%,var(--line));
+    --f-color:var(--ink);
+    --f-placeholder:color-mix(in srgb,var(--slate-soft) 80%,transparent);
+    --f-ring:color-mix(in srgb,var(--cyan) 24%,transparent);
+    --f-shadow:0 1px 2px rgba(28,38,46,.05);
+    --f-arrow:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6873' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+  html[data-theme="dark"]{
+    --f-shadow:none;
+    --f-arrow:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239AA8B1' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+  html[data-theme="dark"] :is(input,select,textarea){color-scheme:dark;}
+
+  /* أحجام حسب المنطقة */
+  .bank-flow{--f-h:46px;}
+  .admin-shell,.about-card-item,.about-maincard-item,.flaticon-modal-search{--f-h:40px;--f-radius:10px;}
+  /* حقول البحث بشكل كبسولة */
+  .search-row,.subject-search,.admin-toolbar{--f-radius:999px;}
+
+  /* الأساس */
+  :is(input:not([type=checkbox],[type=radio],[type=file],[type=hidden],[type=color],[type=range],[type=button],[type=submit],[type=image]),select,textarea):not(.stepper-input,.rte-select,.rte-table-pop *){
+    -webkit-appearance:none;appearance:none;
+    min-height:var(--f-h);padding:var(--f-py,0px) 16px;
+    font-family:inherit;font-size:14.5px;line-height:1.5;
+    color:var(--f-color);background-color:var(--f-bg);
+    border:1.5px solid var(--f-border);border-radius:var(--f-radius);
+    box-shadow:var(--f-shadow);
+    transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease;
+  }
+  :is(input:not([type=checkbox],[type=radio],[type=file],[type=hidden],[type=color],[type=range],[type=button],[type=submit],[type=image]),select,textarea):not(.stepper-input,.rte-select,.rte-table-pop *):hover{
+    border-color:var(--f-border-hover);
+  }
+  :is(input:not([type=checkbox],[type=radio],[type=file],[type=hidden],[type=color],[type=range],[type=button],[type=submit],[type=image]),select,textarea):not(.stepper-input,.rte-select,.rte-table-pop *):focus{
+    outline:none;border-color:var(--cyan);background-color:var(--f-bg-focus);
+    box-shadow:0 0 0 4px var(--f-ring);
+  }
+  :is(input,select,textarea)::placeholder{color:var(--f-placeholder);opacity:1;}
+  :is(input,select,textarea):disabled{opacity:.55;cursor:not-allowed;background-color:var(--paper);}
+  :is(input,select,textarea):user-invalid{
+    border-color:var(--coral);
+    box-shadow:0 0 0 4px color-mix(in srgb,var(--coral) 16%,transparent);
+  }
+  :is(input,textarea):-webkit-autofill,
+  :is(input,textarea):-webkit-autofill:hover{
+    -webkit-text-fill-color:var(--ink);caret-color:var(--ink);
+    -webkit-box-shadow:0 0 0 1000px var(--card) inset;box-shadow:0 0 0 1000px var(--card) inset;
+  }
+  :is(input,textarea):-webkit-autofill:focus{
+    -webkit-box-shadow:0 0 0 1000px var(--card) inset,0 0 0 4px var(--f-ring);
+    box-shadow:0 0 0 1000px var(--card) inset,0 0 0 4px var(--f-ring);
+  }
+
+  /* مربعات النص متعددة الأسطر */
+  textarea{
+    --f-h:96px;--f-py:12px;
+    width:100%;line-height:1.75;resize:vertical;
+  }
+  .sitetext-field textarea{--f-h:72px;}
+
+  /* القوائم المنسدلة */
+  select:not(.rte-select){
+    background-image:var(--f-arrow);background-repeat:no-repeat;
+    background-position:left 14px center;background-size:16px;
+    padding-left:42px;padding-right:16px;cursor:pointer;
+  }
+  select:not(.rte-select)[dir="ltr"]{
+    background-position:right 14px center;padding-left:16px;padding-right:42px;
+  }
+  select option{background:var(--card);color:var(--ink);}
+
+  /* حقول مخصصة */
+  input.about-maincard-icon-input.about-maincard-icon-input{padding:0;text-align:center;}
+  input[type="search"]::-webkit-search-cancel-button{cursor:pointer;}
+  .stepper-input{border-radius:12px;transition:border-color .18s ease,box-shadow .18s ease;}
+  .stepper-input:hover{border-color:var(--f-border-hover);}
+  .stepper-input:focus{box-shadow:0 0 0 4px var(--f-ring);}
+  .rte-editor{
+    border-radius:0 0 12px 12px;transition:border-color .18s ease,box-shadow .18s ease;
+  }
+  .rte-editor:hover{border-color:var(--f-border-hover);}
+  .rte-editor:focus{box-shadow:0 0 0 4px var(--f-ring);}
+  .rte-editor:empty::before{color:var(--f-placeholder);}
+  .rte-select,.rte-table-pop input[type="number"]{transition:border-color .18s ease,box-shadow .18s ease;}
+  .rte-select:focus,.rte-table-pop input[type="number"]:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px var(--f-ring);}
+
+  /* الاختيار (checkbox / radio) وأزرار رفع الملفات */
+  input[type="checkbox"],input[type="radio"]{accent-color:var(--cyan);cursor:pointer;}
+  input[type="file"]{font-family:inherit;font-size:13.5px;color:var(--slate);max-width:100%;}
+  input[type="file"]::file-selector-button{
+    font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;
+    margin-inline-end:12px;padding:9px 16px;border-radius:10px;
+    border:1.5px solid var(--line);background:var(--paper);color:var(--slate);
+    transition:border-color .18s ease,background-color .18s ease,color .18s ease;
+  }
+  input[type="file"]::file-selector-button:hover{border-color:var(--cyan);background:var(--cyan-pale);color:var(--cyan-deep);}
+
+  /* نموذج «ساهم بسؤال» (على الخلفية الداكنة) */
+  .contribute-form{
+    --f-bg:rgba(255,255,255,.08);--f-bg-focus:rgba(255,255,255,.14);
+    --f-border:rgba(255,255,255,.22);--f-border-hover:rgba(255,255,255,.42);
+    --f-color:#fff;--f-placeholder:#B4C2CA;--f-shadow:none;
+    --f-ring:rgba(63,190,239,.30);
+    --f-arrow:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+  .contribute-form select option{background:var(--card);color:var(--ink);}
+  .contribute-form :is(input,textarea):-webkit-autofill{-webkit-box-shadow:0 0 0 1000px #3F4B56 inset;box-shadow:0 0 0 1000px #3F4B56 inset;-webkit-text-fill-color:#fff;}
+
+  @media (prefers-reduced-motion:reduce){
+    :is(input,select,textarea),.rte-editor,.stepper-input{transition:none !important;}
+  }
 </style>
 </head>
 <body>
@@ -2608,7 +2730,7 @@
 
       <div class="field u-mb0">
         <label for="importRawText">أو الصق نص الأسئلة هنا كما هو (نص السؤال، الخيارات، الإجابة، والتفسير)</label>
-        <textarea id="importRawText" dir="ltr" rows="12" style="width:100%;padding:12px 14px;border-radius:10px;border:1.6px solid var(--line);font-family:inherit;font-size:14px;" placeholder="Paste the question text here exactly as it appears in the file..."></textarea>
+        <textarea id="importRawText" dir="ltr" rows="12" placeholder="Paste the question text here exactly as it appears in the file..."></textarea>
       </div>
 
       <div class="admin-form-actions">
@@ -4660,7 +4782,7 @@
       <div class="subject-manage-row selectable">
         <span class="lec-left" style="flex:1;">
           <input type="checkbox" class="admin-lec-checkbox" data-id="${l.id}" onchange="toggleLectureSelected(${l.id}, this.checked)" ${ADMIN_SELECTED_LEC_IDS.has(l.id)?'checked':''}>
-          <input type="text" id="editLectureInput-${l.id}" value="${(l.name || '').replace(/"/g,'&quot;')}" style="flex:1;border:1.6px solid var(--cyan);border-radius:8px;padding:6px 10px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink);" onkeydown="if(event.key==='Enter'){event.preventDefault();saveLectureEdit(${l.id});}else if(event.key==='Escape'){cancelLectureEdit();}">
+          <input type="text" id="editLectureInput-${l.id}" value="${(l.name || '').replace(/"/g,'&quot;')}" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();saveLectureEdit(${l.id});}else if(event.key==='Escape'){cancelLectureEdit();}">
         </span>
         <button class="btn-icon-sm" onclick="saveLectureEdit(${l.id})">💾 حفظ</button>
         <button class="btn-icon-sm" onclick="cancelLectureEdit()">إلغاء</button>
@@ -7515,7 +7637,7 @@
         ${warnBox}
         <div class="field" style="margin-bottom:10px;">
           <label>نص السؤال</label>
-          <textarea dir="ltr" rows="2" style="width:100%;padding:10px 12px;border-radius:10px;border:1.6px solid var(--line);font-family:inherit;font-size:14px;" oninput="updateImportField(${i},'text',this.value)">${escapeHtml(q.text)}</textarea>
+          <textarea dir="ltr" rows="2" oninput="updateImportField(${i},'text',this.value)">${escapeHtml(q.text)}</textarea>
         </div>
         <div class="admin-options-list" style="margin-bottom:10px;">
           ${IMPORT_OPT_LETTERS.map(l=>`
@@ -7534,7 +7656,7 @@
           </div>
           <div class="field">
             <label>تفسير الإجابة (اختياري)</label>
-            <textarea dir="ltr" rows="2" style="width:100%;padding:10px 12px;border-radius:10px;border:1.6px solid var(--line);font-family:inherit;font-size:14px;" oninput="updateImportField(${i},'explanation',this.value)">${escapeHtml(q.explanation)}</textarea>
+            <textarea dir="ltr" rows="2" oninput="updateImportField(${i},'explanation',this.value)">${escapeHtml(q.explanation)}</textarea>
           </div>
         </div>
       </div>`;
