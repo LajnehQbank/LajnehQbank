@@ -3228,7 +3228,7 @@
 
     document.getElementById('studentProfileAvatar').src = meta.avatar_url || DEFAULT_AVATAR_SVG;
     document.getElementById('studentProfileName').textContent = meta.full_name || 'بدون اسم';
-    document.getElementById('studentProfileBatch').textContent = meta.batch || '—';
+    document.getElementById('studentProfileBatch').textContent = canonBatch(meta.batch) || '—';
     applyFontSize(meta.font_size || 'medium');
     renderSavedQuestionsList();
   }
@@ -3243,7 +3243,7 @@
 
     const batchSel = document.getElementById('studentBatch');
     batchSel.innerHTML = BATCHES.map(b =>
-      `<option value="${b}" ${meta.batch===b ? 'selected' : ''}>${b}</option>`
+      `<option value="${b}" ${canonBatch(meta.batch)===b ? 'selected' : ''}>${b}</option>`
     ).join('');
 
     document.getElementById('studentFontSize').value = meta.font_size || 'medium';
@@ -4530,7 +4530,15 @@
       if(error) throw error;
       if(data && data.length){
         ADMIN_BATCHES = data;
-        BATCHES = data.map(r=>r.name);
+        // نشيل التكرار: الأسماء المتشابهة (ايفوري/اايفوري/آيفوري) تظهر دفعة وحدة بالقوائم
+        const seenBatchKeys = new Set();
+        BATCHES = [];
+        data.forEach(r=>{
+          const k = batchKey(r.name);
+          if(!k || seenBatchKeys.has(k)) return;
+          seenBatchKeys.add(k);
+          BATCHES.push(r.name);
+        });
       }
     }catch(err){
       // جدول batches قد لا يكون موجوداً بعد في Supabase — نستمر بالقائمة الافتراضية أعلاه
@@ -5912,7 +5920,7 @@
 
     // الدفعات: بلوك واحد لتوزيع الطلاب (اسم كل دفعة يظهر مرة وحدة فقط)
     const stuByBatch = {};
-    ADMIN_STUDENTS.forEach(st=>{ const k = st.batch || 'غير محدد'; stuByBatch[k] = (stuByBatch[k]||0) + 1; });
+    ADMIN_STUDENTS.forEach(st=>{ const k = canonBatch(st.batch) || 'غير محدد'; stuByBatch[k] = (stuByBatch[k]||0) + 1; });
     const batchNames = Object.keys(stuByBatch).sort((x,y)=>stuByBatch[y]-stuByBatch[x]);
     const maxStu = Math.max(...batchNames.map(k=>stuByBatch[k]||0), 1);
     const batchBlock = `
@@ -5989,14 +5997,14 @@
     const qEl = document.getElementById('studentsListSearch');
     const q = (qEl ? qEl.value : '').trim().toLowerCase();
     const rows = ADMIN_STUDENTS
-      .filter(st => !q || [st.full_name, st.phone, st.batch].some(v => String(v || '').toLowerCase().includes(q)))
+      .filter(st => !q || [st.full_name, st.phone, canonBatch(st.batch)].some(v => String(v || '').toLowerCase().includes(q)))
       .sort((a,b)=> String(a.full_name || '').localeCompare(String(b.full_name || ''), 'ar'));
     body.innerHTML = rows.length
       ? rows.map((st,i)=>`<tr>
           <td>${i+1}</td>
           <td>${escapeHtml(st.full_name || '—')}</td>
           <td dir="ltr" style="text-align:right;font-family:'IBM Plex Mono',monospace;">${escapeHtml(st.phone || '—')}</td>
-          <td>${escapeHtml(st.batch || '—')}</td>
+          <td>${escapeHtml(canonBatch(st.batch) || '—')}</td>
         </tr>`).join('')
       : '<tr><td colspan="4" class="analytics-empty">لا توجد نتائج.</td></tr>';
   }
@@ -6004,6 +6012,24 @@
      هذه القائمة كقيمة افتراضية إن لم يكن الجدول موجوداً أو كان فارغاً بعد */
   let BATCHES = ["آيفوري","لومينا"];
   let ADMIN_BATCHES = []; // [{id, name}] — تُستخدم في لوحة التحكم لإضافة/حذف الدفعات
+  /* توحيد أسماء الدفعات: «آيفوري» و«ايفوري» و«اايفوري» (وأي اختلاف بالهمزة/المدّة/تكرار الألف
+     أو الياء/الألف المقصورة) تُعامَل كدفعة وحدة. المفتاح هو الاسم بعد التطبيع. */
+  function batchKey(n){
+    return String(n == null ? '' : n).trim()
+      .replace(/[\u064B-\u065F\u0670\u0640]/g,'')
+      .replace(/[آأإٱ]/g,'ا')
+      .replace(/ا{2,}/g,'ا')
+      .replace(/[ىئ]/g,'ي')
+      .replace(/\s+/g,' ')
+      .toLowerCase();
+  }
+  /* يرجّع الاسم الرسمي للدفعة (أول اسم مطابق بقائمة BATCHES)، وإلا يرجّع الاسم كما هو */
+  function canonBatch(n){
+    if(n == null || n === '') return n;
+    const k = batchKey(n);
+    const hit = BATCHES.find(b => batchKey(b) === k);
+    return hit || n;
+  }
   const QUESTION_TYPE = "اختيار من متعدد"; // نمط السؤال أصبح ثابتاً: اختيار من متعدد فقط
   const NATURES = [
     {k:"archive", label:"الأرشيف", desc:"أسئلة امتحانات ودفعات سابقة موثّقة من اللجنة."},
@@ -6107,7 +6133,7 @@
       return {
         id: row.id,
         subject: row.subject,
-        batch: row.batch,
+        batch: canonBatch(row.batch),
         lecture: row.lecture || (LECTURES[row.subject]||["عام"])[0],
         kind: row.kind,
         // إذا كان المستخدم مسجّلاً دخوله، تُفتح كل الأسئلة المقفلة تلقائياً
@@ -6740,7 +6766,7 @@
   /* دفعة الطالب تُقرأ الآن من بياناته الشخصية (بدل اختيارها يدوياً) — لا تظهر المواد إلا بعد تسجيل الدخول */
   function getStudentBatch(){
     const meta = currentSession && currentSession.user && currentSession.user.user_metadata;
-    return (meta && meta.batch) || BATCHES[0];
+    return canonBatch(meta && meta.batch) || BATCHES[0];
   }
 
   function renderBatchStage(){
@@ -7965,7 +7991,7 @@
       if(!row) return;
       document.getElementById('adminFormTitle').textContent = 'تعديل السؤال #' + id;
       document.getElementById('adminQId').value = id;
-      document.getElementById('adminQBatch').value = row.batch || BATCHES[0];
+      document.getElementById('adminQBatch').value = canonBatch(row.batch) || BATCHES[0];
       document.getElementById('adminQSubject').value = row.subject || allowedSubjects()[0];
       syncAdminLectureOptions();
       document.getElementById('adminQLecture').value = row.lecture || '';
