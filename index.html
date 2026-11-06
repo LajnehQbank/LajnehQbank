@@ -636,11 +636,35 @@
   .subject-card h4{font-size:16.5px;font-weight:700;direction:ltr;text-align:right;font-family:'IBM Plex Sans Arabic',sans-serif;letter-spacing:.01em;}
   .subject-card span.count{font-size:12.5px;color:var(--slate-soft);font-weight:600;}
   .subject-go-btn{
-    margin-top:auto;background:var(--slate);color:#fff;border:none;border-radius:100px;
-    padding:11px 18px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    transition:background .2s;font-family:inherit;cursor:pointer;
+    margin-top:auto;width:100%;position:relative;overflow:hidden;
+    display:inline-flex;align-items:center;justify-content:space-between;gap:10px;
+    min-height:50px;padding-block:6px;padding-inline:20px 6px;border:none;border-radius:14px;
+    background:linear-gradient(135deg,#12A2DB 0%,#0A7CAA 100%);color:#fff;
+    font-weight:800;font-size:14.5px;letter-spacing:.01em;font-family:inherit;cursor:pointer;
+    box-shadow:0 10px 20px -10px rgba(10,124,170,.75), inset 0 1px 0 rgba(255,255,255,.28);
+    transition:transform .2s ease, box-shadow .25s ease, filter .2s ease;
+    -webkit-tap-highlight-color:transparent;
   }
-  .subject-go-btn:hover{background:var(--ink);}
+  .subject-go-btn::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);
+    transform:translateX(120%);transition:transform .7s ease;
+  }
+  .subject-go-btn .go-arrow{
+    width:38px;height:38px;flex:0 0 auto;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.2);transition:transform .25s ease, background .2s ease, color .2s ease;
+  }
+  .subject-go-btn .go-arrow svg{width:18px;height:18px;display:block;}
+  .subject-card:hover .subject-go-btn, .subject-go-btn:hover{
+    transform:translateY(-2px);box-shadow:0 14px 24px -10px rgba(10,124,170,.85), inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .subject-card:hover .subject-go-btn::after, .subject-go-btn:hover::after{transform:translateX(-120%);}
+  .subject-card:hover .go-arrow, .subject-go-btn:hover .go-arrow{background:#fff;color:#0A7CAA;transform:translateX(-4px);}
+  .subject-go-btn:active{transform:translateY(0) scale(.98);filter:brightness(.96);}
+  .subject-go-btn:focus-visible{outline:3px solid rgba(18,162,219,.45);outline-offset:3px;}
+  @media (prefers-reduced-motion:reduce){
+    .subject-go-btn, .subject-go-btn::after, .subject-go-btn .go-arrow{transition:none;}
+  }
 
   /* ---- unified single-page setup ---- */
   .setup-shell{max-width:900px;counter-reset:setupstep;}
@@ -1646,11 +1670,10 @@
   .subject-search input{flex:1 1 auto;text-align:start;border-radius:var(--b-radius);min-height:var(--b-h);padding:0 16px;}
   .subject-search select{border-radius:var(--b-radius);min-height:var(--b-h);padding:0 16px;}
   .filter-hint{text-align:start;}
-  .bank-flow .btn-start, .bank-flow .btn-continue, .bank-flow .btn-back, .bank-flow .subject-go-btn, .bank-flow .exam-flag-btn{
+  .bank-flow .btn-start, .bank-flow .btn-continue, .bank-flow .btn-back, .bank-flow .exam-flag-btn{
     border-radius:var(--b-radius);min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
   }
   .bank-flow .btn-back, .bank-flow .btn-continue{padding:0 24px;}
-  .bank-flow .subject-go-btn{padding:0 18px;}
   .wiz{border-radius:var(--radius-md);}
 
   /* الإعداد: عمودين (الخيارات + ملخص ثابت) */
@@ -6829,7 +6852,7 @@
           <div class="subject-card-body">
             <h4>${s}</h4>
             <span class="count">${metaLine}</span>
-            <button class="subject-go-btn" onclick="selectSubject('${s}')">دخول المادة ←</button>
+            <button class="subject-go-btn" onclick="selectSubject('${s}')"><span>دخول المادة</span><span class="go-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg></span></button>
           </div>
         </article>`;
     }).join('');
